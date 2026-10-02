@@ -1,0 +1,98 @@
+{
+  "status": "PASSED",
+  "package_version": "phase3-v1.0.0",
+  "record_count": 20,
+  "column_count": 20,
+  "unique_record_ids": 20,
+  "failures": [],
+  "checks": [
+    {
+      "check": "required_file:data/source-sample/source_sample.csv",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/canonical/intelligence_data.csv",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/published/intelligence_data.json",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/schema.json",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/manifest.json",
+      "status": "passed"
+    },
+    {
+      "check": "file_size:data/source-sample/source_sample.csv",
+      "status": "passed",
+      "bytes": 3338
+    },
+    {
+      "check": "file_size:data/canonical/intelligence_data.csv",
+      "status": "passed",
+      "bytes": 5222
+    },
+    {
+      "check": "file_size:data/published/intelligence_data.json",
+      "status": "passed",
+      "bytes": 13814
+    },
+    {
+      "check": "file_size:data/schema.json",
+      "status": "passed",
+      "bytes": 5554
+    },
+    {
+      "check": "file_size:data/manifest.json",
+      "status": "passed",
+      "bytes": 1280
+    },
+    {
+      "check": "data_directory_size",
+      "status": "passed",
+      "bytes": 37211
+    },
+    {
+      "check": "canonical_structure",
+      "status": "passed",
+      "rows": 20,
+      "columns": 20
+    },
+    {
+      "check": "manifest_package_file:data/canonical/intelligence_data.csv",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/source-sample/source_sample.csv",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/schema.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/manifest.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/published/intelligence_data.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/quality/data_profile.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/quality/validation_report.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/quality/sampling_report.md",
+      "status": "passed"
+    }
+  ]
+}

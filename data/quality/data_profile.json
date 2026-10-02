@@ -1,0 +1,88 @@
+{
+  "record_count": 20,
+  "column_count": 20,
+  "columns": [
+    "record_id",
+    "record_type",
+    "observed_at",
+    "entity_id",
+    "related_entity_id",
+    "entity_name",
+    "category",
+    "subcategory",
+    "status",
+    "stage",
+    "metric_name",
+    "metric_value",
+    "metric_unit",
+    "text_value",
+    "latitude",
+    "longitude",
+    "source_name",
+    "source_record_id",
+    "is_synthetic",
+    "data_version"
+  ],
+  "unique_record_ids": 20,
+  "date_range": {
+    "min": "2026-01-08T00:00:00Z",
+    "max": "2026-06-05T00:00:00Z"
+  },
+  "missing_values": {
+    "record_id": 0,
+    "record_type": 0,
+    "observed_at": 0,
+    "entity_id": 0,
+    "related_entity_id": 20,
+    "entity_name": 0,
+    "category": 0,
+    "subcategory": 0,
+    "status": 0,
+    "stage": 0,
+    "metric_name": 0,
+    "metric_value": 0,
+    "metric_unit": 0,
+    "text_value": 0,
+    "latitude": 20,
+    "longitude": 20,
+    "source_name": 0,
+    "source_record_id": 0,
+    "is_synthetic": 0,
+    "data_version": 0
+  },
+  "category_counts": {
+    "record_type": {
+      "lost_deal": 20
+    },
+    "category": {
+      "Price": 5,
+      "Competitor": 5,
+      "Product Fit": 4,
+      "Timing": 3,
+      "Budget": 3
+    },
+    "subcategory": {
+      "Analytics Suite": 7,
+      "Cloud Platform": 6,
+      "CRM Platform": 7
+    },
+    "status": {
+      "HIGH": 9,
+      "MEDIUM": 7,
+      "LOW": 4
+    },
+    "stage": {
+      "Negotiation": 6,
+      "Proposal": 6,
+      "Evaluation": 5,
+      "Qualification": 3
+    }
+  },
+  "synthetic_records": 20,
+  "metric": {
+    "name": "deal_value",
+    "unit": "currency_unspecified",
+    "min": 150000.0,
+    "max": 1250000.0
+  }
+}

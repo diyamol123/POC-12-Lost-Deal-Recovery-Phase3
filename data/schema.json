@@ -1,0 +1,193 @@
+{
+  "schema_name": "phase3_canonical_intelligence_data",
+  "schema_version": "1.0.0",
+  "description": "Canonical schema for the Phase 3 Lost Deal Recovery synthetic CRM dataset.",
+  "columns": [
+    {
+      "name": "record_id",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Stable unique identifier for the canonical record.",
+      "source_derived": "id",
+      "example": "CRM-001"
+    },
+    {
+      "name": "record_type",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["lost_deal"],
+      "description": "Canonical record classification.",
+      "source_derived": "derived from dataset context",
+      "example": "lost_deal"
+    },
+    {
+      "name": "observed_at",
+      "type": "datetime",
+      "required": true,
+      "nullable": false,
+      "description": "Observation date normalized to ISO UTC datetime. Source provides date only.",
+      "source_derived": "date",
+      "example": "2026-01-08T00:00:00Z"
+    },
+    {
+      "name": "entity_id",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Stable entity reference derived from the source deal ID.",
+      "source_derived": "id",
+      "example": "CRM-001"
+    },
+    {
+      "name": "related_entity_id",
+      "type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Related entity identifier. Blank because no separate related-entity ID was supplied.",
+      "source_derived": null,
+      "example": null
+    },
+    {
+      "name": "entity_name",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Company associated with the lost deal.",
+      "source_derived": "company",
+      "example": "Aster Systems"
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Lost-deal reason category.",
+      "source_derived": "reason",
+      "example": "Price"
+    },
+    {
+      "name": "subcategory",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Product associated with the deal.",
+      "source_derived": "product",
+      "example": "Analytics Suite"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["HIGH", "MEDIUM", "LOW"],
+      "description": "Operational priority supplied by the source dataset.",
+      "source_derived": "priority",
+      "example": "HIGH"
+    },
+    {
+      "name": "stage",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Deal stage supplied by the source dataset.",
+      "source_derived": "stage",
+      "example": "Negotiation"
+    },
+    {
+      "name": "metric_name",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["deal_value"],
+      "description": "Name of the numeric metric represented by metric_value.",
+      "source_derived": "derived from value",
+      "example": "deal_value"
+    },
+    {
+      "name": "metric_value",
+      "type": "number",
+      "required": true,
+      "nullable": false,
+      "description": "Numeric deal value from the source.",
+      "source_derived": "value",
+      "example": 850000
+    },
+    {
+      "name": "metric_unit",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["currency_unspecified"],
+      "description": "Unit label for the monetary metric. Source does not explicitly identify the currency.",
+      "source_derived": "derived from source limitation",
+      "example": "currency_unspecified"
+    },
+    {
+      "name": "text_value",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "max_length": 500,
+      "description": "Recovery action text supplied by the source.",
+      "source_derived": "action",
+      "example": "Re-engage with ROI comparison and flexible pricing."
+    },
+    {
+      "name": "latitude",
+      "type": "number",
+      "required": false,
+      "nullable": true,
+      "description": "Latitude. No coordinates were supplied.",
+      "source_derived": null,
+      "example": null
+    },
+    {
+      "name": "longitude",
+      "type": "number",
+      "required": false,
+      "nullable": true,
+      "description": "Longitude. No coordinates were supplied.",
+      "source_derived": null,
+      "example": null
+    },
+    {
+      "name": "source_name",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Name identifying the source dataset.",
+      "source_derived": "Phase 2 synthetic CRM dataset",
+      "example": "Phase 2 synthetic CRM dataset"
+    },
+    {
+      "name": "source_record_id",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Identifier of the original source record.",
+      "source_derived": "id",
+      "example": "CRM-001"
+    },
+    {
+      "name": "is_synthetic",
+      "type": "boolean",
+      "required": true,
+      "nullable": false,
+      "allowed": [true],
+      "description": "Indicates that the record is synthetic.",
+      "source_derived": "derived from Phase 2 application context",
+      "example": true
+    },
+    {
+      "name": "data_version",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Version identifier for this canonical data package.",
+      "source_derived": "derived",
+      "example": "phase3-v1.0.0"
+    }
+  ]
+}

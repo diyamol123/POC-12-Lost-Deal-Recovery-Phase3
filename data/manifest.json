@@ -1,0 +1,45 @@
+{
+  "package_name": "phase3_canonical_data_foundation",
+  "package_version": "phase3-v1.0.0",
+  "description": "Canonical data package for the Phase 3 Lost Deal Recovery application.",
+  "source": {
+    "name": "Phase 2 synthetic CRM dataset",
+    "location": "backend/main.py",
+    "record_count": 20,
+    "source_field_count": 13,
+    "synthetic": true
+  },
+  "canonical": {
+    "file": "data/canonical/intelligence_data.csv",
+    "record_count": 20,
+    "column_count": 20
+  },
+  "source_sample": {
+    "file": "data/source-sample/source_sample.csv",
+    "record_count": 20,
+    "column_count": 13
+  },
+  "schema": {
+    "file": "data/schema.json",
+    "schema_version": "1.0.0"
+  },
+  "sampling": {
+    "reduction_performed": false,
+    "records_retained": 20,
+    "method": "full supplied dataset retained"
+  },
+  "published": {
+    "file": "data/published/intelligence_data.json",
+    "generated_from": "data/canonical/intelligence_data.csv"
+  },
+  "quality": {
+    "profile": "data/quality/data_profile.json",
+    "validation_report": "data/quality/validation_report.json"
+  },
+  "documentation": [
+    "docs/DATA_SOURCE_INVENTORY.md",
+    "docs/SAMPLING_AND_REDUCTION_REPORT.md",
+    "docs/CANONICAL_DATA_MAPPING.md",
+    "docs/CANONICAL_DATA_PACKAGE_VALIDATION.md"
+  ]
+}

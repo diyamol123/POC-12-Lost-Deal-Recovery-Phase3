@@ -1,0 +1,21 @@
+id,date,location,team,product,company,segment,reason,competitor,stage,value,priority,action
+CRM-001,2026-01-08,Bengaluru,Enterprise,Analytics Suite,Aster Systems,Enterprise,Price,Salesforce,Negotiation,850000,HIGH,Re-engage with ROI comparison and flexible pricing.
+CRM-002,2026-01-14,Mumbai,Enterprise,Cloud Platform,Nova Retail,Enterprise,Competitor,Microsoft,Proposal,720000,HIGH,Review competitor feature gap and schedule executive follow-up.
+CRM-003,2026-01-22,Kochi,SMB,Analytics Suite,Bluewave Foods,SMB,Product Fit,Zoho,Evaluation,280000,MEDIUM,Offer a product-fit workshop and targeted demo.
+CRM-004,2026-02-03,Chennai,Mid-Market,CRM Platform,Orbit Logistics,Mid-Market,Timing,HubSpot,Proposal,460000,MEDIUM,Create a 60-day re-engagement reminder.
+CRM-005,2026-02-11,Hyderabad,Enterprise,Cloud Platform,Vertex Health,Enterprise,Price,AWS,Negotiation,1100000,HIGH,Escalate for commercial review and ROI justification.
+CRM-006,2026-02-18,Pune,SMB,CRM Platform,Bright Retail,SMB,Budget,Zoho,Qualification,190000,LOW,Revisit during next budget cycle.
+CRM-007,2026-02-26,Delhi,Mid-Market,Analytics Suite,Northstar Finance,Mid-Market,Competitor,Power BI,Negotiation,640000,HIGH,Compare analytics capabilities and migration benefits.
+CRM-008,2026-03-04,Kochi,SMB,Cloud Platform,Harbor Tech,SMB,Product Fit,AWS,Evaluation,230000,MEDIUM,Run a technical discovery session.
+CRM-009,2026-03-12,Bengaluru,Enterprise,CRM Platform,Zenith Motors,Enterprise,Competitor,Salesforce,Proposal,920000,HIGH,Build competitor battlecard and executive outreach.
+CRM-010,2026-03-18,Mumbai,Mid-Market,Analytics Suite,Urban Living,Mid-Market,Timing,Tableau,Evaluation,370000,MEDIUM,Schedule future re-engagement based on buying cycle.
+CRM-011,2026-03-25,Chennai,SMB,CRM Platform,Green Basket,SMB,Budget,Zoho,Qualification,150000,LOW,Send lower-tier package when budget becomes available.
+CRM-012,2026-04-02,Hyderabad,Enterprise,Cloud Platform,Prime Energy,Enterprise,Price,Azure,Negotiation,1250000,HIGH,Conduct executive pricing review and ROI analysis.
+CRM-013,2026-04-10,Pune,Mid-Market,CRM Platform,Axis Manufacturing,Mid-Market,Product Fit,HubSpot,Evaluation,410000,MEDIUM,Map missing requirements and propose configuration.
+CRM-014,2026-04-18,Delhi,Enterprise,Analytics Suite,Summit Bank,Enterprise,Competitor,Tableau,Negotiation,980000,HIGH,Present differentiated analytics capabilities.
+CRM-015,2026-04-25,Kochi,SMB,Cloud Platform,Coastal Foods,SMB,Timing,AWS,Proposal,210000,LOW,Place into quarterly recovery campaign.
+CRM-016,2026-05-03,Bengaluru,Mid-Market,CRM Platform,Techline India,Mid-Market,Price,Salesforce,Proposal,570000,HIGH,Reopen pricing discussion with value-based package.
+CRM-017,2026-05-11,Mumbai,Enterprise,Cloud Platform,Metro Infra,Enterprise,Budget,Azure,Qualification,690000,MEDIUM,Monitor budget approval and prepare re-entry plan.
+CRM-018,2026-05-19,Chennai,SMB,Analytics Suite,FreshMart,SMB,Competitor,Power BI,Evaluation,175000,LOW,Share product comparison and customer proof points.
+CRM-019,2026-05-27,Hyderabad,Mid-Market,CRM Platform,Medix Labs,Mid-Market,Product Fit,HubSpot,Proposal,520000,MEDIUM,Schedule solution-design workshop.
+CRM-020,2026-06-05,Pune,Enterprise,Analytics Suite,Global Textiles,Enterprise,Price,Tableau,Negotiation,890000,HIGH,Create executive-level commercial recovery plan.
