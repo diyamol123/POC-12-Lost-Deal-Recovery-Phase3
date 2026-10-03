@@ -1,0 +1,74 @@
+{
+  "project_id": "POC-12",
+  "project_title": "Lost Deal Reason & Recovery Intelligence",
+  "approved_track": "Track A \u2014 Comparative Intelligence",
+  "primary_question": "Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?",
+  "decision": "Use descriptive evidence to identify where recovery attention may be concentrated.",
+  "data_version": "phase3-v1.0.0",
+  "method_version": "1.0.0",
+  "result_count": 5,
+  "key_findings": [
+    "Price ranks 1 by total deal value, with 40.16% of the observed total.",
+    "Competitor ranks 2 by total deal value, with 29.60% of the observed total.",
+    "Product Fit ranks 3 by total deal value, with 12.41% of the observed total.",
+    "Timing ranks 4 by total deal value, with 8.96% of the observed total.",
+    "Budget ranks 5 by total deal value, with 8.88% of the observed total."
+  ],
+  "priority_items": [
+    {
+      "priority_rank": 1,
+      "group_key": "Price",
+      "total_value": 4660000.0,
+      "contribution_pct": 40.15510555794916
+    },
+    {
+      "priority_rank": 2,
+      "group_key": "Competitor",
+      "total_value": 3435000.0,
+      "contribution_pct": 29.59931064196467
+    },
+    {
+      "priority_rank": 3,
+      "group_key": "Product Fit",
+      "total_value": 1440000.0,
+      "contribution_pct": 12.408444635932787
+    },
+    {
+      "priority_rank": 4,
+      "group_key": "Timing",
+      "total_value": 1040000.0,
+      "contribution_pct": 8.96165445928479
+    },
+    {
+      "priority_rank": 5,
+      "group_key": "Budget",
+      "total_value": 1030000.0,
+      "contribution_pct": 8.875484704868592
+    }
+  ],
+  "validation_result": {
+    "passed": true,
+    "contribution_total_percent": 100.0,
+    "small_groups_at_threshold": [
+      "Timing",
+      "Budget"
+    ]
+  },
+  "weak_case_review": {
+    "minimum_size_cases": 2,
+    "highest_value_record": {
+      "record_id": "CRM-012",
+      "category": "Price",
+      "metric_value": 1250000.0,
+      "assessment": "This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis."
+    }
+  },
+  "important_limitations": [
+    "The analysis uses 20 synthetic canonical records.",
+    "Currency is unspecified.",
+    "Timing and Budget contain only three records each.",
+    "The sample may not represent the complete operational population.",
+    "Results are descriptive and do not establish causality."
+  ],
+  "generated_at": "2026-10-03T13:50:30Z"
+}

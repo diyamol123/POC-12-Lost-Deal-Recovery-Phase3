@@ -1,0 +1,121 @@
+{
+  "review_type": "weak_case_and_limitation_review",
+  "data_version": "phase3-v1.0.0",
+  "minimum_group_size": 3,
+  "weak_cases": [
+    {
+      "case_type": "minimum_group_size",
+      "category": "Timing",
+      "record_count": 3,
+      "assessment": "Ranking is included because the group meets the minimum threshold, but the estimate is more sensitive to individual records than larger groups."
+    },
+    {
+      "case_type": "minimum_group_size",
+      "category": "Budget",
+      "record_count": 3,
+      "assessment": "Ranking is included because the group meets the minimum threshold, but the estimate is more sensitive to individual records than larger groups."
+    }
+  ],
+  "leave_one_out_sensitivity": [
+    {
+      "category": "Price",
+      "tested": true,
+      "reason": "Leave-one-out sensitivity test performed.",
+      "baseline_ranking": [
+        "Price",
+        "Competitor",
+        "Product Fit",
+        "Timing",
+        "Budget"
+      ],
+      "rank_changes": [
+        {
+          "removed_record_id": "CRM-012",
+          "removed_value": 1250000.0,
+          "ranking_after_removal": [
+            "Competitor",
+            "Price",
+            "Product Fit",
+            "Timing",
+            "Budget"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Competitor",
+      "tested": true,
+      "reason": "Leave-one-out sensitivity test performed.",
+      "baseline_ranking": [
+        "Price",
+        "Competitor",
+        "Product Fit",
+        "Timing",
+        "Budget"
+      ],
+      "rank_changes": []
+    },
+    {
+      "category": "Product Fit",
+      "tested": true,
+      "reason": "Leave-one-out sensitivity test performed.",
+      "baseline_ranking": [
+        "Price",
+        "Competitor",
+        "Product Fit",
+        "Timing",
+        "Budget"
+      ],
+      "rank_changes": [
+        {
+          "removed_record_id": "CRM-013",
+          "removed_value": 410000.0,
+          "ranking_after_removal": [
+            "Price",
+            "Competitor",
+            "Timing",
+            "Budget",
+            "Product Fit"
+          ]
+        },
+        {
+          "removed_record_id": "CRM-019",
+          "removed_value": 520000.0,
+          "ranking_after_removal": [
+            "Price",
+            "Competitor",
+            "Timing",
+            "Budget",
+            "Product Fit"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Timing",
+      "tested": true,
+      "reason": "Group is at the minimum sample-size threshold.",
+      "rank_changes": []
+    },
+    {
+      "category": "Budget",
+      "tested": true,
+      "reason": "Group is at the minimum sample-size threshold.",
+      "rank_changes": []
+    }
+  ],
+  "highest_value_record_review": {
+    "record_id": "CRM-012",
+    "category": "Price",
+    "metric_value": 1250000.0,
+    "assessment": "This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis."
+  },
+  "overall_assessment": "Comparative ranking is usable for descriptive analysis of the canonical sample, with caution for minimum-size groups and potential influence from extreme deal values.",
+  "limitations": [
+    "The canonical dataset contains only 20 synthetic records.",
+    "Minimum-size groups have only three records.",
+    "The supplied sample may not represent the full operational population.",
+    "Observed ranking should not be interpreted as causal evidence.",
+    "Currency is unspecified in the canonical data."
+  ]
+}

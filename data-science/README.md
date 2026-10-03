@@ -1,69 +1,126 @@
-# Phase 3 Data Validation and Analytical Readiness
+# Phase 3 — Analytical Track Development
 
-## Purpose
+## Project
 
-This workspace contains the validation, profiling, representativeness, and analytical-readiness evidence for the Phase 3 canonical dataset.
+**POC-12 — Lost Deal Reason & Recovery Intelligence**
 
-## Canonical Dataset
-
-- Path: `../data/canonical/intelligence_data.csv`
-- Data version: `phase3-v1.0.0`
-- Record count: 20
-- Column count: 20
-- Record type: `lost_deal`
-- Synthetic records: 20
-- Non-synthetic records: 0
-
-## Validation
-
-The canonical dataset was revalidated using the existing Phase 3 validation pipeline.
-
-Validation result: **PASS**
-
-## Workspace
-
-- `scripts/profile_canonical_data.py` — canonical data profiling
-- `scripts/assess_data_quality.py` — quality assessment
-- `scripts/assess_representativeness.py` — representativeness assessment
-- `scripts/assess_analytical_readiness.py` — analytical track readiness assessment
-- `outputs/canonical_profile.json` — canonical profile
-- `outputs/quality_assessment.json` — quality assessment
-- `outputs/representativeness_assessment.json` — representativeness assessment
-- `outputs/analytical_readiness.json` — analytical readiness assessment
-- `notebooks/01_canonical_data_validation_and_readiness.ipynb` — reproducible validation and readiness notebook
-
-## Analytical Readiness
-
-Primary analytical archetype:
-
-**Structured event / transactional CRM records**
-
-Primary analytical track:
+## Approved Analytical Track
 
 **Track A — Comparative Intelligence**
 
-Supporting track:
+## Canonical Input
 
-**Track H — Text & Theme Intelligence**
+`data/canonical/intelligence_data.csv`
 
-Predictive intelligence is not supported by the current dataset because of the limited synthetic sample, limited historical depth, and insufficient evidence for predictive validation.
+Data version: `phase3-v1.0.0`
 
-## Important Limitations
+The analytical implementation uses only the approved canonical dataset.
 
-- The dataset contains 20 synthetic CRM records.
-- Operational population coverage has not been established.
-- No sampling reduction was performed; the full supplied dataset was retained.
-- Geographic coordinates are unavailable.
-- The source currency is unspecified.
-- Text coverage is limited.
-- Predictive intelligence is not justified by the current evidence.
+## Analytical Question
 
-## Evidence
+> Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?
 
-The detailed evidence is documented in:
+## Decision Supported
 
-- `../docs/CANONICAL_DATA_PROFILE.md`
-- `../docs/DATA_QUALITY_ASSESSMENT.md`
-- `../docs/REPRESENTATIVENESS_ASSESSMENT.md`
-- `../docs/DATA_ARCHETYPE_CONFIRMATION.md`
-- `../docs/ANALYTICAL_READINESS_REPORT.md`
+> Use descriptive evidence to identify where recovery attention may be concentrated.
+
+## Method
+
+The primary comparison is performed at the `category` level.
+
+For each category meeting the minimum group size of 3 records, the method calculates:
+
+- Record count
+- Total deal value
+- Average deal value
+- Percentage contribution to total observed deal value
+- Deterministic priority rank
+
+Ranking:
+
+1. Total deal value descending
+2. Category name ascending as the tie-break
+
+Descriptive comparisons are also generated for subcategory, status, and stage within the same approved comparative track.
+
+## Execution Scripts
+
+### Analytical execution
+
+`python3 data-science/scripts/run_comparative_intelligence.py`
+
+Generates: `data-science/outputs/comparative_intelligence.json`
+
+### Validation
+
+`python3 data-science/scripts/validate_analytical_track.py`
+
+Generates: `data-science/outputs/validation_metrics.json`
+
+### Weak-case review
+
+`python3 data-science/scripts/review_weak_cases.py`
+
+Generates: `data-science/outputs/weak_case_review.json`
+
+### Intelligence export
+
+`python3 data-science/scripts/export_intelligence_results.py`
+
+Generates:
+- `data-science/outputs/intelligence_results.json`
+- `data-science/outputs/intelligence_summary.json`
+
+## Validation
+
+The analytical track independently recalculates the category results from the canonical CSV.
+
+Validated checks include:
+
+- Data version
+- Record count
+- Group count
+- Calculation accuracy
+- Contribution total
+- Ranking sequence
+- Deterministic ranking
+- Minimum-size group identification
+
+Current validation result: **PASSED**
+
+Rounded contribution percentages total **100.01%**, within the defined tolerance.
+
+## Weak Cases
+
+The following categories are at the minimum group-size threshold:
+
+- Timing — 3 records
+- Budget — 3 records
+
+The highest-value record is `CRM-012` — `1,250,000`.
+
+## Output Files
+
+- `outputs/comparative_intelligence.json`
+- `outputs/validation_metrics.json`
+- `outputs/weak_case_review.json`
+- `outputs/intelligence_results.json`
+- `outputs/intelligence_summary.json`
+
+## Interpretation Boundary
+
+The output is descriptive intelligence from the supplied synthetic canonical sample.
+
+It does not provide causal conclusions, predictive recovery probabilities, forecasts, machine-learning predictions, or population-wide estimates.
+
+## Reproducibility
+
+All analytical scripts use repository-relative paths.
+
+The canonical dataset is the only analytical input.
+
+Outputs are generated by code and must not be manually edited.
+
+Method version: `1.0.0`
+
+Canonical data version: `phase3-v1.0.0`

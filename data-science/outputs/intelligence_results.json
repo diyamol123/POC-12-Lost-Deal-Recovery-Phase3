@@ -1,0 +1,157 @@
+[
+  {
+    "result_id": "POC12-CAT-01",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Price",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 4660000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_1",
+    "priority_rank": 1,
+    "finding": "Price ranks 1 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 5,
+      "average_deal_value": 932000.0,
+      "contribution_pct": 40.15510555794916,
+      "record_ids": [
+        "CRM-001",
+        "CRM-005",
+        "CRM-012",
+        "CRM-016",
+        "CRM-020"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T13:50:30Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-02",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Competitor",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 3435000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_2",
+    "priority_rank": 2,
+    "finding": "Competitor ranks 2 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 5,
+      "average_deal_value": 687000.0,
+      "contribution_pct": 29.59931064196467,
+      "record_ids": [
+        "CRM-002",
+        "CRM-007",
+        "CRM-009",
+        "CRM-014",
+        "CRM-018"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T13:50:30Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-03",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Product Fit",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 1440000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_3",
+    "priority_rank": 3,
+    "finding": "Product Fit ranks 3 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 4,
+      "average_deal_value": 360000.0,
+      "contribution_pct": 12.408444635932787,
+      "record_ids": [
+        "CRM-003",
+        "CRM-008",
+        "CRM-013",
+        "CRM-019"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T13:50:30Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-04",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Timing",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 1040000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_4",
+    "priority_rank": 4,
+    "finding": "Timing ranks 4 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 3,
+      "average_deal_value": 346666.6666666667,
+      "contribution_pct": 8.96165445928479,
+      "record_ids": [
+        "CRM-004",
+        "CRM-010",
+        "CRM-015"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T13:50:30Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-05",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Budget",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 1030000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_5",
+    "priority_rank": 5,
+    "finding": "Budget ranks 5 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 3,
+      "average_deal_value": 343333.3333333333,
+      "contribution_pct": 8.875484704868592,
+      "record_ids": [
+        "CRM-006",
+        "CRM-011",
+        "CRM-017"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T13:50:30Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  }
+]
