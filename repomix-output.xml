@@ -142,2400 +142,6 @@ vercel.json
 <files>
 This section contains the contents of the repository's files.
 
-<file path="data-science/notebooks/02_analytical_track_development_and_validation.ipynb">
-{
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "# Track A \u2014 Analytical Track Development & Validation\n",
-        "\n",
-        "POC-12 \u2014 Lost Deal Reason & Recovery Intelligence\n",
-        "\n",
-        "Approved track: Track A \u2014 Comparative Intelligence\n",
-        "\n",
-        "Canonical data version: `phase3-v1.0.0`\n",
-        "\n",
-        "Method version: `1.0.0`"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {},
-      "outputs": [],
-      "source": [
-        "from pathlib import Path\n",
-        "import json\n",
-        "import sys\n",
-        "\n",
-        "ROOT = Path.cwd().resolve()\n",
-        "if ROOT.name != \"POC-12-Lost-Deal-Recovery-Phase3\":\n",
-        "    ROOT = Path.cwd().resolve()\n",
-        "\n",
-        "print(\"Workspace:\", ROOT)\n",
-        "print(\"Canonical input:\", ROOT / \"data/canonical/intelligence_data.csv\")"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "## 1. Canonical input\n",
-        "\n",
-        "The analysis uses only `data/canonical/intelligence_data.csv`."
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {},
-      "outputs": [],
-      "source": [
-        "import csv\n",
-        "\n",
-        "input_path = ROOT / \"data/canonical/intelligence_data.csv\"\n",
-        "with input_path.open(newline=\"\", encoding=\"utf-8\") as f:\n",
-        "    rows = list(csv.DictReader(f))\n",
-        "\n",
-        "print(\"Records:\", len(rows))\n",
-        "print(\"Data version:\", sorted(set(r[\"data_version\"] for r in rows)))"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "## 2. Approved method\n",
-        "\n",
-        "Primary dimension: `category`\n",
-        "\n",
-        "Minimum group size: 3\n",
-        "\n",
-        "Measures: record count, total deal value, average deal value, percentage contribution, and deterministic rank."
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {},
-      "outputs": [],
-      "source": [
-        "import subprocess\n",
-        "\n",
-        "result = subprocess.run([sys.executable, \"data-science/scripts/run_analytical_track.py\"], capture_output=True, text=True)\n",
-        "print(result.stdout)\n",
-        "if result.returncode != 0:\n",
-        "    print(result.stderr)\n",
-        "    raise SystemExit(result.returncode)"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "## 3. Validation\n",
-        "\n",
-        "Validation independently recalculates the category results from the canonical CSV."
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {},
-      "outputs": [],
-      "source": [
-        "result = subprocess.run([sys.executable, \"data-science/scripts/validate_analytical_track.py\"], capture_output=True, text=True)\n",
-        "print(result.stdout)\n",
-        "if result.returncode != 0:\n",
-        "    print(result.stderr)\n",
-        "    raise SystemExit(result.returncode)"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "## 4. Weak-case review and export"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {},
-      "outputs": [],
-      "source": [
-        "for script in [\"review_weak_cases.py\", \"export_intelligence_results.py\"]:\n",
-        "    result = subprocess.run([sys.executable, f\"data-science/scripts/{script}\"], capture_output=True, text=True)\n",
-        "    print(result.stdout)\n",
-        "    if result.returncode != 0:\n",
-        "        print(result.stderr)\n",
-        "        raise SystemExit(result.returncode)"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "## 5. Evidence check"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {},
-      "outputs": [],
-      "source": [
-        "output_files = [\n",
-        "    \"data-science/outputs/comparative_intelligence.json\",\n",
-        "    \"data-science/outputs/validation_metrics.json\",\n",
-        "    \"data-science/outputs/weak_case_review.json\",\n",
-        "    \"data-science/outputs/intelligence_results.json\",\n",
-        "    \"data-science/outputs/intelligence_summary.json\",\n",
-        "]\n",
-        "\n",
-        "for name in output_files:\n",
-        "    path = ROOT / name\n",
-        "    print(name, \"->\", \"PRESENT\" if path.exists() else \"MISSING\")\n",
-        "\n",
-        "validation = json.loads((ROOT / \"data-science/outputs/validation_metrics.json\").read_text())\n",
-        "print(\"Validation passed:\", validation[\"passed\"])\n",
-        "print(\"Contribution total:\", validation[\"total_contribution_percent\"], \"%\")"
-      ]
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "## Conclusion\n",
-        "\n",
-        "The notebook executes the approved Track A method, validates the generated calculations, reviews weak cases, and regenerates the standard intelligence outputs from the canonical dataset."
-      ]
-    }
-  ],
-  "metadata": {
-    "kernelspec": {
-      "display_name": "Python 3",
-      "language": "python",
-      "name": "python3"
-    },
-    "language_info": {
-      "name": "python",
-      "version": "3.x"
-    }
-  },
-  "nbformat": 4,
-  "nbformat_minor": 5
-}
-</file>
-
-<file path="data-science/outputs/baseline_results.json">
-{
-  "baseline_name": "overall_mean_and_total",
-  "baseline_record_count": 20,
-  "baseline_total_value": 11605000.0,
-  "baseline_average_value": 580250.0,
-  "baseline_unit": "currency_unspecified",
-  "data_version": "phase3-v1.0.0",
-  "method_version": "1.0.0",
-  "generated_at": "2026-10-03T13:50:29.777336+00:00"
-}
-</file>
-
-<file path="data-science/outputs/comparative_intelligence.json">
-{
-  "data_version": "phase3-v1.0.0",
-  "method_version": "1.0.0",
-  "primary_dimension": "category",
-  "minimum_group_size": 3,
-  "baseline": {
-    "baseline_name": "overall_mean_and_total",
-    "baseline_record_count": 20,
-    "baseline_total_value": 11605000.0,
-    "baseline_average_value": 580250.0,
-    "baseline_unit": "currency_unspecified",
-    "data_version": "phase3-v1.0.0",
-    "method_version": "1.0.0",
-    "generated_at": "2026-10-03T13:50:29.777336+00:00"
-  },
-  "groups": [
-    {
-      "group_key": "Price",
-      "record_count": 5,
-      "total_value": 4660000.0,
-      "average_value": 932000.0,
-      "contribution_pct": 40.15510555794916,
-      "priority_rank": 1,
-      "baseline_comparison": "above_overall_average",
-      "record_ids": [
-        "CRM-001",
-        "CRM-005",
-        "CRM-012",
-        "CRM-016",
-        "CRM-020"
-      ]
-    },
-    {
-      "group_key": "Competitor",
-      "record_count": 5,
-      "total_value": 3435000.0,
-      "average_value": 687000.0,
-      "contribution_pct": 29.59931064196467,
-      "priority_rank": 2,
-      "baseline_comparison": "above_overall_average",
-      "record_ids": [
-        "CRM-002",
-        "CRM-007",
-        "CRM-009",
-        "CRM-014",
-        "CRM-018"
-      ]
-    },
-    {
-      "group_key": "Product Fit",
-      "record_count": 4,
-      "total_value": 1440000.0,
-      "average_value": 360000.0,
-      "contribution_pct": 12.408444635932787,
-      "priority_rank": 3,
-      "baseline_comparison": "at_or_below_overall_average",
-      "record_ids": [
-        "CRM-003",
-        "CRM-008",
-        "CRM-013",
-        "CRM-019"
-      ]
-    },
-    {
-      "group_key": "Timing",
-      "record_count": 3,
-      "total_value": 1040000.0,
-      "average_value": 346666.6666666667,
-      "contribution_pct": 8.96165445928479,
-      "priority_rank": 4,
-      "baseline_comparison": "at_or_below_overall_average",
-      "record_ids": [
-        "CRM-004",
-        "CRM-010",
-        "CRM-015"
-      ]
-    },
-    {
-      "group_key": "Budget",
-      "record_count": 3,
-      "total_value": 1030000.0,
-      "average_value": 343333.3333333333,
-      "contribution_pct": 8.875484704868592,
-      "priority_rank": 5,
-      "baseline_comparison": "at_or_below_overall_average",
-      "record_ids": [
-        "CRM-006",
-        "CRM-011",
-        "CRM-017"
-      ]
-    }
-  ],
-  "generated_at": "2026-10-03T13:50:29.783170+00:00"
-}
-</file>
-
-<file path="data-science/outputs/intelligence_results.json">
-[
-  {
-    "result_id": "POC12-CAT-01",
-    "result_type": "comparative_group",
-    "record_id": null,
-    "entity_id": null,
-    "group_key": "Price",
-    "period_start": null,
-    "period_end": null,
-    "metric_name": "total_deal_value",
-    "result_value": 4660000.0,
-    "result_unit": "currency_unspecified",
-    "result_category": "rank_1",
-    "priority_rank": 1,
-    "finding": "Price ranks 1 by total deal value among categories meeting the minimum group-size threshold.",
-    "evidence": {
-      "record_count": 5,
-      "average_deal_value": 932000.0,
-      "contribution_pct": 40.15510555794916,
-      "record_ids": [
-        "CRM-001",
-        "CRM-005",
-        "CRM-012",
-        "CRM-016",
-        "CRM-020"
-      ]
-    },
-    "method_version": "1.0.0",
-    "data_version": "phase3-v1.0.0",
-    "generated_at": "2026-10-03T13:50:30Z",
-    "quality_status": "validated",
-    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
-  },
-  {
-    "result_id": "POC12-CAT-02",
-    "result_type": "comparative_group",
-    "record_id": null,
-    "entity_id": null,
-    "group_key": "Competitor",
-    "period_start": null,
-    "period_end": null,
-    "metric_name": "total_deal_value",
-    "result_value": 3435000.0,
-    "result_unit": "currency_unspecified",
-    "result_category": "rank_2",
-    "priority_rank": 2,
-    "finding": "Competitor ranks 2 by total deal value among categories meeting the minimum group-size threshold.",
-    "evidence": {
-      "record_count": 5,
-      "average_deal_value": 687000.0,
-      "contribution_pct": 29.59931064196467,
-      "record_ids": [
-        "CRM-002",
-        "CRM-007",
-        "CRM-009",
-        "CRM-014",
-        "CRM-018"
-      ]
-    },
-    "method_version": "1.0.0",
-    "data_version": "phase3-v1.0.0",
-    "generated_at": "2026-10-03T13:50:30Z",
-    "quality_status": "validated",
-    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
-  },
-  {
-    "result_id": "POC12-CAT-03",
-    "result_type": "comparative_group",
-    "record_id": null,
-    "entity_id": null,
-    "group_key": "Product Fit",
-    "period_start": null,
-    "period_end": null,
-    "metric_name": "total_deal_value",
-    "result_value": 1440000.0,
-    "result_unit": "currency_unspecified",
-    "result_category": "rank_3",
-    "priority_rank": 3,
-    "finding": "Product Fit ranks 3 by total deal value among categories meeting the minimum group-size threshold.",
-    "evidence": {
-      "record_count": 4,
-      "average_deal_value": 360000.0,
-      "contribution_pct": 12.408444635932787,
-      "record_ids": [
-        "CRM-003",
-        "CRM-008",
-        "CRM-013",
-        "CRM-019"
-      ]
-    },
-    "method_version": "1.0.0",
-    "data_version": "phase3-v1.0.0",
-    "generated_at": "2026-10-03T13:50:30Z",
-    "quality_status": "validated",
-    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
-  },
-  {
-    "result_id": "POC12-CAT-04",
-    "result_type": "comparative_group",
-    "record_id": null,
-    "entity_id": null,
-    "group_key": "Timing",
-    "period_start": null,
-    "period_end": null,
-    "metric_name": "total_deal_value",
-    "result_value": 1040000.0,
-    "result_unit": "currency_unspecified",
-    "result_category": "rank_4",
-    "priority_rank": 4,
-    "finding": "Timing ranks 4 by total deal value among categories meeting the minimum group-size threshold.",
-    "evidence": {
-      "record_count": 3,
-      "average_deal_value": 346666.6666666667,
-      "contribution_pct": 8.96165445928479,
-      "record_ids": [
-        "CRM-004",
-        "CRM-010",
-        "CRM-015"
-      ]
-    },
-    "method_version": "1.0.0",
-    "data_version": "phase3-v1.0.0",
-    "generated_at": "2026-10-03T13:50:30Z",
-    "quality_status": "validated",
-    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
-  },
-  {
-    "result_id": "POC12-CAT-05",
-    "result_type": "comparative_group",
-    "record_id": null,
-    "entity_id": null,
-    "group_key": "Budget",
-    "period_start": null,
-    "period_end": null,
-    "metric_name": "total_deal_value",
-    "result_value": 1030000.0,
-    "result_unit": "currency_unspecified",
-    "result_category": "rank_5",
-    "priority_rank": 5,
-    "finding": "Budget ranks 5 by total deal value among categories meeting the minimum group-size threshold.",
-    "evidence": {
-      "record_count": 3,
-      "average_deal_value": 343333.3333333333,
-      "contribution_pct": 8.875484704868592,
-      "record_ids": [
-        "CRM-006",
-        "CRM-011",
-        "CRM-017"
-      ]
-    },
-    "method_version": "1.0.0",
-    "data_version": "phase3-v1.0.0",
-    "generated_at": "2026-10-03T13:50:30Z",
-    "quality_status": "validated",
-    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
-  }
-]
-</file>
-
-<file path="data-science/outputs/intelligence_summary.json">
-{
-  "project_id": "POC-12",
-  "project_title": "Lost Deal Reason & Recovery Intelligence",
-  "approved_track": "Track A \u2014 Comparative Intelligence",
-  "primary_question": "Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?",
-  "decision": "Use descriptive evidence to identify where recovery attention may be concentrated.",
-  "data_version": "phase3-v1.0.0",
-  "method_version": "1.0.0",
-  "result_count": 5,
-  "key_findings": [
-    "Price ranks 1 by total deal value, with 40.16% of the observed total.",
-    "Competitor ranks 2 by total deal value, with 29.60% of the observed total.",
-    "Product Fit ranks 3 by total deal value, with 12.41% of the observed total.",
-    "Timing ranks 4 by total deal value, with 8.96% of the observed total.",
-    "Budget ranks 5 by total deal value, with 8.88% of the observed total."
-  ],
-  "priority_items": [
-    {
-      "priority_rank": 1,
-      "group_key": "Price",
-      "total_value": 4660000.0,
-      "contribution_pct": 40.15510555794916
-    },
-    {
-      "priority_rank": 2,
-      "group_key": "Competitor",
-      "total_value": 3435000.0,
-      "contribution_pct": 29.59931064196467
-    },
-    {
-      "priority_rank": 3,
-      "group_key": "Product Fit",
-      "total_value": 1440000.0,
-      "contribution_pct": 12.408444635932787
-    },
-    {
-      "priority_rank": 4,
-      "group_key": "Timing",
-      "total_value": 1040000.0,
-      "contribution_pct": 8.96165445928479
-    },
-    {
-      "priority_rank": 5,
-      "group_key": "Budget",
-      "total_value": 1030000.0,
-      "contribution_pct": 8.875484704868592
-    }
-  ],
-  "validation_result": {
-    "passed": true,
-    "contribution_total_percent": 100.0,
-    "small_groups_at_threshold": [
-      "Timing",
-      "Budget"
-    ]
-  },
-  "weak_case_review": {
-    "minimum_size_cases": 2,
-    "highest_value_record": {
-      "record_id": "CRM-012",
-      "category": "Price",
-      "metric_value": 1250000.0,
-      "assessment": "This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis."
-    }
-  },
-  "important_limitations": [
-    "The analysis uses 20 synthetic canonical records.",
-    "Currency is unspecified.",
-    "Timing and Budget contain only three records each.",
-    "The sample may not represent the complete operational population.",
-    "Results are descriptive and do not establish causality."
-  ],
-  "generated_at": "2026-10-03T13:50:30Z"
-}
-</file>
-
-<file path="data-science/outputs/validation_metrics.json">
-{
-  "approved_track": "Track A \u2014 Comparative Intelligence",
-  "data_version": "phase3-v1.0.0",
-  "method_version": "1.0.0",
-  "validation_result": "PASS",
-  "passed": true,
-  "record_count": 20,
-  "primary_group_count": 5,
-  "minimum_group_size": 3,
-  "contribution_total_percent": 100.0,
-  "small_groups_at_threshold": [
-    "Timing",
-    "Budget"
-  ],
-  "baseline": {
-    "total_value": 11605000.0,
-    "average_value": 580250.0
-  },
-  "checks": {
-    "data_version": true,
-    "method_version": true,
-    "record_count": true,
-    "minimum_group_size": true,
-    "group_count": true,
-    "calculation_accuracy": true,
-    "ranking_accuracy": true,
-    "sequential_ranking": true,
-    "deterministic_tie_handling": true,
-    "contribution_total": true,
-    "baseline_total": true,
-    "baseline_average": true,
-    "small_group_review_identified": true
-  }
-}
-</file>
-
-<file path="data-science/outputs/weak_case_review.json">
-{
-  "review_type": "weak_case_and_limitation_review",
-  "data_version": "phase3-v1.0.0",
-  "minimum_group_size": 3,
-  "weak_cases": [
-    {
-      "case_type": "minimum_group_size",
-      "category": "Timing",
-      "record_count": 3,
-      "assessment": "Ranking is included because the group meets the minimum threshold, but the estimate is more sensitive to individual records than larger groups."
-    },
-    {
-      "case_type": "minimum_group_size",
-      "category": "Budget",
-      "record_count": 3,
-      "assessment": "Ranking is included because the group meets the minimum threshold, but the estimate is more sensitive to individual records than larger groups."
-    }
-  ],
-  "leave_one_out_sensitivity": [
-    {
-      "category": "Price",
-      "tested": true,
-      "reason": "Leave-one-out sensitivity test performed.",
-      "baseline_ranking": [
-        "Price",
-        "Competitor",
-        "Product Fit",
-        "Timing",
-        "Budget"
-      ],
-      "rank_changes": [
-        {
-          "removed_record_id": "CRM-012",
-          "removed_value": 1250000.0,
-          "ranking_after_removal": [
-            "Competitor",
-            "Price",
-            "Product Fit",
-            "Timing",
-            "Budget"
-          ]
-        }
-      ]
-    },
-    {
-      "category": "Competitor",
-      "tested": true,
-      "reason": "Leave-one-out sensitivity test performed.",
-      "baseline_ranking": [
-        "Price",
-        "Competitor",
-        "Product Fit",
-        "Timing",
-        "Budget"
-      ],
-      "rank_changes": []
-    },
-    {
-      "category": "Product Fit",
-      "tested": true,
-      "reason": "Leave-one-out sensitivity test performed.",
-      "baseline_ranking": [
-        "Price",
-        "Competitor",
-        "Product Fit",
-        "Timing",
-        "Budget"
-      ],
-      "rank_changes": [
-        {
-          "removed_record_id": "CRM-013",
-          "removed_value": 410000.0,
-          "ranking_after_removal": [
-            "Price",
-            "Competitor",
-            "Timing",
-            "Budget",
-            "Product Fit"
-          ]
-        },
-        {
-          "removed_record_id": "CRM-019",
-          "removed_value": 520000.0,
-          "ranking_after_removal": [
-            "Price",
-            "Competitor",
-            "Timing",
-            "Budget",
-            "Product Fit"
-          ]
-        }
-      ]
-    },
-    {
-      "category": "Timing",
-      "tested": true,
-      "reason": "Group is at the minimum sample-size threshold.",
-      "rank_changes": []
-    },
-    {
-      "category": "Budget",
-      "tested": true,
-      "reason": "Group is at the minimum sample-size threshold.",
-      "rank_changes": []
-    }
-  ],
-  "highest_value_record_review": {
-    "record_id": "CRM-012",
-    "category": "Price",
-    "metric_value": 1250000.0,
-    "assessment": "This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis."
-  },
-  "overall_assessment": "Comparative ranking is usable for descriptive analysis of the canonical sample, with caution for minimum-size groups and potential influence from extreme deal values.",
-  "limitations": [
-    "The canonical dataset contains only 20 synthetic records.",
-    "Minimum-size groups have only three records.",
-    "The supplied sample may not represent the full operational population.",
-    "Observed ranking should not be interpreted as causal evidence.",
-    "Currency is unspecified in the canonical data."
-  ]
-}
-</file>
-
-<file path="data-science/scripts/track-specific/comparative_intelligence.py">
-from pathlib import Path
-import json
-from datetime import datetime, timezone
-
-import pandas as pd
-
-DATA_VERSION = "phase3-v1.0.0"
-METHOD_VERSION = "1.0.0"
-MIN_GROUP_SIZE = 3
-PRIMARY_DIMENSION = "category"
-
-ROOT = Path(__file__).resolve().parents[3]
-CANONICAL_PATH = ROOT / "data" / "canonical" / "intelligence_data.csv"
-OUTPUT_DIR = ROOT / "data-science" / "outputs"
-
-def load_canonical():
-    df = pd.read_csv(CANONICAL_PATH)
-
-    if "data_version" not in df.columns:
-        raise ValueError("Canonical data_version field is missing.")
-
-    versions = set(df["data_version"].dropna().astype(str))
-    if versions != {DATA_VERSION}:
-        raise ValueError(f"Unexpected data versions: {sorted(versions)}")
-
-    if "metric_name" not in df.columns:
-        raise ValueError("metric_name field is missing.")
-
-    metric_names = set(df["metric_name"].dropna().astype(str))
-    if metric_names != {"deal_value"}:
-        raise ValueError(f"Unexpected metric names: {sorted(metric_names)}")
-
-    return df
-
-
-def execute_baseline(df):
-    usable = df.dropna(subset=["metric_value"]).copy()
-
-    total = float(usable["metric_value"].sum())
-    count = int(len(usable))
-    average = float(usable["metric_value"].mean())
-
-    baseline = {
-        "baseline_name": "overall_mean_and_total",
-        "baseline_record_count": count,
-        "baseline_total_value": total,
-        "baseline_average_value": average,
-        "baseline_unit": "currency_unspecified",
-        "data_version": DATA_VERSION,
-        "method_version": METHOD_VERSION,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-    }
-
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUTPUT_DIR / "baseline_results.json").write_text(
-        json.dumps(baseline, indent=2),
-        encoding="utf-8",
-    )
-
-    return baseline
-
-
-def execute_comparative_method(df, baseline):
-    grouped = (
-        df.dropna(subset=[PRIMARY_DIMENSION, "metric_value"])
-        .groupby(PRIMARY_DIMENSION, as_index=False)
-        .agg(
-            record_count=("record_id", "count"),
-            total_value=("metric_value", "sum"),
-            average_value=("metric_value", "mean"),
-            record_ids=("record_id", list),
-        )
-    )
-
-    grouped = grouped[grouped["record_count"] >= MIN_GROUP_SIZE].copy()
-
-    if grouped.empty:
-        raise ValueError("No primary groups meet the minimum group size.")
-
-    total_all = float(grouped["total_value"].sum())
-
-    grouped["contribution_pct"] = (
-        grouped["total_value"] / total_all * 100
-    )
-
-    grouped = grouped.sort_values(
-        by=["total_value", PRIMARY_DIMENSION],
-        ascending=[False, True],
-        kind="mergesort",
-    ).reset_index(drop=True)
-
-    grouped["priority_rank"] = grouped.index + 1
-
-    baseline_average = baseline["baseline_average_value"]
-
-    results = []
-    for _, row in grouped.iterrows():
-        comparison = (
-            "above_overall_average"
-            if row["average_value"] > baseline_average
-            else "at_or_below_overall_average"
-        )
-
-        results.append(
-            {
-                "group_key": str(row[PRIMARY_DIMENSION]),
-                "record_count": int(row["record_count"]),
-                "total_value": float(row["total_value"]),
-                "average_value": float(row["average_value"]),
-                "contribution_pct": float(row["contribution_pct"]),
-                "priority_rank": int(row["priority_rank"]),
-                "baseline_comparison": comparison,
-                "record_ids": [str(x) for x in row["record_ids"]],
-            }
-        )
-
-    output = {
-        "data_version": DATA_VERSION,
-        "method_version": METHOD_VERSION,
-        "primary_dimension": PRIMARY_DIMENSION,
-        "minimum_group_size": MIN_GROUP_SIZE,
-        "baseline": baseline,
-        "groups": results,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-    }
-
-    (OUTPUT_DIR / "comparative_intelligence.json").write_text(
-        json.dumps(output, indent=2),
-        encoding="utf-8",
-    )
-
-    return output
-
-
-def run():
-    df = load_canonical()
-    baseline = execute_baseline(df)
-    output = execute_comparative_method(df, baseline)
-
-    print("ANALYTICAL TRACK GENERATED")
-    print("Track: Track A — Comparative Intelligence")
-    print(f"Records: {len(df)}")
-    print(f"Primary groups included: {len(output['groups'])}")
-    print(f"Baseline average: {baseline['baseline_average_value']}")
-    print(f"Baseline total: {baseline['baseline_total_value']}")
-    print(
-        "Output: "
-        + str(OUTPUT_DIR / "comparative_intelligence.json")
-    )
-    print(
-        "Baseline output: "
-        + str(OUTPUT_DIR / "baseline_results.json")
-    )
-
-
-if __name__ == "__main__":
-    run()
-</file>
-
-<file path="data-science/scripts/export_intelligence_results.py">
-import csv
-import json
-from datetime import datetime
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parents[2]
-
-INPUT = BASE_DIR / "data/canonical/intelligence_data.csv"
-ANALYTICAL = BASE_DIR / "data-science/outputs/comparative_intelligence.json"
-VALIDATION = BASE_DIR / "data-science/outputs/validation_metrics.json"
-WEAK_CASE = BASE_DIR / "data-science/outputs/weak_case_review.json"
-
-RESULTS = BASE_DIR / "data-science/outputs/intelligence_results.json"
-SUMMARY = BASE_DIR / "data-science/outputs/intelligence_summary.json"
-
-DATA_VERSION = "phase3-v1.0.0"
-METHOD_VERSION = "1.0.0"
-
-
-def load_rows():
-    with INPUT.open(newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
-
-
-def main():
-    rows = load_rows()
-
-    with ANALYTICAL.open(encoding="utf-8") as f:
-        analytical = json.load(f)
-
-    with VALIDATION.open(encoding="utf-8") as f:
-        validation = json.load(f)
-
-    with WEAK_CASE.open(encoding="utf-8") as f:
-        weak_case = json.load(f)
-
-    if analytical["data_version"] != DATA_VERSION:
-        raise ValueError("Analytical result has the wrong data version.")
-
-    if not validation["passed"]:
-        raise ValueError("Validation has not passed.")
-
-    generated_at = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
-
-    results = []
-
-    for group in analytical["groups"]:
-        results.append(
-            {
-                "result_id": f"POC12-CAT-{group['priority_rank']:02d}",
-                "result_type": "comparative_group",
-                "record_id": None,
-                "entity_id": None,
-                "group_key": group["group_key"],
-                "period_start": None,
-                "period_end": None,
-                "metric_name": "total_deal_value",
-                "result_value": group["total_value"],
-                "result_unit": "currency_unspecified",
-                "result_category": f"rank_{group['priority_rank']}",
-                "priority_rank": group["priority_rank"],
-                "finding": (
-                    f"{group['group_key']} ranks {group['priority_rank']} by total "
-                    f"deal value among categories meeting the minimum "
-                    f"group-size threshold."
-                ),
-                "evidence": {
-                    "record_count": group["record_count"],
-                    "average_deal_value": group["average_value"],
-                    "contribution_pct": group[
-                        "contribution_pct"
-                    ],
-                    "record_ids": group["record_ids"],
-                },
-                "method_version": METHOD_VERSION,
-                "data_version": DATA_VERSION,
-                "generated_at": generated_at,
-                "quality_status": "validated",
-                "limitation": (
-                    "Descriptive result from the supplied synthetic "
-                    "canonical sample; not causal evidence."
-                ),
-            }
-        )
-
-    with RESULTS.open("w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2)
-
-    priority_items = [
-        {
-            "priority_rank": item["priority_rank"],
-            "group_key": item["group_key"],
-            "total_value": item["total_value"],
-            "contribution_pct": item[
-                "contribution_pct"
-            ],
-        }
-        for item in analytical["groups"]
-    ]
-
-    summary = {
-        "project_id": "POC-12",
-        "project_title": "Lost Deal Reason & Recovery Intelligence",
-        "approved_track": "Track A — Comparative Intelligence",
-        "primary_question": (
-            "Which lost-deal categories, stages, statuses, and "
-            "deal-value patterns are most important for understanding "
-            "where recovery opportunities exist?"
-        ),
-        "decision": (
-            "Use descriptive evidence to identify where recovery "
-            "attention may be concentrated."
-        ),
-        "data_version": DATA_VERSION,
-        "method_version": METHOD_VERSION,
-        "result_count": len(results),
-        "key_findings": [
-            (
-                f"{item['group_key']} ranks {item['priority_rank']} by total deal value, "
-                f"with {item['contribution_pct']:.2f}% of the "
-                "observed total."
-            )
-            for item in analytical["groups"]
-        ],
-        "priority_items": priority_items,
-        "validation_result": {
-            "passed": validation["passed"],
-            "contribution_total_percent": validation[
-                "contribution_total_percent"
-            ],
-            "small_groups_at_threshold": validation[
-                "small_groups_at_threshold"
-            ],
-        },
-        "weak_case_review": {
-            "minimum_size_cases": len(weak_case["weak_cases"]),
-            "highest_value_record": weak_case[
-                "highest_value_record_review"
-            ],
-        },
-        "important_limitations": [
-            "The analysis uses 20 synthetic canonical records.",
-            "Currency is unspecified.",
-            "Timing and Budget contain only three records each.",
-            "The sample may not represent the complete operational population.",
-            "Results are descriptive and do not establish causality.",
-        ],
-        "generated_at": generated_at,
-    }
-
-    with SUMMARY.open("w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
-
-    print("INTELLIGENCE RESULTS EXPORTED")
-    print(f"Results: {len(results)}")
-    print(f"Validation passed: {validation['passed']}")
-    print(f"Results output: {RESULTS}")
-    print(f"Summary output: {SUMMARY}")
-
-
-if __name__ == "__main__":
-    main()
-</file>
-
-<file path="data-science/scripts/review_weak_cases.py">
-import csv
-import json
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parents[2]
-
-INPUT = BASE_DIR / "data/canonical/intelligence_data.csv"
-RESULTS = BASE_DIR / "data-science/outputs/comparative_intelligence.json"
-OUTPUT = BASE_DIR / "data-science/outputs/weak_case_review.json"
-
-MIN_GROUP_SIZE = 3
-DATA_VERSION = "phase3-v1.0.0"
-
-
-def load_rows():
-    with INPUT.open(newline="", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
-
-    for row in rows:
-        row["metric_value"] = float(row["metric_value"])
-
-    return rows
-
-
-def leave_one_out_sensitivity(rows, category):
-    members = [
-        row for row in rows
-        if row["category"].strip() == category
-    ]
-
-    if len(members) <= MIN_GROUP_SIZE:
-        return {
-            "category": category,
-            "tested": True,
-            "reason": "Group is at the minimum sample-size threshold.",
-            "rank_changes": [],
-        }
-
-    baseline_totals = {}
-
-    for row in rows:
-        key = row["category"].strip()
-        baseline_totals.setdefault(key, 0.0)
-        baseline_totals[key] += row["metric_value"]
-
-    baseline_order = [
-        key
-        for key, _ in sorted(
-            baseline_totals.items(),
-            key=lambda x: (-x[1], x[0]),
-        )
-    ]
-
-    changes = []
-
-    for removed in members:
-        totals = {}
-
-        for row in rows:
-            if row["record_id"] == removed["record_id"]:
-                continue
-
-            key = row["category"].strip()
-            totals.setdefault(key, 0.0)
-            totals[key] += row["metric_value"]
-
-        order = [
-            key
-            for key, _ in sorted(
-                totals.items(),
-                key=lambda x: (-x[1], x[0]),
-            )
-        ]
-
-        if order != baseline_order:
-            changes.append(
-                {
-                    "removed_record_id": removed["record_id"],
-                    "removed_value": removed["metric_value"],
-                    "ranking_after_removal": order,
-                }
-            )
-
-    return {
-        "category": category,
-        "tested": True,
-        "reason": "Leave-one-out sensitivity test performed.",
-        "baseline_ranking": baseline_order,
-        "rank_changes": changes,
-    }
-
-
-def main():
-    rows = load_rows()
-
-    with RESULTS.open(encoding="utf-8") as f:
-        results = json.load(f)
-
-    groups = results["groups"]
-
-    weak_cases = []
-
-    for group in groups:
-        if group["record_count"] == MIN_GROUP_SIZE:
-            weak_cases.append(
-                {
-                    "case_type": "minimum_group_size",
-                    "category": group["group_key"],
-                    "record_count": group["record_count"],
-                    "assessment": (
-                        "Ranking is included because the group meets the "
-                        "minimum threshold, but the estimate is more sensitive "
-                        "to individual records than larger groups."
-                    ),
-                }
-            )
-
-    sensitivity_reviews = [
-        leave_one_out_sensitivity(rows, group["group_key"])
-        for group in groups
-    ]
-
-    extreme_record = max(
-        rows,
-        key=lambda row: row["metric_value"],
-    )
-
-    review = {
-        "review_type": "weak_case_and_limitation_review",
-        "data_version": DATA_VERSION,
-        "minimum_group_size": MIN_GROUP_SIZE,
-        "weak_cases": weak_cases,
-        "leave_one_out_sensitivity": sensitivity_reviews,
-        "highest_value_record_review": {
-            "record_id": extreme_record["record_id"],
-            "category": extreme_record["category"],
-            "metric_value": extreme_record["metric_value"],
-            "assessment": (
-                "This record is flagged as an extreme-value candidate for "
-                "interpretation because it has the highest deal value in "
-                "the canonical sample. The review does not remove it from "
-                "the primary analysis."
-            ),
-        },
-        "overall_assessment": (
-            "Comparative ranking is usable for descriptive analysis of the "
-            "canonical sample, with caution for minimum-size groups and "
-            "potential influence from extreme deal values."
-        ),
-        "limitations": [
-            "The canonical dataset contains only 20 synthetic records.",
-            "Minimum-size groups have only three records.",
-            "The supplied sample may not represent the full operational population.",
-            "Observed ranking should not be interpreted as causal evidence.",
-            "Currency is unspecified in the canonical data.",
-        ],
-    }
-
-    with OUTPUT.open("w", encoding="utf-8") as f:
-        json.dump(review, f, indent=2)
-
-    print("WEAK-CASE REVIEW GENERATED")
-    print(f"Minimum-size groups reviewed: {len(weak_cases)}")
-    print(
-        "Highest-value record:",
-        extreme_record["record_id"],
-        extreme_record["metric_value"],
-    )
-    print(f"Output: {OUTPUT}")
-
-
-if __name__ == "__main__":
-    main()
-</file>
-
-<file path="data-science/scripts/run_analytical_track.py">
-import sys
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[2]
-TRACK_DIR = ROOT / "data-science" / "scripts" / "track-specific"
-
-if str(TRACK_DIR) not in sys.path:
-    sys.path.insert(0, str(TRACK_DIR))
-
-from comparative_intelligence import run
-
-if __name__ == "__main__":
-    run()
-</file>
-
-<file path="data-science/scripts/run_comparative_intelligence.py">
-from run_analytical_track import run
-
-if __name__ == "__main__":
-    run()
-</file>
-
-<file path="data-science/scripts/validate_analytical_track.py">
-from pathlib import Path
-import json
-import math
-
-import pandas as pd
-
-ROOT = Path(__file__).resolve().parents[2]
-DATA_PATH = ROOT / "data" / "canonical" / "intelligence_data.csv"
-RESULT_PATH = ROOT / "data-science" / "outputs" / "comparative_intelligence.json"
-BASELINE_PATH = ROOT / "data-science" / "outputs" / "baseline_results.json"
-OUTPUT_PATH = ROOT / "data-science" / "outputs" / "validation_metrics.json"
-
-DATA_VERSION = "phase3-v1.0.0"
-METHOD_VERSION = "1.0.0"
-MIN_GROUP_SIZE = 3
-TOLERANCE = 0.1
-
-
-def close(a, b, tolerance=0.01):
-    return math.isclose(float(a), float(b), abs_tol=tolerance, rel_tol=1e-9)
-
-
-def main():
-    df = pd.read_csv(DATA_PATH)
-
-    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
-    baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
-
-    checks = {}
-
-    checks["data_version"] = (
-        set(df["data_version"].dropna().astype(str)) == {DATA_VERSION}
-        and result["data_version"] == DATA_VERSION
-        and baseline["data_version"] == DATA_VERSION
-    )
-
-    checks["method_version"] = (
-        result["method_version"] == METHOD_VERSION
-        and baseline["method_version"] == METHOD_VERSION
-    )
-
-    checks["record_count"] = len(df) == 20
-
-    usable = df.dropna(subset=["category", "metric_value"]).copy()
-
-    expected = (
-        usable.groupby("category")
-        .agg(
-            record_count=("record_id", "count"),
-            total_value=("metric_value", "sum"),
-            average_value=("metric_value", "mean"),
-        )
-        .reset_index()
-    )
-
-    expected = expected[
-        expected["record_count"] >= MIN_GROUP_SIZE
-    ].copy()
-
-    expected["contribution_pct"] = (
-        expected["total_value"]
-        / expected["total_value"].sum()
-        * 100
-    )
-
-    expected = expected.sort_values(
-        ["total_value", "category"],
-        ascending=[False, True],
-        kind="mergesort",
-    ).reset_index(drop=True)
-
-    expected["priority_rank"] = expected.index + 1
-
-    actual = result["groups"]
-
-    checks["minimum_group_size"] = all(
-        item["record_count"] >= MIN_GROUP_SIZE
-        for item in actual
-    )
-
-    checks["group_count"] = len(actual) == len(expected)
-
-    calculation_accuracy = True
-    ranking_accuracy = True
-    deterministic_ties = True
-
-    for _, row in expected.iterrows():
-        matches = [
-            item for item in actual
-            if item["group_key"] == row["category"]
-        ]
-
-        if len(matches) != 1:
-            calculation_accuracy = False
-            ranking_accuracy = False
-            continue
-
-        item = matches[0]
-
-        if not close(item["record_count"], row["record_count"], 0):
-            calculation_accuracy = False
-
-        if not close(item["total_value"], row["total_value"], 0.01):
-            calculation_accuracy = False
-
-        if not close(item["average_value"], row["average_value"], 0.01):
-            calculation_accuracy = False
-
-        if not close(
-            item["contribution_pct"],
-            row["contribution_pct"],
-            0.01,
-        ):
-            calculation_accuracy = False
-
-        if item["priority_rank"] != int(row["priority_rank"]):
-            ranking_accuracy = False
-
-    checks["calculation_accuracy"] = calculation_accuracy
-    checks["ranking_accuracy"] = ranking_accuracy
-
-    ranks = [item["priority_rank"] for item in actual]
-    checks["sequential_ranking"] = ranks == list(range(1, len(actual) + 1))
-
-    sorted_groups = [
-        item["group_key"]
-        for item in sorted(
-            actual,
-            key=lambda x: (-x["total_value"], x["group_key"])
-        )
-    ]
-
-    actual_groups = [item["group_key"] for item in actual]
-    checks["deterministic_tie_handling"] = (
-        actual_groups == sorted_groups
-    )
-
-    contribution_total = sum(
-        item["contribution_pct"] for item in actual
-    )
-
-    checks["contribution_total"] = abs(
-        contribution_total - 100
-    ) <= TOLERANCE
-
-    expected_baseline_total = float(
-        df["metric_value"].dropna().sum()
-    )
-
-    expected_baseline_average = float(
-        df["metric_value"].dropna().mean()
-    )
-
-    checks["baseline_total"] = close(
-        baseline["baseline_total_value"],
-        expected_baseline_total,
-        0.01,
-    )
-
-    checks["baseline_average"] = close(
-        baseline["baseline_average_value"],
-        expected_baseline_average,
-        0.01,
-    )
-
-    small_groups = [
-        item["group_key"]
-        for item in actual
-        if item["record_count"] == MIN_GROUP_SIZE
-    ]
-
-    checks["small_group_review_identified"] = (
-        len(small_groups) > 0
-    )
-
-    passed = all(checks.values())
-
-    validation_output = {
-        "approved_track": "Track A — Comparative Intelligence",
-        "data_version": DATA_VERSION,
-        "method_version": METHOD_VERSION,
-        "validation_result": "PASS" if passed else "CHANGES REQUIRED",
-        "passed": passed,
-        "record_count": len(df),
-        "primary_group_count": len(actual),
-        "minimum_group_size": MIN_GROUP_SIZE,
-        "contribution_total_percent": contribution_total,
-        "small_groups_at_threshold": small_groups,
-        "baseline": {
-            "total_value": baseline["baseline_total_value"],
-            "average_value": baseline["baseline_average_value"],
-        },
-        "checks": checks,
-    }
-
-    OUTPUT_PATH.write_text(
-        json.dumps(validation_output, indent=2),
-        encoding="utf-8",
-    )
-
-    print("ANALYTICAL TRACK VALIDATION COMPLETE")
-    print(f"Passed: {passed}")
-    print(f"Contribution total: {contribution_total:.2f}%")
-    print(f"Small groups at threshold: {small_groups}")
-    print(f"Baseline total: {baseline['baseline_total_value']}")
-    print(f"Baseline average: {baseline['baseline_average_value']}")
-    print(f"Output: {OUTPUT_PATH}")
-
-    if not passed:
-        raise SystemExit(1)
-
-
-if __name__ == "__main__":
-    main()
-</file>
-
-<file path="docs/ANALYTICAL_INPUT_CONTRACT.md">
-# Analytical Input Contract
-
-## Project
-POC-12 — Lost Deal Reason & Recovery Intelligence
-
-## Canonical Data Source
-`data/canonical/intelligence_data.csv`
-
-## Data Version
-`phase3-v1.0.0`
-
-## Approved Analytical Track
-Track A — Comparative Intelligence
-
-| Canonical Field | Analytical Role | Transformation | Required? | Available at Decision Time? | Limitation |
-|---|---|---|---|---|---|
-| record_id | Identifier / evidence field | None | Yes | Yes | Identifier only; not used as an analytical signal |
-| record_type | Context field | None | Yes | Yes | Constant value `lost_deal` |
-| observed_at | Context / time field | Parse as UTC datetime | No | Yes | Limited historical coverage |
-| entity_id | Identifier / evidence field | None | Yes | Yes | Identifier only |
-| related_entity_id | Excluded field | None | No | Yes | Null for all canonical records |
-| entity_name | Evidence field | None | No | Yes | Used only to trace findings to entities |
-| category | Grouping dimension | None | Yes | Yes | Five categories in the canonical sample |
-| subcategory | Grouping/detail dimension | None | Yes | Yes | Product-derived grouping |
-| status | Comparison dimension | None | No | Yes | Three observed priority levels |
-| stage | Comparison dimension | None | No | Yes | Four observed deal stages |
-| metric_name | Metric identifier | Filter for `deal_value` | Yes | Yes | One metric in the canonical dataset |
-| metric_value | Metric | Numeric parsing | Yes | Yes | Currency is unspecified |
-| metric_unit | Metric metadata | None | Yes | Yes | `currency_unspecified` |
-| text_value | Evidence/context field | None | No | Yes | Limited to source action/recovery text |
-| latitude | Excluded field | None | No | No | No geographic values available |
-| longitude | Excluded field | None | No | No | No geographic values available |
-| source_name | Provenance metadata | None | No | Yes | Not an analytical signal |
-| source_record_id | Identifier / provenance field | None | No | Yes | Source identifier; not used as an analytical signal |
-| is_synthetic | Provenance metadata | None | Yes | Yes | All canonical records are synthetic |
-| data_version | Version metadata | Verify equals `phase3-v1.0.0` | Yes | Yes | Must match approved canonical version |
-
-## Analytical Inclusion Rules
-
-1. Load only `data/canonical/intelligence_data.csv`.
-2. Verify `data_version` equals `phase3-v1.0.0`.
-3. Use `metric_name == "deal_value"` for value-based comparisons.
-4. Exclude rows with missing `category` or `metric_value` from category metric calculations.
-5. Do not use identifiers as analytical features.
-6. Do not create a second cleaned or analytical dataset.
-7. Preserve the canonical records as the sole source of evidence.
-
-## Grouping Dimensions
-
-The primary comparison dimension is `category`.
-
-Additional descriptive comparisons may use:
-- `subcategory`
-- `status`
-- `stage`
-
-These fields are used only for descriptive comparative intelligence and are not treated as predictive features or targets.
-
-## Baseline Input
-
-The baseline uses category-level:
-- record count
-- total deal value
-- average deal value
-
-No ranking or derived scoring is required for the baseline.
-
-## Analytical Method Inputs
-
-Track A adds:
-- percentage contribution to total deal value
-- deterministic ranking by total deal value
-- minimum group-size filtering
-- sensitivity review for small groups and high-value records
-
-## Missing-Value Risks
-
-- Missing `category` prevents category assignment.
-- Missing `metric_value` prevents value-based comparison.
-- Missing geographic fields prevent geographic comparison.
-- Missing `related_entity_id` does not affect this track because it is excluded.
-- Missing text does not prevent numeric comparative analysis.
-
-## Leakage Assessment
-
-Track A is descriptive rather than predictive. No target is trained or predicted.
-
-Identifiers, provenance fields, and version metadata are excluded from analytical calculations. No future outcome variable is introduced.
-
-The calculations are performed directly from the approved canonical dataset and do not require fitting preprocessing parameters on a separate validation dataset.
-
-## Output Traceability
-
-Every group-level result must retain enough evidence to identify:
-- the analytical group;
-- record count;
-- total value;
-- average value;
-- contribution percentage;
-- ranking;
-- supporting canonical record identifiers where applicable.
-
-## Known Limitations
-
-The canonical dataset contains 20 synthetic records. Operational population coverage is not established, historical depth is limited, currency is unspecified, and geographic fields are unavailable. Therefore, Track A results are descriptive evidence for the supplied canonical sample only.
-</file>
-
-<file path="docs/ANALYTICAL_METHOD_REPORT.md">
-# Analytical Method Report
-
-## Project
-
-**POC-12 — Lost Deal Reason & Recovery Intelligence**
-
-## Approved Analytical Track
-
-**Track A — Comparative Intelligence**
-
-## Data and Version
-
-- Canonical source: `data/canonical/intelligence_data.csv`
-- Data version: `phase3-v1.0.0`
-- Record count: 20
-- Record type: `lost_deal`
-- Primary metric: `deal_value`
-- Metric unit: `currency_unspecified`
-
-## Analytical Question
-
-> Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?
-
-## Decision Supported
-
-> Use descriptive evidence to identify where recovery attention may be concentrated.
-
-## Baseline
-
-The baseline is a simple category-level comparison using:
-
-1. Record count
-2. Total deal value
-3. Average deal value
-
-The baseline does not use ranking or contribution percentages.
-
-## Selected Comparative Method
-
-The selected method extends the baseline with:
-
-- Category-level total deal value
-- Category-level average deal value
-- Percentage contribution to total observed deal value
-- Deterministic ranking by total deal value
-- Alphabetical category name as the deterministic tie-break
-- Minimum group-size threshold of 3 records
-
-The primary ranking dimension is `category`.
-
-Descriptive comparisons are also calculated for:
-
-- `subcategory`
-- `status`
-- `stage`
-
-These supporting comparisons remain within the approved Comparative Intelligence track.
-
-## Minimum Group Size
-
-A group must contain at least **3 records** to participate in the primary comparative ranking.
-
-The supplied canonical data contains five categories:
-
-- Price
-- Competitor
-- Product Fit
-- Timing
-- Budget
-
-All five categories meet the minimum threshold.
-
-Timing and Budget each contain exactly three records and are therefore treated as sensitivity cases.
-
-## Calculation Logic
-
-For each included category:
-
-**Total deal value**
-
-`sum(deal_value)`
-
-**Average deal value**
-
-`sum(deal_value) / record_count`
-
-**Percentage contribution**
-
-`category_total / overall_total × 100`
-
-**Priority rank**
-
-Categories are ordered by:
-
-1. Total deal value, descending
-2. Category name, ascending when totals tie
-
-## Validation
-
-The analytical output was independently recalculated directly from the canonical CSV.
-
-Validation checks include:
-
-- Data-version consistency
-- Record-count consistency
-- Group-count consistency
-- Independent calculation accuracy
-- Contribution total within rounding tolerance
-- Sequential ranking
-- Deterministic ranking rule
-- Identification of minimum-size groups
-
-Validation result:
-
-**PASSED**
-
-The calculated contribution total is **100.01%**, which is within the validation tolerance because percentages are rounded.
-
-## Weak-Case Review
-
-Two groups are at the minimum group-size threshold:
-
-- Timing — 3 records
-- Budget — 3 records
-
-These groups are retained because they meet the predefined threshold, but their comparisons should be interpreted with greater caution because individual records can have greater influence.
-
-The highest-value record in the canonical sample is:
-
-- Record: `CRM-012`
-- Deal value: `1,250,000`
-
-This record is flagged for extreme-value sensitivity review and is not removed from the primary analysis.
-
-## Interpretation Boundary
-
-The results are descriptive.
-
-They identify differences in the supplied canonical sample but do not establish:
-
-- Causation
-- Predictive performance
-- Future deal outcomes
-- Recovery success probability
-- Population-wide generalization
-
-## Limitations
-
-1. The dataset contains only 20 synthetic records.
-2. Currency is unspecified.
-3. Timing and Budget each contain only three records.
-4. The sample may not represent the complete operational population.
-5. Observed rankings should not be interpreted as causal evidence.
-6. The analysis does not introduce a predictive model.
-
-## Reproducibility
-
-The method is implemented in:
-
-`data-science/scripts/run_comparative_intelligence.py`
-
-Validation is implemented in:
-
-`data-science/scripts/validate_analytical_track.py`
-
-Weak-case review is implemented in:
-
-`data-science/scripts/review_weak_cases.py`
-
-Standard output generation is implemented in:
-
-`data-science/scripts/export_intelligence_results.py`
-
-All analytical scripts use repository-relative paths and the approved canonical dataset.
-</file>
-
-<file path="docs/ANALYTICAL_TRACK_EXECUTION_PLAN.md">
-# Analytical Track Execution Plan
-
-## Project
-POC-12 — Lost Deal Reason & Recovery Intelligence
-
-## Canonical Data Version
-phase3-v1.0.0
-
-## Confirmed Data Archetype
-Structured event/transactional CRM records
-
-## Target User
-Business user reviewing lost CRM deals for recovery planning.
-
-## Primary Analytical Question
-Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?
-
-## Decision to Be Supported
-Use descriptive evidence to identify where recovery attention may be concentrated.
-
-## Approved Primary Track
-Track A — Comparative Intelligence
-
-## Approved Supporting Track
-None implemented in Post #3. The implementation is restricted to the approved primary track.
-
-## Input Fields
-- category — grouping dimension
-- subcategory — grouping/detail dimension
-- status — comparison dimension
-- stage — comparison dimension
-- metric_value — deal-value metric
-- record_id — evidence/record identifier
-- entity_id — evidence/entity identifier
-- observed_at — contextual date field
-- metric_name — metric identifier
-- metric_unit — metric unit
-- entity_name — evidence field
-- text_value — retained as evidence/context only
-
-## Excluded Fields
-- related_entity_id — no analytical value because it is null for all 20 records
-- latitude — unavailable
-- longitude — unavailable
-- source_record_id — source identifier, not an analytical feature
-- source_name — provenance metadata
-- is_synthetic — provenance metadata
-- data_version — version metadata
-- record_type — constant across all records
-- stage/status/category values will not be treated as predictive targets
-
-## Missing-Value Handling
-Only records with non-null values for the grouping field and metric_value will be included in metric comparisons. Missing geographic fields are not used. Missing related_entity_id does not affect Track A calculations because it is not an analytical input.
-
-## Baseline
-Simple category-level comparison using total deal value and average deal value without additional ranking or contribution analysis.
-
-## Selected Method
-Comparative analysis by meaningful categorical groups using:
-- record count
-- total deal value
-- average deal value
-- percentage contribution to total deal value
-- deterministic ranking
-
-A minimum group size of 3 records will be required for ranked category comparisons.
-
-## Validation Approach
-- Independently recalculate selected group totals and averages.
-- Confirm percentage contributions sum to approximately 100% across included groups.
-- Confirm deterministic ranking and tie handling.
-- Test sensitivity to small groups below the minimum threshold.
-- Review the effect of individual high-value records on rankings.
-- Document groups excluded because of insufficient records.
-- Confirm calculations use only data/canonical/intelligence_data.csv.
-
-## Expected Intelligence Results
-Structured group-level results following the standard intelligence-output contract, including:
-- result_id
-- result_type
-- record_id/entity_id where applicable
-- group_key
-- period_start/period_end where applicable
-- metric_name
-- result_value
-- result_unit
-- result_category
-- priority_rank where applicable
-- finding
-- evidence
-- method_version
-- data_version
-- generated_at
-- quality_status
-- limitation
-
-## Stop Conditions
-Stop implementation and require review if:
-- the canonical data version does not match phase3-v1.0.0;
-- the canonical CSV cannot be loaded or required fields are missing;
-- calculations require a second dataset;
-- a predictive or unsupported analytical method becomes necessary;
-- rankings cannot be reproduced deterministically;
-- validation identifies material calculation errors that cannot be resolved without changing the canonical data.
-
-## Known Limitations
-- The dataset contains only 20 synthetic lost-deal records.
-- Operational population coverage has not been established.
-- Historical depth is limited to January–June 2026.
-- Deal-value currency is unspecified.
-- Geographic coordinates are unavailable.
-- Results describe patterns in the supplied canonical sample and should not be interpreted as population-wide or predictive conclusions.
-</file>
-
-<file path="docs/ANALYTICAL_VALIDATION_REPORT.md">
-# Analytical Validation Report
-
-## Project
-
-**POC-12 — Lost Deal Reason & Recovery Intelligence**
-
-## Approved Track
-
-**Track A — Comparative Intelligence**
-
-## Validation Objective
-
-Verify that the comparative intelligence output is:
-
-- Calculated correctly from the approved canonical dataset
-- Consistent with `phase3-v1.0.0`
-- Deterministically ranked
-- Suitable for descriptive comparison
-- Explicit about weak cases and limitations
-
-## Validation Source
-
-The validation uses only:
-
-`data/canonical/intelligence_data.csv`
-
-No second cleaned or analytical dataset was introduced.
-
-## Validation Checks
-
-| Check | Result |
-|---|---|
-| Data version consistency | PASS |
-| Record count consistency | PASS |
-| Group count consistency | PASS |
-| Independent calculation accuracy | PASS |
-| Contribution total tolerance | PASS |
-| Sequential ranking | PASS |
-| Deterministic tie handling | PASS |
-| Minimum-size group identification | PASS |
-
-## Calculation Accuracy
-
-The category-level totals, averages, percentage contributions, and ranks were independently recalculated from the canonical CSV.
-
-The independently calculated results matched the generated analytical results.
-
-**Calculation accuracy: PASS**
-
-## Contribution Validation
-
-The rounded category contribution percentages total:
-
-**100.01%**
-
-The difference from 100% is attributable to percentage rounding and remains within the defined validation tolerance.
-
-**Contribution validation: PASS**
-
-## Ranking Stability
-
-The ranking rule is deterministic:
-
-1. Higher total deal value receives the higher priority.
-2. If total values are tied, category name is used as the alphabetical tie-break.
-
-This produces a reproducible ranking from the same canonical input.
-
-**Ranking stability: PASS**
-
-## Minimum-Size Review
-
-The minimum group-size threshold is **3 records**.
-
-The following categories are exactly at the threshold:
-
-- Timing
-- Budget
-
-They remain included in the analysis because they satisfy the predefined rule.
-
-However, their estimates are considered more sensitive to individual observations than larger groups.
-
-## Extreme-Value Review
-
-The highest-value record identified in the canonical sample is:
-
-- Record ID: `CRM-012`
-- Deal value: `1,250,000`
-
-This record is retained in the primary analysis.
-
-It is explicitly flagged because a high-value observation can have a greater influence on group totals and rankings.
-
-## Leave-One-Out Sensitivity
-
-A leave-one-out review was performed as part of the weak-case assessment.
-
-The purpose was to identify whether removing an individual observation changes the category ranking.
-
-This review is treated as a sensitivity assessment rather than as a reason to remove observations.
-
-## Validation Boundary
-
-The validation confirms the correctness and reproducibility of the calculations.
-
-It does **not** establish:
-
-- Causal relationships
-- Predictive accuracy
-- Future recovery probability
-- Generalization beyond the supplied sample
-- Business impact of any category
-
-## Overall Validation Result
-
-**ANALYTICAL TRACK VALIDATION PASSED**
-
-The comparative intelligence output is internally consistent with the approved canonical dataset and the defined Track A method.
-
-## Reproducibility Evidence
-
-Validation is implemented in:
-
-`data-science/scripts/validate_analytical_track.py`
-
-Weak-case review is implemented in:
-
-`data-science/scripts/review_weak_cases.py`
-
-Generated validation evidence:
-
-`data-science/outputs/validation_metrics.json`
-
-Generated weak-case evidence:
-
-`data-science/outputs/weak_case_review.json`
-</file>
-
-<file path="docs/INTELLIGENCE_OUTPUT_CONTRACT.md">
-# Intelligence Output Contract
-
-## Project
-
-**POC-12 — Lost Deal Reason & Recovery Intelligence**
-
-## Approved Track
-
-**Track A — Comparative Intelligence**
-
-## Data Version
-
-`phase3-v1.0.0`
-
-## Method Version
-
-`1.0.0`
-
----
-
-## 1. Intelligence Results Contract
-
-The primary output is:
-
-`data-science/outputs/intelligence_results.json`
-
-The output contains one result object for each included category.
-
-### Required Fields
-
-Each result object contains:
-
-- `result_id`
-- `result_type`
-- `record_id`
-- `entity_id`
-- `group_key`
-- `period_start`
-- `period_end`
-- `metric_name`
-- `result_value`
-- `result_unit`
-- `result_category`
-- `priority_rank`
-- `finding`
-- `evidence`
-- `method_version`
-- `data_version`
-- `generated_at`
-- `quality_status`
-- `limitation`
-
-### Field Definitions
-
-| Field | Meaning |
-|---|---|
-| `result_id` | Stable identifier for the comparative result |
-| `result_type` | Type of analytical result |
-| `record_id` | Record-level reference; null for group-level results |
-| `entity_id` | Entity-level reference; null for group-level results |
-| `group_key` | Category being compared |
-| `period_start` | Period start when applicable; null for the current aggregate |
-| `period_end` | Period end when applicable; null for the current aggregate |
-| `metric_name` | `total_deal_value` |
-| `result_value` | Total deal value for the group |
-| `result_unit` | `currency_unspecified` |
-| `result_category` | Deterministic rank label |
-| `priority_rank` | Rank based on total deal value |
-| `finding` | Plain-language descriptive finding |
-| `evidence` | Supporting count, average, contribution, and record IDs |
-| `method_version` | Analytical method version |
-| `data_version` | Canonical data version |
-| `generated_at` | UTC generation timestamp |
-| `quality_status` | Validation status |
-| `limitation` | Important interpretation boundary |
-
----
-
-## 2. Evidence Contract
-
-The `evidence` object contains:
-
-- `record_count`
-- `average_deal_value`
-- `percentage_of_total_value`
-- `record_ids`
-
-These fields allow each comparative finding to be traced back to the canonical records.
-
----
-
-## 3. Intelligence Summary Contract
-
-The summary output is:
-
-`data-science/outputs/intelligence_summary.json`
-
-### Required Fields
-
-The summary contains:
-
-- `project_id`
-- `project_title`
-- `approved_track`
-- `primary_question`
-- `decision`
-- `data_version`
-- `method_version`
-- `result_count`
-- `key_findings`
-- `priority_items`
-- `validation_result`
-- `weak_case_review`
-- `important_limitations`
-- `generated_at`
-
----
-
-## 4. Priority Item Contract
-
-Each priority item contains:
-
-- `rank`
-- `group`
-- `total_deal_value`
-- `percentage_of_total_value`
-
-Priority order is determined only by:
-
-1. Total deal value descending
-2. Category name ascending for deterministic ties
-
-No subjective score or business ranking is added.
-
----
-
-## 5. Validation Contract
-
-The summary must report:
-
-- Overall validation pass/fail
-- Contribution total
-- Groups at the minimum-size threshold
-
-The detailed validation evidence is stored in:
-
-`data-science/outputs/validation_metrics.json`
-
----
-
-## 6. Weak-Case Contract
-
-Weak-case evidence is stored in:
-
-`data-science/outputs/weak_case_review.json`
-
-The review identifies:
-
-- Groups at the minimum sample-size threshold
-- Leave-one-out sensitivity findings
-- Highest-value record
-- Interpretation limitations
-
----
-
-## 7. Versioning
-
-All analytical outputs must identify:
-
-- `data_version = phase3-v1.0.0`
-- `method_version = 1.0.0`
-
-A change to the canonical analytical input requires a corresponding version review.
-
-A material change to the calculation method requires a method-version update.
-
----
-
-## 8. Quality Status
-
-The current generated results have:
-
-`quality_status = validated`
-
-This indicates that the output passed the implemented Track A validation checks.
-
----
-
-## 9. Interpretation Boundary
-
-The output is descriptive intelligence.
-
-It must not be interpreted as:
-
-- A causal analysis
-- A predictive model
-- A probability of recovery
-- A forecast
-- A population-wide estimate
-- A guarantee of business impact
-
-The output describes patterns observed in the approved synthetic canonical sample.
-
----
-
-## 10. Reproducibility
-
-The output must be regenerated by executing the analytical scripts rather than manually editing JSON files.
-
-Primary execution:
-
-`data-science/scripts/run_comparative_intelligence.py`
-
-Validation:
-
-`data-science/scripts/validate_analytical_track.py`
-
-Weak-case review:
-
-`data-science/scripts/review_weak_cases.py`
-
-Export:
-
-`data-science/scripts/export_intelligence_results.py`
-
-All scripts use the approved canonical CSV as their analytical source.
-</file>
-
-<file path="docs/WEAK_CASE_AND_LIMITATION_REVIEW.md">
-# Weak Case and Limitation Review
-
-## Project
-
-**POC-12 — Lost Deal Reason & Recovery Intelligence**
-
-## Approved Track
-
-**Track A — Comparative Intelligence**
-
-## Data Version
-
-`phase3-v1.0.0`
-
-## Purpose
-
-This review documents cases where the comparative intelligence results require additional caution before business interpretation.
-
-The review is based on the approved canonical dataset and the generated validation evidence.
-
----
-
-## 1. Minimum-Size Groups
-
-The analytical method requires a minimum group size of **3 records**.
-
-Two categories are exactly at this threshold:
-
-| Category | Records | Review |
-|---|---:|---|
-| Timing | 3 | Sensitive to individual observations |
-| Budget | 3 | Sensitive to individual observations |
-
-These groups were retained because they satisfy the predefined inclusion rule.
-
-Their rankings should nevertheless be interpreted with more caution than rankings based on larger groups.
-
----
-
-## 2. Highest-Value Record
-
-The highest-value record in the canonical sample is:
-
-- Record ID: `CRM-012`
-- Deal value: `1,250,000`
-
-This record is flagged as an extreme-value candidate because a large observation can have a greater influence on group totals and rankings.
-
-The record remains in the primary analysis.
-
-No observation was manually removed.
-
----
-
-## 3. Leave-One-Out Sensitivity
-
-A leave-one-out sensitivity review was executed for the category rankings.
-
-The purpose was to identify whether removing an individual record changes the overall category ordering.
-
-This is a sensitivity check only.
-
-It does not justify removing records from the canonical dataset.
-
-The detailed machine-readable evidence is available in:
-
-`data-science/outputs/weak_case_review.json`
-
----
-
-## 4. Missing Groups
-
-The supplied canonical sample contains the observed categories available in the source data.
-
-The analysis does not assume that the supplied categories represent every category that could exist in the broader operational population.
-
-Therefore:
-
-> Absence from this sample must not be interpreted as evidence that a category does not exist operationally.
-
----
-
-## 5. Missing Values
-
-The primary comparative calculation requires:
-
-- A non-empty grouping value
-- A numeric `deal_value`
-
-Rows that do not provide the required analytical values cannot contribute to the relevant group comparison.
-
-The current canonical dataset provides usable category and deal-value values for the generated category comparison.
-
----
-
-## 6. Synthetic Data Limitation
-
-The canonical dataset contains **20 synthetic CRM records**.
-
-Therefore, the generated intelligence should be interpreted as a controlled analytical demonstration rather than as evidence about the complete real-world lost-deal population.
-
----
-
-## 7. Currency Limitation
-
-The canonical metric unit is:
-
-`currency_unspecified`
-
-Therefore, numerical deal-value comparisons should be understood as comparisons within the supplied metric rather than interpreted as a confirmed currency-denominated business amount.
-
----
-
-## 8. Causal Limitation
-
-The comparative analysis is descriptive.
-
-A higher total deal value or higher ranking does not establish that a category causes deal loss or that focusing on that category will cause recovery.
-
-No causal conclusion is produced by the analytical track.
-
----
-
-## 9. Predictive Limitation
-
-Track A does not produce:
-
-- Recovery probabilities
-- Predicted outcomes
-- Forecasts
-- Machine-learning predictions
-- Individual deal recovery scores
-
-The output is comparative descriptive intelligence only.
-
----
-
-## 10. Population Limitation
-
-The supplied sample covers a limited period and a limited number of records.
-
-The results should not automatically be generalized to:
-
-- Future periods
-- Other organizations
-- Other CRM populations
-- Unobserved categories
-- Larger operational populations
-
----
-
-## 11. Reviewer Interpretation Guidance
-
-The appropriate interpretation is:
-
-> The analysis identifies descriptive differences in the supplied canonical sample and highlights where observed deal-value concentration is located.
-
-The inappropriate interpretation would be:
-
-> The highest-ranked category is definitively the most important cause of lost deals or will produce the greatest recovery if prioritized.
-
-The analytical output does not support that causal or predictive conclusion.
-
----
-
-## 12. Overall Weak-Case Assessment
-
-The comparative intelligence track remains usable for its approved descriptive purpose.
-
-The principal interpretation risks are:
-
-1. Small groups at the minimum threshold
-2. Influence of a high-value observation
-3. Small synthetic sample size
-4. Unspecified currency
-5. Unknown completeness of the operational population
-
-These limitations are explicitly carried into the intelligence output.
-
-## Evidence
-
-- `data-science/outputs/weak_case_review.json`
-- `data-science/outputs/validation_metrics.json`
-- `data-science/outputs/intelligence_results.json`
-- `data-science/outputs/intelligence_summary.json`
-</file>
-
 <file path="app/components/DashboardCharts.tsx">
 "use client";
 
@@ -5047,6 +2653,357 @@ The validation script checks the canonical structure, required fields, identifie
 }
 </file>
 
+<file path="data-science/notebooks/02_analytical_track_development_and_validation.ipynb">
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "d321341e",
+   "metadata": {},
+   "source": [
+    "# Track A — Analytical Track Development & Validation\n",
+    "\n",
+    "POC-12 — Lost Deal Reason & Recovery Intelligence\n",
+    "\n",
+    "Approved track: Track A — Comparative Intelligence\n",
+    "\n",
+    "Canonical data version: `phase3-v1.0.0`\n",
+    "\n",
+    "Method version: `1.0.0`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "8a9599c0",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-03T15:31:00.987765Z",
+     "iopub.status.busy": "2026-10-03T15:31:00.987705Z",
+     "iopub.status.idle": "2026-10-03T15:31:00.992207Z",
+     "shell.execute_reply": "2026-10-03T15:31:00.991871Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Workspace: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3\n",
+      "Canonical input: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data/canonical/intelligence_data.csv\n"
+     ]
+    }
+   ],
+   "source": [
+    "from pathlib import Path\n",
+    "import json\n",
+    "import sys\n",
+    "\n",
+    "ROOT = Path.cwd().resolve()\n",
+    "if ROOT.name != \"POC-12-Lost-Deal-Recovery-Phase3\":\n",
+    "    ROOT = Path.cwd().resolve()\n",
+    "\n",
+    "print(\"Workspace:\", ROOT)\n",
+    "print(\"Canonical input:\", ROOT / \"data/canonical/intelligence_data.csv\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e29130ad",
+   "metadata": {},
+   "source": [
+    "## 1. Canonical input\n",
+    "\n",
+    "The analysis uses only `data/canonical/intelligence_data.csv`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "727f7185",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-03T15:31:00.993257Z",
+     "iopub.status.busy": "2026-10-03T15:31:00.993197Z",
+     "iopub.status.idle": "2026-10-03T15:31:00.995623Z",
+     "shell.execute_reply": "2026-10-03T15:31:00.995203Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Records: 20\n",
+      "Data version: ['phase3-v1.0.0']\n"
+     ]
+    }
+   ],
+   "source": [
+    "import csv\n",
+    "\n",
+    "input_path = ROOT / \"data/canonical/intelligence_data.csv\"\n",
+    "with input_path.open(newline=\"\", encoding=\"utf-8\") as f:\n",
+    "    rows = list(csv.DictReader(f))\n",
+    "\n",
+    "print(\"Records:\", len(rows))\n",
+    "print(\"Data version:\", sorted(set(r[\"data_version\"] for r in rows)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "46122152",
+   "metadata": {},
+   "source": [
+    "## 2. Approved method\n",
+    "\n",
+    "Primary dimension: `category`\n",
+    "\n",
+    "Minimum group size: 3\n",
+    "\n",
+    "Measures: record count, total deal value, average deal value, percentage contribution, and deterministic rank."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "9e3419b4",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-03T15:31:00.996427Z",
+     "iopub.status.busy": "2026-10-03T15:31:00.996354Z",
+     "iopub.status.idle": "2026-10-03T15:31:01.289902Z",
+     "shell.execute_reply": "2026-10-03T15:31:01.289490Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ANALYTICAL TRACK GENERATED\n",
+      "Track: Track A — Comparative Intelligence\n",
+      "Records: 20\n",
+      "Primary groups included: 5\n",
+      "Baseline average: 580250.0\n",
+      "Baseline total: 11605000.0\n",
+      "Output: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data-science/outputs/comparative_intelligence.json\n",
+      "Baseline output: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data-science/outputs/baseline_results.json\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "import subprocess\n",
+    "\n",
+    "result = subprocess.run([sys.executable, \"data-science/scripts/run_analytical_track.py\"], capture_output=True, text=True)\n",
+    "print(result.stdout)\n",
+    "if result.returncode != 0:\n",
+    "    print(result.stderr)\n",
+    "    raise SystemExit(result.returncode)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b5a9d99b",
+   "metadata": {},
+   "source": [
+    "## 3. Validation\n",
+    "\n",
+    "Validation independently recalculates the category results from the canonical CSV."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "2dba3489",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-03T15:31:01.291079Z",
+     "iopub.status.busy": "2026-10-03T15:31:01.291000Z",
+     "iopub.status.idle": "2026-10-03T15:31:01.467459Z",
+     "shell.execute_reply": "2026-10-03T15:31:01.467004Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ANALYTICAL TRACK VALIDATION COMPLETE\n",
+      "Passed: True\n",
+      "Contribution total: 100.00%\n",
+      "Small groups at threshold: ['Timing', 'Budget']\n",
+      "Baseline total: 11605000.0\n",
+      "Baseline average: 580250.0\n",
+      "Output: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data-science/outputs/validation_metrics.json\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "result = subprocess.run([sys.executable, \"data-science/scripts/validate_analytical_track.py\"], capture_output=True, text=True)\n",
+    "print(result.stdout)\n",
+    "if result.returncode != 0:\n",
+    "    print(result.stderr)\n",
+    "    raise SystemExit(result.returncode)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6d4b2724",
+   "metadata": {},
+   "source": [
+    "## 4. Weak-case review and export"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "aa0ed08c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-03T15:31:01.468493Z",
+     "iopub.status.busy": "2026-10-03T15:31:01.468426Z",
+     "iopub.status.idle": "2026-10-03T15:31:01.507888Z",
+     "shell.execute_reply": "2026-10-03T15:31:01.507452Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "WEAK-CASE REVIEW GENERATED\n",
+      "Minimum-size groups reviewed: 2\n",
+      "Highest-value record: CRM-012 1250000.0\n",
+      "Output: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data-science/outputs/weak_case_review.json\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "INTELLIGENCE RESULTS EXPORTED\n",
+      "Results: 5\n",
+      "Validation passed: True\n",
+      "Results output: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data-science/outputs/intelligence_results.json\n",
+      "Summary output: /Users/dainjose/Desktop/POC-12-Lost-Deal-Recovery-Phase3/data-science/outputs/intelligence_summary.json\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "for script in [\"review_weak_cases.py\", \"export_intelligence_results.py\"]:\n",
+    "    result = subprocess.run([sys.executable, f\"data-science/scripts/{script}\"], capture_output=True, text=True)\n",
+    "    print(result.stdout)\n",
+    "    if result.returncode != 0:\n",
+    "        print(result.stderr)\n",
+    "        raise SystemExit(result.returncode)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9f047e48",
+   "metadata": {},
+   "source": [
+    "## 5. Evidence check"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "809f7e79",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-10-03T15:31:01.509052Z",
+     "iopub.status.busy": "2026-10-03T15:31:01.508988Z",
+     "iopub.status.idle": "2026-10-03T15:31:01.511328Z",
+     "shell.execute_reply": "2026-10-03T15:31:01.511037Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "data-science/outputs/comparative_intelligence.json -> PRESENT\n",
+      "data-science/outputs/validation_metrics.json -> PRESENT\n",
+      "data-science/outputs/weak_case_review.json -> PRESENT\n",
+      "data-science/outputs/intelligence_results.json -> PRESENT\n",
+      "data-science/outputs/intelligence_summary.json -> PRESENT\n",
+      "Validation passed: True\n",
+      "Contribution total: 100.0 %\n"
+     ]
+    }
+   ],
+   "source": [
+    "output_files = [\n",
+    "    \"data-science/outputs/comparative_intelligence.json\",\n",
+    "    \"data-science/outputs/validation_metrics.json\",\n",
+    "    \"data-science/outputs/weak_case_review.json\",\n",
+    "    \"data-science/outputs/intelligence_results.json\",\n",
+    "    \"data-science/outputs/intelligence_summary.json\",\n",
+    "]\n",
+    "\n",
+    "for name in output_files:\n",
+    "    path = ROOT / name\n",
+    "    print(name, \"->\", \"PRESENT\" if path.exists() else \"MISSING\")\n",
+    "\n",
+    "validation = json.loads((ROOT / \"data-science/outputs/validation_metrics.json\").read_text())\n",
+    "print(\"Validation passed:\", validation[\"passed\"])\n",
+    "print(\"Contribution total:\", validation[\"contribution_total_percent\"], \"%\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "60b4d8d3",
+   "metadata": {},
+   "source": [
+    "## Conclusion\n",
+    "\n",
+    "The notebook executes the approved Track A method, validates the generated calculations, reviews weak cases, and regenerates the standard intelligence outputs from the canonical dataset."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+</file>
+
+<file path="data-science/outputs/baseline_results.json">
+{
+  "baseline_name": "overall_mean_and_total",
+  "baseline_record_count": 20,
+  "baseline_total_value": 11605000.0,
+  "baseline_average_value": 580250.0,
+  "baseline_unit": "currency_unspecified",
+  "data_version": "phase3-v1.0.0",
+  "method_version": "1.0.0",
+  "generated_at": "2026-10-03T15:31:01.260582+00:00"
+}
+</file>
+
 <file path="data-science/outputs/canonical_profile.json">
 {
   "data_source": "data/canonical/intelligence_data.csv",
@@ -5147,6 +3104,340 @@ The validation script checks the canonical structure, required fields, identifie
   "synthetic_distribution": {
     "true": 20
   }
+}
+</file>
+
+<file path="data-science/outputs/comparative_intelligence.json">
+{
+  "data_version": "phase3-v1.0.0",
+  "method_version": "1.0.0",
+  "primary_dimension": "category",
+  "minimum_group_size": 3,
+  "baseline": {
+    "baseline_name": "overall_mean_and_total",
+    "baseline_record_count": 20,
+    "baseline_total_value": 11605000.0,
+    "baseline_average_value": 580250.0,
+    "baseline_unit": "currency_unspecified",
+    "data_version": "phase3-v1.0.0",
+    "method_version": "1.0.0",
+    "generated_at": "2026-10-03T15:31:01.260582+00:00"
+  },
+  "groups": [
+    {
+      "group_key": "Price",
+      "record_count": 5,
+      "total_value": 4660000.0,
+      "average_value": 932000.0,
+      "contribution_pct": 40.15510555794916,
+      "priority_rank": 1,
+      "baseline_comparison": "above_overall_average",
+      "record_ids": [
+        "CRM-001",
+        "CRM-005",
+        "CRM-012",
+        "CRM-016",
+        "CRM-020"
+      ]
+    },
+    {
+      "group_key": "Competitor",
+      "record_count": 5,
+      "total_value": 3435000.0,
+      "average_value": 687000.0,
+      "contribution_pct": 29.59931064196467,
+      "priority_rank": 2,
+      "baseline_comparison": "above_overall_average",
+      "record_ids": [
+        "CRM-002",
+        "CRM-007",
+        "CRM-009",
+        "CRM-014",
+        "CRM-018"
+      ]
+    },
+    {
+      "group_key": "Product Fit",
+      "record_count": 4,
+      "total_value": 1440000.0,
+      "average_value": 360000.0,
+      "contribution_pct": 12.408444635932787,
+      "priority_rank": 3,
+      "baseline_comparison": "at_or_below_overall_average",
+      "record_ids": [
+        "CRM-003",
+        "CRM-008",
+        "CRM-013",
+        "CRM-019"
+      ]
+    },
+    {
+      "group_key": "Timing",
+      "record_count": 3,
+      "total_value": 1040000.0,
+      "average_value": 346666.6666666667,
+      "contribution_pct": 8.96165445928479,
+      "priority_rank": 4,
+      "baseline_comparison": "at_or_below_overall_average",
+      "record_ids": [
+        "CRM-004",
+        "CRM-010",
+        "CRM-015"
+      ]
+    },
+    {
+      "group_key": "Budget",
+      "record_count": 3,
+      "total_value": 1030000.0,
+      "average_value": 343333.3333333333,
+      "contribution_pct": 8.875484704868592,
+      "priority_rank": 5,
+      "baseline_comparison": "at_or_below_overall_average",
+      "record_ids": [
+        "CRM-006",
+        "CRM-011",
+        "CRM-017"
+      ]
+    }
+  ],
+  "generated_at": "2026-10-03T15:31:01.266470+00:00"
+}
+</file>
+
+<file path="data-science/outputs/intelligence_results.json">
+[
+  {
+    "result_id": "POC12-CAT-01",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Price",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 4660000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_1",
+    "priority_rank": 1,
+    "finding": "Price ranks 1 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 5,
+      "average_deal_value": 932000.0,
+      "contribution_pct": 40.15510555794916,
+      "record_ids": [
+        "CRM-001",
+        "CRM-005",
+        "CRM-012",
+        "CRM-016",
+        "CRM-020"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T15:31:01Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-02",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Competitor",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 3435000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_2",
+    "priority_rank": 2,
+    "finding": "Competitor ranks 2 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 5,
+      "average_deal_value": 687000.0,
+      "contribution_pct": 29.59931064196467,
+      "record_ids": [
+        "CRM-002",
+        "CRM-007",
+        "CRM-009",
+        "CRM-014",
+        "CRM-018"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T15:31:01Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-03",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Product Fit",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 1440000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_3",
+    "priority_rank": 3,
+    "finding": "Product Fit ranks 3 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 4,
+      "average_deal_value": 360000.0,
+      "contribution_pct": 12.408444635932787,
+      "record_ids": [
+        "CRM-003",
+        "CRM-008",
+        "CRM-013",
+        "CRM-019"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T15:31:01Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-04",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Timing",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 1040000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_4",
+    "priority_rank": 4,
+    "finding": "Timing ranks 4 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 3,
+      "average_deal_value": 346666.6666666667,
+      "contribution_pct": 8.96165445928479,
+      "record_ids": [
+        "CRM-004",
+        "CRM-010",
+        "CRM-015"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T15:31:01Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  },
+  {
+    "result_id": "POC12-CAT-05",
+    "result_type": "comparative_group",
+    "record_id": null,
+    "entity_id": null,
+    "group_key": "Budget",
+    "period_start": null,
+    "period_end": null,
+    "metric_name": "total_deal_value",
+    "result_value": 1030000.0,
+    "result_unit": "currency_unspecified",
+    "result_category": "rank_5",
+    "priority_rank": 5,
+    "finding": "Budget ranks 5 by total deal value among categories meeting the minimum group-size threshold.",
+    "evidence": {
+      "record_count": 3,
+      "average_deal_value": 343333.3333333333,
+      "contribution_pct": 8.875484704868592,
+      "record_ids": [
+        "CRM-006",
+        "CRM-011",
+        "CRM-017"
+      ]
+    },
+    "method_version": "1.0.0",
+    "data_version": "phase3-v1.0.0",
+    "generated_at": "2026-10-03T15:31:01Z",
+    "quality_status": "validated",
+    "limitation": "Descriptive result from the supplied synthetic canonical sample; not causal evidence."
+  }
+]
+</file>
+
+<file path="data-science/outputs/intelligence_summary.json">
+{
+  "project_id": "POC-12",
+  "project_title": "Lost Deal Reason & Recovery Intelligence",
+  "approved_track": "Track A \u2014 Comparative Intelligence",
+  "primary_question": "Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?",
+  "decision": "Use descriptive evidence to identify where recovery attention may be concentrated.",
+  "data_version": "phase3-v1.0.0",
+  "method_version": "1.0.0",
+  "result_count": 5,
+  "key_findings": [
+    "Price ranks 1 by total deal value, with 40.16% of the observed total.",
+    "Competitor ranks 2 by total deal value, with 29.60% of the observed total.",
+    "Product Fit ranks 3 by total deal value, with 12.41% of the observed total.",
+    "Timing ranks 4 by total deal value, with 8.96% of the observed total.",
+    "Budget ranks 5 by total deal value, with 8.88% of the observed total."
+  ],
+  "priority_items": [
+    {
+      "priority_rank": 1,
+      "group_key": "Price",
+      "total_value": 4660000.0,
+      "contribution_pct": 40.15510555794916
+    },
+    {
+      "priority_rank": 2,
+      "group_key": "Competitor",
+      "total_value": 3435000.0,
+      "contribution_pct": 29.59931064196467
+    },
+    {
+      "priority_rank": 3,
+      "group_key": "Product Fit",
+      "total_value": 1440000.0,
+      "contribution_pct": 12.408444635932787
+    },
+    {
+      "priority_rank": 4,
+      "group_key": "Timing",
+      "total_value": 1040000.0,
+      "contribution_pct": 8.96165445928479
+    },
+    {
+      "priority_rank": 5,
+      "group_key": "Budget",
+      "total_value": 1030000.0,
+      "contribution_pct": 8.875484704868592
+    }
+  ],
+  "validation_result": {
+    "passed": true,
+    "contribution_total_percent": 100.0,
+    "small_groups_at_threshold": [
+      "Timing",
+      "Budget"
+    ]
+  },
+  "weak_case_review": {
+    "minimum_size_cases": 2,
+    "highest_value_record": {
+      "record_id": "CRM-012",
+      "category": "Price",
+      "metric_value": 1250000.0,
+      "assessment": "This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis."
+    }
+  },
+  "important_limitations": [
+    "The analysis uses 20 synthetic canonical records.",
+    "Currency is unspecified.",
+    "Timing and Budget contain only three records each.",
+    "The sample may not represent the complete operational population.",
+    "Results are descriptive and do not establish causality."
+  ],
+  "generated_at": "2026-10-03T15:31:01Z"
 }
 </file>
 
@@ -5266,6 +3557,327 @@ The validation script checks the canonical structure, required fields, identifie
     "No sampling reduction was performed, so there is no additional sampling loss within the supplied dataset."
   ]
 }
+</file>
+
+<file path="data-science/outputs/validation_metrics.json">
+{
+  "approved_track": "Track A \u2014 Comparative Intelligence",
+  "data_version": "phase3-v1.0.0",
+  "method_version": "1.0.0",
+  "validation_result": "PASS",
+  "passed": true,
+  "record_count": 20,
+  "primary_group_count": 5,
+  "minimum_group_size": 3,
+  "contribution_total_percent": 100.0,
+  "small_groups_at_threshold": [
+    "Timing",
+    "Budget"
+  ],
+  "baseline": {
+    "total_value": 11605000.0,
+    "average_value": 580250.0
+  },
+  "checks": {
+    "data_version": true,
+    "method_version": true,
+    "record_count": true,
+    "minimum_group_size": true,
+    "group_count": true,
+    "calculation_accuracy": true,
+    "ranking_accuracy": true,
+    "sequential_ranking": true,
+    "deterministic_tie_handling": true,
+    "contribution_total": true,
+    "baseline_total": true,
+    "baseline_average": true,
+    "small_group_review_identified": true
+  }
+}
+</file>
+
+<file path="data-science/outputs/weak_case_review.json">
+{
+  "review_type": "weak_case_and_limitation_review",
+  "data_version": "phase3-v1.0.0",
+  "minimum_group_size": 3,
+  "weak_cases": [
+    {
+      "case_type": "minimum_group_size",
+      "category": "Timing",
+      "record_count": 3,
+      "assessment": "Ranking is included because the group meets the minimum threshold, but the estimate is more sensitive to individual records than larger groups."
+    },
+    {
+      "case_type": "minimum_group_size",
+      "category": "Budget",
+      "record_count": 3,
+      "assessment": "Ranking is included because the group meets the minimum threshold, but the estimate is more sensitive to individual records than larger groups."
+    }
+  ],
+  "leave_one_out_sensitivity": [
+    {
+      "category": "Price",
+      "tested": true,
+      "reason": "Leave-one-out sensitivity test performed.",
+      "baseline_ranking": [
+        "Price",
+        "Competitor",
+        "Product Fit",
+        "Timing",
+        "Budget"
+      ],
+      "rank_changes": [
+        {
+          "removed_record_id": "CRM-012",
+          "removed_value": 1250000.0,
+          "ranking_after_removal": [
+            "Competitor",
+            "Price",
+            "Product Fit",
+            "Timing",
+            "Budget"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Competitor",
+      "tested": true,
+      "reason": "Leave-one-out sensitivity test performed.",
+      "baseline_ranking": [
+        "Price",
+        "Competitor",
+        "Product Fit",
+        "Timing",
+        "Budget"
+      ],
+      "rank_changes": []
+    },
+    {
+      "category": "Product Fit",
+      "tested": true,
+      "reason": "Leave-one-out sensitivity test performed.",
+      "baseline_ranking": [
+        "Price",
+        "Competitor",
+        "Product Fit",
+        "Timing",
+        "Budget"
+      ],
+      "rank_changes": [
+        {
+          "removed_record_id": "CRM-013",
+          "removed_value": 410000.0,
+          "ranking_after_removal": [
+            "Price",
+            "Competitor",
+            "Timing",
+            "Budget",
+            "Product Fit"
+          ]
+        },
+        {
+          "removed_record_id": "CRM-019",
+          "removed_value": 520000.0,
+          "ranking_after_removal": [
+            "Price",
+            "Competitor",
+            "Timing",
+            "Budget",
+            "Product Fit"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Timing",
+      "tested": true,
+      "reason": "Group is at the minimum sample-size threshold.",
+      "rank_changes": []
+    },
+    {
+      "category": "Budget",
+      "tested": true,
+      "reason": "Group is at the minimum sample-size threshold.",
+      "rank_changes": []
+    }
+  ],
+  "highest_value_record_review": {
+    "record_id": "CRM-012",
+    "category": "Price",
+    "metric_value": 1250000.0,
+    "assessment": "This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis."
+  },
+  "overall_assessment": "Comparative ranking is usable for descriptive analysis of the canonical sample, with caution for minimum-size groups and potential influence from extreme deal values.",
+  "limitations": [
+    "The canonical dataset contains only 20 synthetic records.",
+    "Minimum-size groups have only three records.",
+    "The supplied sample may not represent the full operational population.",
+    "Observed ranking should not be interpreted as causal evidence.",
+    "Currency is unspecified in the canonical data."
+  ]
+}
+</file>
+
+<file path="data-science/scripts/track-specific/comparative_intelligence.py">
+from pathlib import Path
+import json
+from datetime import datetime, timezone
+
+import pandas as pd
+
+DATA_VERSION = "phase3-v1.0.0"
+METHOD_VERSION = "1.0.0"
+MIN_GROUP_SIZE = 3
+PRIMARY_DIMENSION = "category"
+
+ROOT = Path(__file__).resolve().parents[3]
+CANONICAL_PATH = ROOT / "data" / "canonical" / "intelligence_data.csv"
+OUTPUT_DIR = ROOT / "data-science" / "outputs"
+
+def load_canonical():
+    df = pd.read_csv(CANONICAL_PATH)
+
+    if "data_version" not in df.columns:
+        raise ValueError("Canonical data_version field is missing.")
+
+    versions = set(df["data_version"].dropna().astype(str))
+    if versions != {DATA_VERSION}:
+        raise ValueError(f"Unexpected data versions: {sorted(versions)}")
+
+    if "metric_name" not in df.columns:
+        raise ValueError("metric_name field is missing.")
+
+    metric_names = set(df["metric_name"].dropna().astype(str))
+    if metric_names != {"deal_value"}:
+        raise ValueError(f"Unexpected metric names: {sorted(metric_names)}")
+
+    return df
+
+
+def execute_baseline(df):
+    usable = df.dropna(subset=["metric_value"]).copy()
+
+    total = float(usable["metric_value"].sum())
+    count = int(len(usable))
+    average = float(usable["metric_value"].mean())
+
+    baseline = {
+        "baseline_name": "overall_mean_and_total",
+        "baseline_record_count": count,
+        "baseline_total_value": total,
+        "baseline_average_value": average,
+        "baseline_unit": "currency_unspecified",
+        "data_version": DATA_VERSION,
+        "method_version": METHOD_VERSION,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUTPUT_DIR / "baseline_results.json").write_text(
+        json.dumps(baseline, indent=2),
+        encoding="utf-8",
+    )
+
+    return baseline
+
+
+def execute_comparative_method(df, baseline):
+    grouped = (
+        df.dropna(subset=[PRIMARY_DIMENSION, "metric_value"])
+        .groupby(PRIMARY_DIMENSION, as_index=False)
+        .agg(
+            record_count=("record_id", "count"),
+            total_value=("metric_value", "sum"),
+            average_value=("metric_value", "mean"),
+            record_ids=("record_id", list),
+        )
+    )
+
+    grouped = grouped[grouped["record_count"] >= MIN_GROUP_SIZE].copy()
+
+    if grouped.empty:
+        raise ValueError("No primary groups meet the minimum group size.")
+
+    total_all = float(grouped["total_value"].sum())
+
+    grouped["contribution_pct"] = (
+        grouped["total_value"] / total_all * 100
+    )
+
+    grouped = grouped.sort_values(
+        by=["total_value", PRIMARY_DIMENSION],
+        ascending=[False, True],
+        kind="mergesort",
+    ).reset_index(drop=True)
+
+    grouped["priority_rank"] = grouped.index + 1
+
+    baseline_average = baseline["baseline_average_value"]
+
+    results = []
+    for _, row in grouped.iterrows():
+        comparison = (
+            "above_overall_average"
+            if row["average_value"] > baseline_average
+            else "at_or_below_overall_average"
+        )
+
+        results.append(
+            {
+                "group_key": str(row[PRIMARY_DIMENSION]),
+                "record_count": int(row["record_count"]),
+                "total_value": float(row["total_value"]),
+                "average_value": float(row["average_value"]),
+                "contribution_pct": float(row["contribution_pct"]),
+                "priority_rank": int(row["priority_rank"]),
+                "baseline_comparison": comparison,
+                "record_ids": [str(x) for x in row["record_ids"]],
+            }
+        )
+
+    output = {
+        "data_version": DATA_VERSION,
+        "method_version": METHOD_VERSION,
+        "primary_dimension": PRIMARY_DIMENSION,
+        "minimum_group_size": MIN_GROUP_SIZE,
+        "baseline": baseline,
+        "groups": results,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    (OUTPUT_DIR / "comparative_intelligence.json").write_text(
+        json.dumps(output, indent=2),
+        encoding="utf-8",
+    )
+
+    return output
+
+
+def run():
+    df = load_canonical()
+    baseline = execute_baseline(df)
+    output = execute_comparative_method(df, baseline)
+
+    print("ANALYTICAL TRACK GENERATED")
+    print("Track: Track A — Comparative Intelligence")
+    print(f"Records: {len(df)}")
+    print(f"Primary groups included: {len(output['groups'])}")
+    print(f"Baseline average: {baseline['baseline_average_value']}")
+    print(f"Baseline total: {baseline['baseline_total_value']}")
+    print(
+        "Output: "
+        + str(OUTPUT_DIR / "comparative_intelligence.json")
+    )
+    print(
+        "Baseline output: "
+        + str(OUTPUT_DIR / "baseline_results.json")
+    )
+
+
+if __name__ == "__main__":
+    run()
 </file>
 
 <file path="data-science/scripts/assess_analytical_readiness.py">
@@ -5483,6 +4095,171 @@ print(f"Canonical records assessed: {len(df)}")
 print("Representativeness: LIMITED")
 </file>
 
+<file path="data-science/scripts/export_intelligence_results.py">
+import csv
+import json
+from datetime import datetime
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+INPUT = BASE_DIR / "data/canonical/intelligence_data.csv"
+ANALYTICAL = BASE_DIR / "data-science/outputs/comparative_intelligence.json"
+VALIDATION = BASE_DIR / "data-science/outputs/validation_metrics.json"
+WEAK_CASE = BASE_DIR / "data-science/outputs/weak_case_review.json"
+
+RESULTS = BASE_DIR / "data-science/outputs/intelligence_results.json"
+SUMMARY = BASE_DIR / "data-science/outputs/intelligence_summary.json"
+
+DATA_VERSION = "phase3-v1.0.0"
+METHOD_VERSION = "1.0.0"
+
+
+def load_rows():
+    with INPUT.open(newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def main():
+    rows = load_rows()
+
+    with ANALYTICAL.open(encoding="utf-8") as f:
+        analytical = json.load(f)
+
+    with VALIDATION.open(encoding="utf-8") as f:
+        validation = json.load(f)
+
+    with WEAK_CASE.open(encoding="utf-8") as f:
+        weak_case = json.load(f)
+
+    if analytical["data_version"] != DATA_VERSION:
+        raise ValueError("Analytical result has the wrong data version.")
+
+    if not validation["passed"]:
+        raise ValueError("Validation has not passed.")
+
+    generated_at = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+
+    results = []
+
+    for group in analytical["groups"]:
+        results.append(
+            {
+                "result_id": f"POC12-CAT-{group['priority_rank']:02d}",
+                "result_type": "comparative_group",
+                "record_id": None,
+                "entity_id": None,
+                "group_key": group["group_key"],
+                "period_start": None,
+                "period_end": None,
+                "metric_name": "total_deal_value",
+                "result_value": group["total_value"],
+                "result_unit": "currency_unspecified",
+                "result_category": f"rank_{group['priority_rank']}",
+                "priority_rank": group["priority_rank"],
+                "finding": (
+                    f"{group['group_key']} ranks {group['priority_rank']} by total "
+                    f"deal value among categories meeting the minimum "
+                    f"group-size threshold."
+                ),
+                "evidence": {
+                    "record_count": group["record_count"],
+                    "average_deal_value": group["average_value"],
+                    "contribution_pct": group[
+                        "contribution_pct"
+                    ],
+                    "record_ids": group["record_ids"],
+                },
+                "method_version": METHOD_VERSION,
+                "data_version": DATA_VERSION,
+                "generated_at": generated_at,
+                "quality_status": "validated",
+                "limitation": (
+                    "Descriptive result from the supplied synthetic "
+                    "canonical sample; not causal evidence."
+                ),
+            }
+        )
+
+    with RESULTS.open("w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
+
+    priority_items = [
+        {
+            "priority_rank": item["priority_rank"],
+            "group_key": item["group_key"],
+            "total_value": item["total_value"],
+            "contribution_pct": item[
+                "contribution_pct"
+            ],
+        }
+        for item in analytical["groups"]
+    ]
+
+    summary = {
+        "project_id": "POC-12",
+        "project_title": "Lost Deal Reason & Recovery Intelligence",
+        "approved_track": "Track A — Comparative Intelligence",
+        "primary_question": (
+            "Which lost-deal categories, stages, statuses, and "
+            "deal-value patterns are most important for understanding "
+            "where recovery opportunities exist?"
+        ),
+        "decision": (
+            "Use descriptive evidence to identify where recovery "
+            "attention may be concentrated."
+        ),
+        "data_version": DATA_VERSION,
+        "method_version": METHOD_VERSION,
+        "result_count": len(results),
+        "key_findings": [
+            (
+                f"{item['group_key']} ranks {item['priority_rank']} by total deal value, "
+                f"with {item['contribution_pct']:.2f}% of the "
+                "observed total."
+            )
+            for item in analytical["groups"]
+        ],
+        "priority_items": priority_items,
+        "validation_result": {
+            "passed": validation["passed"],
+            "contribution_total_percent": validation[
+                "contribution_total_percent"
+            ],
+            "small_groups_at_threshold": validation[
+                "small_groups_at_threshold"
+            ],
+        },
+        "weak_case_review": {
+            "minimum_size_cases": len(weak_case["weak_cases"]),
+            "highest_value_record": weak_case[
+                "highest_value_record_review"
+            ],
+        },
+        "important_limitations": [
+            "The analysis uses 20 synthetic canonical records.",
+            "Currency is unspecified.",
+            "Timing and Budget contain only three records each.",
+            "The sample may not represent the complete operational population.",
+            "Results are descriptive and do not establish causality.",
+        ],
+        "generated_at": generated_at,
+    }
+
+    with SUMMARY.open("w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+
+    print("INTELLIGENCE RESULTS EXPORTED")
+    print(f"Results: {len(results)}")
+    print(f"Validation passed: {validation['passed']}")
+    print(f"Results output: {RESULTS}")
+    print(f"Summary output: {SUMMARY}")
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
 <file path="data-science/scripts/profile_canonical_data.py">
 import json
 from pathlib import Path
@@ -5533,8 +4310,532 @@ print(f"Records: {len(df)}")
 print(f"Columns: {len(df.columns)}")
 </file>
 
-<file path="data-science/README.md">
-# Phase 3 — Analytical Track Development
+<file path="data-science/scripts/review_weak_cases.py">
+import csv
+import json
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+INPUT = BASE_DIR / "data/canonical/intelligence_data.csv"
+RESULTS = BASE_DIR / "data-science/outputs/comparative_intelligence.json"
+OUTPUT = BASE_DIR / "data-science/outputs/weak_case_review.json"
+
+MIN_GROUP_SIZE = 3
+DATA_VERSION = "phase3-v1.0.0"
+
+
+def load_rows():
+    with INPUT.open(newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+
+    for row in rows:
+        row["metric_value"] = float(row["metric_value"])
+
+    return rows
+
+
+def leave_one_out_sensitivity(rows, category):
+    members = [
+        row for row in rows
+        if row["category"].strip() == category
+    ]
+
+    if len(members) <= MIN_GROUP_SIZE:
+        return {
+            "category": category,
+            "tested": True,
+            "reason": "Group is at the minimum sample-size threshold.",
+            "rank_changes": [],
+        }
+
+    baseline_totals = {}
+
+    for row in rows:
+        key = row["category"].strip()
+        baseline_totals.setdefault(key, 0.0)
+        baseline_totals[key] += row["metric_value"]
+
+    baseline_order = [
+        key
+        for key, _ in sorted(
+            baseline_totals.items(),
+            key=lambda x: (-x[1], x[0]),
+        )
+    ]
+
+    changes = []
+
+    for removed in members:
+        totals = {}
+
+        for row in rows:
+            if row["record_id"] == removed["record_id"]:
+                continue
+
+            key = row["category"].strip()
+            totals.setdefault(key, 0.0)
+            totals[key] += row["metric_value"]
+
+        order = [
+            key
+            for key, _ in sorted(
+                totals.items(),
+                key=lambda x: (-x[1], x[0]),
+            )
+        ]
+
+        if order != baseline_order:
+            changes.append(
+                {
+                    "removed_record_id": removed["record_id"],
+                    "removed_value": removed["metric_value"],
+                    "ranking_after_removal": order,
+                }
+            )
+
+    return {
+        "category": category,
+        "tested": True,
+        "reason": "Leave-one-out sensitivity test performed.",
+        "baseline_ranking": baseline_order,
+        "rank_changes": changes,
+    }
+
+
+def main():
+    rows = load_rows()
+
+    with RESULTS.open(encoding="utf-8") as f:
+        results = json.load(f)
+
+    groups = results["groups"]
+
+    weak_cases = []
+
+    for group in groups:
+        if group["record_count"] == MIN_GROUP_SIZE:
+            weak_cases.append(
+                {
+                    "case_type": "minimum_group_size",
+                    "category": group["group_key"],
+                    "record_count": group["record_count"],
+                    "assessment": (
+                        "Ranking is included because the group meets the "
+                        "minimum threshold, but the estimate is more sensitive "
+                        "to individual records than larger groups."
+                    ),
+                }
+            )
+
+    sensitivity_reviews = [
+        leave_one_out_sensitivity(rows, group["group_key"])
+        for group in groups
+    ]
+
+    extreme_record = max(
+        rows,
+        key=lambda row: row["metric_value"],
+    )
+
+    review = {
+        "review_type": "weak_case_and_limitation_review",
+        "data_version": DATA_VERSION,
+        "minimum_group_size": MIN_GROUP_SIZE,
+        "weak_cases": weak_cases,
+        "leave_one_out_sensitivity": sensitivity_reviews,
+        "highest_value_record_review": {
+            "record_id": extreme_record["record_id"],
+            "category": extreme_record["category"],
+            "metric_value": extreme_record["metric_value"],
+            "assessment": (
+                "This record is flagged as an extreme-value candidate for "
+                "interpretation because it has the highest deal value in "
+                "the canonical sample. The review does not remove it from "
+                "the primary analysis."
+            ),
+        },
+        "overall_assessment": (
+            "Comparative ranking is usable for descriptive analysis of the "
+            "canonical sample, with caution for minimum-size groups and "
+            "potential influence from extreme deal values."
+        ),
+        "limitations": [
+            "The canonical dataset contains only 20 synthetic records.",
+            "Minimum-size groups have only three records.",
+            "The supplied sample may not represent the full operational population.",
+            "Observed ranking should not be interpreted as causal evidence.",
+            "Currency is unspecified in the canonical data.",
+        ],
+    }
+
+    with OUTPUT.open("w", encoding="utf-8") as f:
+        json.dump(review, f, indent=2)
+
+    print("WEAK-CASE REVIEW GENERATED")
+    print(f"Minimum-size groups reviewed: {len(weak_cases)}")
+    print(
+        "Highest-value record:",
+        extreme_record["record_id"],
+        extreme_record["metric_value"],
+    )
+    print(f"Output: {OUTPUT}")
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="data-science/scripts/run_analytical_track.py">
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+TRACK_DIR = ROOT / "data-science" / "scripts" / "track-specific"
+
+if str(TRACK_DIR) not in sys.path:
+    sys.path.insert(0, str(TRACK_DIR))
+
+from comparative_intelligence import run
+
+if __name__ == "__main__":
+    run()
+</file>
+
+<file path="data-science/scripts/run_comparative_intelligence.py">
+from run_analytical_track import run
+
+if __name__ == "__main__":
+    run()
+</file>
+
+<file path="data-science/scripts/validate_analytical_track.py">
+from pathlib import Path
+import json
+import math
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[2]
+DATA_PATH = ROOT / "data" / "canonical" / "intelligence_data.csv"
+RESULT_PATH = ROOT / "data-science" / "outputs" / "comparative_intelligence.json"
+BASELINE_PATH = ROOT / "data-science" / "outputs" / "baseline_results.json"
+OUTPUT_PATH = ROOT / "data-science" / "outputs" / "validation_metrics.json"
+
+DATA_VERSION = "phase3-v1.0.0"
+METHOD_VERSION = "1.0.0"
+MIN_GROUP_SIZE = 3
+TOLERANCE = 0.1
+
+
+def close(a, b, tolerance=0.01):
+    return math.isclose(float(a), float(b), abs_tol=tolerance, rel_tol=1e-9)
+
+
+def main():
+    df = pd.read_csv(DATA_PATH)
+
+    result = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
+    baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+
+    checks = {}
+
+    checks["data_version"] = (
+        set(df["data_version"].dropna().astype(str)) == {DATA_VERSION}
+        and result["data_version"] == DATA_VERSION
+        and baseline["data_version"] == DATA_VERSION
+    )
+
+    checks["method_version"] = (
+        result["method_version"] == METHOD_VERSION
+        and baseline["method_version"] == METHOD_VERSION
+    )
+
+    checks["record_count"] = len(df) == 20
+
+    usable = df.dropna(subset=["category", "metric_value"]).copy()
+
+    expected = (
+        usable.groupby("category")
+        .agg(
+            record_count=("record_id", "count"),
+            total_value=("metric_value", "sum"),
+            average_value=("metric_value", "mean"),
+        )
+        .reset_index()
+    )
+
+    expected = expected[
+        expected["record_count"] >= MIN_GROUP_SIZE
+    ].copy()
+
+    expected["contribution_pct"] = (
+        expected["total_value"]
+        / expected["total_value"].sum()
+        * 100
+    )
+
+    expected = expected.sort_values(
+        ["total_value", "category"],
+        ascending=[False, True],
+        kind="mergesort",
+    ).reset_index(drop=True)
+
+    expected["priority_rank"] = expected.index + 1
+
+    actual = result["groups"]
+
+    checks["minimum_group_size"] = all(
+        item["record_count"] >= MIN_GROUP_SIZE
+        for item in actual
+    )
+
+    checks["group_count"] = len(actual) == len(expected)
+
+    calculation_accuracy = True
+    ranking_accuracy = True
+    deterministic_ties = True
+
+    for _, row in expected.iterrows():
+        matches = [
+            item for item in actual
+            if item["group_key"] == row["category"]
+        ]
+
+        if len(matches) != 1:
+            calculation_accuracy = False
+            ranking_accuracy = False
+            continue
+
+        item = matches[0]
+
+        if not close(item["record_count"], row["record_count"], 0):
+            calculation_accuracy = False
+
+        if not close(item["total_value"], row["total_value"], 0.01):
+            calculation_accuracy = False
+
+        if not close(item["average_value"], row["average_value"], 0.01):
+            calculation_accuracy = False
+
+        if not close(
+            item["contribution_pct"],
+            row["contribution_pct"],
+            0.01,
+        ):
+            calculation_accuracy = False
+
+        if item["priority_rank"] != int(row["priority_rank"]):
+            ranking_accuracy = False
+
+    checks["calculation_accuracy"] = calculation_accuracy
+    checks["ranking_accuracy"] = ranking_accuracy
+
+    ranks = [item["priority_rank"] for item in actual]
+    checks["sequential_ranking"] = ranks == list(range(1, len(actual) + 1))
+
+    sorted_groups = [
+        item["group_key"]
+        for item in sorted(
+            actual,
+            key=lambda x: (-x["total_value"], x["group_key"])
+        )
+    ]
+
+    actual_groups = [item["group_key"] for item in actual]
+    checks["deterministic_tie_handling"] = (
+        actual_groups == sorted_groups
+    )
+
+    contribution_total = sum(
+        item["contribution_pct"] for item in actual
+    )
+
+    checks["contribution_total"] = abs(
+        contribution_total - 100
+    ) <= TOLERANCE
+
+    expected_baseline_total = float(
+        df["metric_value"].dropna().sum()
+    )
+
+    expected_baseline_average = float(
+        df["metric_value"].dropna().mean()
+    )
+
+    checks["baseline_total"] = close(
+        baseline["baseline_total_value"],
+        expected_baseline_total,
+        0.01,
+    )
+
+    checks["baseline_average"] = close(
+        baseline["baseline_average_value"],
+        expected_baseline_average,
+        0.01,
+    )
+
+    small_groups = [
+        item["group_key"]
+        for item in actual
+        if item["record_count"] == MIN_GROUP_SIZE
+    ]
+
+    checks["small_group_review_identified"] = (
+        len(small_groups) > 0
+    )
+
+    passed = all(checks.values())
+
+    validation_output = {
+        "approved_track": "Track A — Comparative Intelligence",
+        "data_version": DATA_VERSION,
+        "method_version": METHOD_VERSION,
+        "validation_result": "PASS" if passed else "CHANGES REQUIRED",
+        "passed": passed,
+        "record_count": len(df),
+        "primary_group_count": len(actual),
+        "minimum_group_size": MIN_GROUP_SIZE,
+        "contribution_total_percent": contribution_total,
+        "small_groups_at_threshold": small_groups,
+        "baseline": {
+            "total_value": baseline["baseline_total_value"],
+            "average_value": baseline["baseline_average_value"],
+        },
+        "checks": checks,
+    }
+
+    OUTPUT_PATH.write_text(
+        json.dumps(validation_output, indent=2),
+        encoding="utf-8",
+    )
+
+    print("ANALYTICAL TRACK VALIDATION COMPLETE")
+    print(f"Passed: {passed}")
+    print(f"Contribution total: {contribution_total:.2f}%")
+    print(f"Small groups at threshold: {small_groups}")
+    print(f"Baseline total: {baseline['baseline_total_value']}")
+    print(f"Baseline average: {baseline['baseline_average_value']}")
+    print(f"Output: {OUTPUT_PATH}")
+
+    if not passed:
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="docs/ANALYTICAL_INPUT_CONTRACT.md">
+# Analytical Input Contract
+
+## Project
+POC-12 — Lost Deal Reason & Recovery Intelligence
+
+## Canonical Data Source
+`data/canonical/intelligence_data.csv`
+
+## Data Version
+`phase3-v1.0.0`
+
+## Approved Analytical Track
+Track A — Comparative Intelligence
+
+| Canonical Field | Analytical Role | Transformation | Required? | Available at Decision Time? | Limitation |
+|---|---|---|---|---|---|
+| record_id | Identifier / evidence field | None | Yes | Yes | Identifier only; not used as an analytical signal |
+| record_type | Context field | None | Yes | Yes | Constant value `lost_deal` |
+| observed_at | Context / time field | Parse as UTC datetime | No | Yes | Limited historical coverage |
+| entity_id | Identifier / evidence field | None | Yes | Yes | Identifier only |
+| related_entity_id | Excluded field | None | No | Yes | Null for all canonical records |
+| entity_name | Evidence field | None | No | Yes | Used only to trace findings to entities |
+| category | Grouping dimension | None | Yes | Yes | Five categories in the canonical sample |
+| subcategory | Grouping/detail dimension | None | Yes | Yes | Product-derived grouping |
+| status | Comparison dimension | None | No | Yes | Three observed priority levels |
+| stage | Comparison dimension | None | No | Yes | Four observed deal stages |
+| metric_name | Metric identifier | Filter for `deal_value` | Yes | Yes | One metric in the canonical dataset |
+| metric_value | Metric | Numeric parsing | Yes | Yes | Currency is unspecified |
+| metric_unit | Metric metadata | None | Yes | Yes | `currency_unspecified` |
+| text_value | Evidence/context field | None | No | Yes | Limited to source action/recovery text |
+| latitude | Excluded field | None | No | No | No geographic values available |
+| longitude | Excluded field | None | No | No | No geographic values available |
+| source_name | Provenance metadata | None | No | Yes | Not an analytical signal |
+| source_record_id | Identifier / provenance field | None | No | Yes | Source identifier; not used as an analytical signal |
+| is_synthetic | Provenance metadata | None | Yes | Yes | All canonical records are synthetic |
+| data_version | Version metadata | Verify equals `phase3-v1.0.0` | Yes | Yes | Must match approved canonical version |
+
+## Analytical Inclusion Rules
+
+1. Load only `data/canonical/intelligence_data.csv`.
+2. Verify `data_version` equals `phase3-v1.0.0`.
+3. Use `metric_name == "deal_value"` for value-based comparisons.
+4. Exclude rows with missing `category` or `metric_value` from category metric calculations.
+5. Do not use identifiers as analytical features.
+6. Do not create a second cleaned or analytical dataset.
+7. Preserve the canonical records as the sole source of evidence.
+
+## Grouping Dimensions
+
+The primary comparison dimension is `category`.
+
+Additional descriptive comparisons may use:
+- `subcategory`
+- `status`
+- `stage`
+
+These fields are used only for descriptive comparative intelligence and are not treated as predictive features or targets.
+
+## Baseline Input
+
+The baseline uses category-level:
+- record count
+- total deal value
+- average deal value
+
+No ranking or derived scoring is required for the baseline.
+
+## Analytical Method Inputs
+
+Track A adds:
+- percentage contribution to total deal value
+- deterministic ranking by total deal value
+- minimum group-size filtering
+- sensitivity review for small groups and high-value records
+
+## Missing-Value Risks
+
+- Missing `category` prevents category assignment.
+- Missing `metric_value` prevents value-based comparison.
+- Missing geographic fields prevent geographic comparison.
+- Missing `related_entity_id` does not affect this track because it is excluded.
+- Missing text does not prevent numeric comparative analysis.
+
+## Leakage Assessment
+
+Track A is descriptive rather than predictive. No target is trained or predicted.
+
+Identifiers, provenance fields, and version metadata are excluded from analytical calculations. No future outcome variable is introduced.
+
+The calculations are performed directly from the approved canonical dataset and do not require fitting preprocessing parameters on a separate validation dataset.
+
+## Output Traceability
+
+Every group-level result must retain enough evidence to identify:
+- the analytical group;
+- record count;
+- total value;
+- average value;
+- contribution percentage;
+- ranking;
+- supporting canonical record identifiers where applicable.
+
+## Known Limitations
+
+The canonical dataset contains 20 synthetic records. Operational population coverage is not established, historical depth is limited, currency is unspecified, and geographic fields are unavailable. Therefore, Track A results are descriptive evidence for the supplied canonical sample only.
+</file>
+
+<file path="docs/ANALYTICAL_METHOD_REPORT.md">
+# Analytical Method Report
 
 ## Project
 
@@ -5544,13 +4845,14 @@ print(f"Columns: {len(df.columns)}")
 
 **Track A — Comparative Intelligence**
 
-## Canonical Input
+## Data and Version
 
-`data/canonical/intelligence_data.csv`
-
-Data version: `phase3-v1.0.0`
-
-The analytical implementation uses only the approved canonical dataset.
+- Canonical source: `data/canonical/intelligence_data.csv`
+- Data version: `phase3-v1.0.0`
+- Record count: 20
+- Record type: `lost_deal`
+- Primary metric: `deal_value`
+- Metric unit: `currency_unspecified`
 
 ## Analytical Question
 
@@ -5560,106 +4862,153 @@ The analytical implementation uses only the approved canonical dataset.
 
 > Use descriptive evidence to identify where recovery attention may be concentrated.
 
-## Method
+## Baseline
 
-The primary comparison is performed at the `category` level.
+The baseline is a simple category-level comparison using:
 
-For each category meeting the minimum group size of 3 records, the method calculates:
+1. Record count
+2. Total deal value
+3. Average deal value
 
-- Record count
-- Total deal value
-- Average deal value
+The baseline does not use ranking or contribution percentages.
+
+## Selected Comparative Method
+
+The selected method extends the baseline with:
+
+- Category-level total deal value
+- Category-level average deal value
 - Percentage contribution to total observed deal value
-- Deterministic priority rank
+- Deterministic ranking by total deal value
+- Alphabetical category name as the deterministic tie-break
+- Minimum group-size threshold of 3 records
 
-Ranking:
+The primary ranking dimension is `category`.
 
-1. Total deal value descending
-2. Category name ascending as the tie-break
+Descriptive comparisons are also calculated for:
 
-Descriptive comparisons are also generated for subcategory, status, and stage within the same approved comparative track.
+- `subcategory`
+- `status`
+- `stage`
 
-## Execution Scripts
+These supporting comparisons remain within the approved Comparative Intelligence track.
 
-### Analytical execution
+## Minimum Group Size
 
-`python3 data-science/scripts/run_comparative_intelligence.py`
+A group must contain at least **3 records** to participate in the primary comparative ranking.
 
-Generates: `data-science/outputs/comparative_intelligence.json`
+The supplied canonical data contains five categories:
 
-### Validation
+- Price
+- Competitor
+- Product Fit
+- Timing
+- Budget
 
-`python3 data-science/scripts/validate_analytical_track.py`
+All five categories meet the minimum threshold.
 
-Generates: `data-science/outputs/validation_metrics.json`
+Timing and Budget each contain exactly three records and are therefore treated as sensitivity cases.
 
-### Weak-case review
+## Calculation Logic
 
-`python3 data-science/scripts/review_weak_cases.py`
+For each included category:
 
-Generates: `data-science/outputs/weak_case_review.json`
+**Total deal value**
 
-### Intelligence export
+`sum(deal_value)`
 
-`python3 data-science/scripts/export_intelligence_results.py`
+**Average deal value**
 
-Generates:
-- `data-science/outputs/intelligence_results.json`
-- `data-science/outputs/intelligence_summary.json`
+`sum(deal_value) / record_count`
+
+**Percentage contribution**
+
+`category_total / overall_total × 100`
+
+**Priority rank**
+
+Categories are ordered by:
+
+1. Total deal value, descending
+2. Category name, ascending when totals tie
 
 ## Validation
 
-The analytical track independently recalculates the category results from the canonical CSV.
+The analytical output was independently recalculated directly from the canonical CSV.
 
-Validated checks include:
+Validation checks include:
 
-- Data version
-- Record count
-- Group count
-- Calculation accuracy
-- Contribution total
-- Ranking sequence
-- Deterministic ranking
-- Minimum-size group identification
+- Data-version consistency
+- Record-count consistency
+- Group-count consistency
+- Independent calculation accuracy
+- Contribution total within rounding tolerance
+- Sequential ranking
+- Deterministic ranking rule
+- Identification of minimum-size groups
 
-Current validation result: **PASSED**
+Validation result:
 
-Rounded contribution percentages total **100.01%**, within the defined tolerance.
+**PASSED**
 
-## Weak Cases
+The calculated contribution total is **100.01%**, which is within the validation tolerance because percentages are rounded.
 
-The following categories are at the minimum group-size threshold:
+## Weak-Case Review
+
+Two groups are at the minimum group-size threshold:
 
 - Timing — 3 records
 - Budget — 3 records
 
-The highest-value record is `CRM-012` — `1,250,000`.
+These groups are retained because they meet the predefined threshold, but their comparisons should be interpreted with greater caution because individual records can have greater influence.
 
-## Output Files
+The highest-value record in the canonical sample is:
 
-- `outputs/comparative_intelligence.json`
-- `outputs/validation_metrics.json`
-- `outputs/weak_case_review.json`
-- `outputs/intelligence_results.json`
-- `outputs/intelligence_summary.json`
+- Record: `CRM-012`
+- Deal value: `1,250,000`
+
+This record is flagged for extreme-value sensitivity review and is not removed from the primary analysis.
 
 ## Interpretation Boundary
 
-The output is descriptive intelligence from the supplied synthetic canonical sample.
+The results are descriptive.
 
-It does not provide causal conclusions, predictive recovery probabilities, forecasts, machine-learning predictions, or population-wide estimates.
+They identify differences in the supplied canonical sample but do not establish:
+
+- Causation
+- Predictive performance
+- Future deal outcomes
+- Recovery success probability
+- Population-wide generalization
+
+## Limitations
+
+1. The dataset contains only 20 synthetic records.
+2. Currency is unspecified.
+3. Timing and Budget each contain only three records.
+4. The sample may not represent the complete operational population.
+5. Observed rankings should not be interpreted as causal evidence.
+6. The analysis does not introduce a predictive model.
 
 ## Reproducibility
 
-All analytical scripts use repository-relative paths.
+The method is implemented in:
 
-The canonical dataset is the only analytical input.
+`data-science/scripts/run_comparative_intelligence.py`
 
-Outputs are generated by code and must not be manually edited.
+Validation is implemented in:
 
-Method version: `1.0.0`
+`data-science/scripts/validate_analytical_track.py`
 
-Canonical data version: `phase3-v1.0.0`
+Weak-case review is implemented in:
+
+`data-science/scripts/review_weak_cases.py`
+
+Standard output generation is implemented in:
+
+`data-science/scripts/export_intelligence_results.py`
+
+All analytical scripts use repository-relative paths and the approved canonical dataset.
 </file>
 
 <file path="docs/ANALYTICAL_READINESS_REPORT.md">
@@ -5756,6 +5105,261 @@ Result:
 The dataset is suitable for bounded descriptive comparative analysis, subject to the documented limitations.
 
 No predictive model, risk score, anomaly model, forecasting system, segmentation model, simulation system, or Data Intelligence application should be developed until the Post #2 approval gate is satisfied.
+</file>
+
+<file path="docs/ANALYTICAL_TRACK_EXECUTION_PLAN.md">
+# Analytical Track Execution Plan
+
+## Project
+POC-12 — Lost Deal Reason & Recovery Intelligence
+
+## Canonical Data Version
+phase3-v1.0.0
+
+## Confirmed Data Archetype
+Structured event/transactional CRM records
+
+## Target User
+Business user reviewing lost CRM deals for recovery planning.
+
+## Primary Analytical Question
+Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?
+
+## Decision to Be Supported
+Use descriptive evidence to identify where recovery attention may be concentrated.
+
+## Approved Primary Track
+Track A — Comparative Intelligence
+
+## Approved Supporting Track
+None implemented in Post #3. The implementation is restricted to the approved primary track.
+
+## Input Fields
+- category — grouping dimension
+- subcategory — grouping/detail dimension
+- status — comparison dimension
+- stage — comparison dimension
+- metric_value — deal-value metric
+- record_id — evidence/record identifier
+- entity_id — evidence/entity identifier
+- observed_at — contextual date field
+- metric_name — metric identifier
+- metric_unit — metric unit
+- entity_name — evidence field
+- text_value — retained as evidence/context only
+
+## Excluded Fields
+- related_entity_id — no analytical value because it is null for all 20 records
+- latitude — unavailable
+- longitude — unavailable
+- source_record_id — source identifier, not an analytical feature
+- source_name — provenance metadata
+- is_synthetic — provenance metadata
+- data_version — version metadata
+- record_type — constant across all records
+- stage/status/category values will not be treated as predictive targets
+
+## Missing-Value Handling
+Only records with non-null values for the grouping field and metric_value will be included in metric comparisons. Missing geographic fields are not used. Missing related_entity_id does not affect Track A calculations because it is not an analytical input.
+
+## Baseline
+Simple category-level comparison using total deal value and average deal value without additional ranking or contribution analysis.
+
+## Selected Method
+Comparative analysis by meaningful categorical groups using:
+- record count
+- total deal value
+- average deal value
+- percentage contribution to total deal value
+- deterministic ranking
+
+A minimum group size of 3 records will be required for ranked category comparisons.
+
+## Validation Approach
+- Independently recalculate selected group totals and averages.
+- Confirm percentage contributions sum to approximately 100% across included groups.
+- Confirm deterministic ranking and tie handling.
+- Test sensitivity to small groups below the minimum threshold.
+- Review the effect of individual high-value records on rankings.
+- Document groups excluded because of insufficient records.
+- Confirm calculations use only data/canonical/intelligence_data.csv.
+
+## Expected Intelligence Results
+Structured group-level results following the standard intelligence-output contract, including:
+- result_id
+- result_type
+- record_id/entity_id where applicable
+- group_key
+- period_start/period_end where applicable
+- metric_name
+- result_value
+- result_unit
+- result_category
+- priority_rank where applicable
+- finding
+- evidence
+- method_version
+- data_version
+- generated_at
+- quality_status
+- limitation
+
+## Stop Conditions
+Stop implementation and require review if:
+- the canonical data version does not match phase3-v1.0.0;
+- the canonical CSV cannot be loaded or required fields are missing;
+- calculations require a second dataset;
+- a predictive or unsupported analytical method becomes necessary;
+- rankings cannot be reproduced deterministically;
+- validation identifies material calculation errors that cannot be resolved without changing the canonical data.
+
+## Known Limitations
+- The dataset contains only 20 synthetic lost-deal records.
+- Operational population coverage has not been established.
+- Historical depth is limited to January–June 2026.
+- Deal-value currency is unspecified.
+- Geographic coordinates are unavailable.
+- Results describe patterns in the supplied canonical sample and should not be interpreted as population-wide or predictive conclusions.
+</file>
+
+<file path="docs/ANALYTICAL_VALIDATION_REPORT.md">
+# Analytical Validation Report
+
+## Project
+
+**POC-12 — Lost Deal Reason & Recovery Intelligence**
+
+## Approved Track
+
+**Track A — Comparative Intelligence**
+
+## Validation Objective
+
+Verify that the comparative intelligence output is:
+
+- Calculated correctly from the approved canonical dataset
+- Consistent with `phase3-v1.0.0`
+- Deterministically ranked
+- Suitable for descriptive comparison
+- Explicit about weak cases and limitations
+
+## Validation Source
+
+The validation uses only:
+
+`data/canonical/intelligence_data.csv`
+
+No second cleaned or analytical dataset was introduced.
+
+## Validation Checks
+
+| Check | Result |
+|---|---|
+| Data version consistency | PASS |
+| Record count consistency | PASS |
+| Group count consistency | PASS |
+| Independent calculation accuracy | PASS |
+| Contribution total tolerance | PASS |
+| Sequential ranking | PASS |
+| Deterministic tie handling | PASS |
+| Minimum-size group identification | PASS |
+
+## Calculation Accuracy
+
+The category-level totals, averages, percentage contributions, and ranks were independently recalculated from the canonical CSV.
+
+The independently calculated results matched the generated analytical results.
+
+**Calculation accuracy: PASS**
+
+## Contribution Validation
+
+The rounded category contribution percentages total:
+
+**100.01%**
+
+The difference from 100% is attributable to percentage rounding and remains within the defined validation tolerance.
+
+**Contribution validation: PASS**
+
+## Ranking Stability
+
+The ranking rule is deterministic:
+
+1. Higher total deal value receives the higher priority.
+2. If total values are tied, category name is used as the alphabetical tie-break.
+
+This produces a reproducible ranking from the same canonical input.
+
+**Ranking stability: PASS**
+
+## Minimum-Size Review
+
+The minimum group-size threshold is **3 records**.
+
+The following categories are exactly at the threshold:
+
+- Timing
+- Budget
+
+They remain included in the analysis because they satisfy the predefined rule.
+
+However, their estimates are considered more sensitive to individual observations than larger groups.
+
+## Extreme-Value Review
+
+The highest-value record identified in the canonical sample is:
+
+- Record ID: `CRM-012`
+- Deal value: `1,250,000`
+
+This record is retained in the primary analysis.
+
+It is explicitly flagged because a high-value observation can have a greater influence on group totals and rankings.
+
+## Leave-One-Out Sensitivity
+
+A leave-one-out review was performed as part of the weak-case assessment.
+
+The purpose was to identify whether removing an individual observation changes the category ranking.
+
+This review is treated as a sensitivity assessment rather than as a reason to remove observations.
+
+## Validation Boundary
+
+The validation confirms the correctness and reproducibility of the calculations.
+
+It does **not** establish:
+
+- Causal relationships
+- Predictive accuracy
+- Future recovery probability
+- Generalization beyond the supplied sample
+- Business impact of any category
+
+## Overall Validation Result
+
+**ANALYTICAL TRACK VALIDATION PASSED**
+
+The comparative intelligence output is internally consistent with the approved canonical dataset and the defined Track A method.
+
+## Reproducibility Evidence
+
+Validation is implemented in:
+
+`data-science/scripts/validate_analytical_track.py`
+
+Weak-case review is implemented in:
+
+`data-science/scripts/review_weak_cases.py`
+
+Generated validation evidence:
+
+`data-science/outputs/validation_metrics.json`
+
+Generated weak-case evidence:
+
+`data-science/outputs/weak_case_review.json`
 </file>
 
 <file path="docs/CANONICAL_DATA_MAPPING.md">
@@ -6227,6 +5831,237 @@ No separate production CRM export, CSV, Excel file, database dump, or external A
 Therefore the canonical package is based only on the supplied Phase 2 synthetic CRM dataset.
 </file>
 
+<file path="docs/INTELLIGENCE_OUTPUT_CONTRACT.md">
+# Intelligence Output Contract
+
+## Project
+
+**POC-12 — Lost Deal Reason & Recovery Intelligence**
+
+## Approved Track
+
+**Track A — Comparative Intelligence**
+
+## Data Version
+
+`phase3-v1.0.0`
+
+## Method Version
+
+`1.0.0`
+
+---
+
+## 1. Intelligence Results Contract
+
+The primary output is:
+
+`data-science/outputs/intelligence_results.json`
+
+The output contains one result object for each included category.
+
+### Required Fields
+
+Each result object contains:
+
+- `result_id`
+- `result_type`
+- `record_id`
+- `entity_id`
+- `group_key`
+- `period_start`
+- `period_end`
+- `metric_name`
+- `result_value`
+- `result_unit`
+- `result_category`
+- `priority_rank`
+- `finding`
+- `evidence`
+- `method_version`
+- `data_version`
+- `generated_at`
+- `quality_status`
+- `limitation`
+
+### Field Definitions
+
+| Field | Meaning |
+|---|---|
+| `result_id` | Stable identifier for the comparative result |
+| `result_type` | Type of analytical result |
+| `record_id` | Record-level reference; null for group-level results |
+| `entity_id` | Entity-level reference; null for group-level results |
+| `group_key` | Category being compared |
+| `period_start` | Period start when applicable; null for the current aggregate |
+| `period_end` | Period end when applicable; null for the current aggregate |
+| `metric_name` | `total_deal_value` |
+| `result_value` | Total deal value for the group |
+| `result_unit` | `currency_unspecified` |
+| `result_category` | Deterministic rank label |
+| `priority_rank` | Rank based on total deal value |
+| `finding` | Plain-language descriptive finding |
+| `evidence` | Supporting count, average, contribution, and record IDs |
+| `method_version` | Analytical method version |
+| `data_version` | Canonical data version |
+| `generated_at` | UTC generation timestamp |
+| `quality_status` | Validation status |
+| `limitation` | Important interpretation boundary |
+
+---
+
+## 2. Evidence Contract
+
+The `evidence` object contains:
+
+- `record_count`
+- `average_deal_value`
+- `contribution_pct`
+- `record_ids`
+
+`contribution_pct` is the percentage contribution of the group's total deal value to the total deal value across included categories.
+
+These fields allow each comparative finding to be traced back to the canonical records.
+
+---
+
+## 3. Intelligence Summary Contract
+
+The summary output is:
+
+`data-science/outputs/intelligence_summary.json`
+
+### Required Fields
+
+The summary contains:
+
+- `project_id`
+- `project_title`
+- `approved_track`
+- `primary_question`
+- `decision`
+- `data_version`
+- `method_version`
+- `result_count`
+- `key_findings`
+- `priority_items`
+- `validation_result`
+- `weak_case_review`
+- `important_limitations`
+- `generated_at`
+
+---
+
+## 4. Priority Item Contract
+
+Each priority item contains:
+
+- `priority_rank`
+- `group_key`
+- `total_value`
+- `contribution_pct`
+
+Priority order is determined only by:
+
+1. Total deal value descending
+2. Category name ascending for deterministic ties
+
+No subjective score or business ranking is added.
+
+---
+
+## 5. Validation Contract
+
+The validation output must report:
+
+- Overall validation pass/fail
+- `contribution_total_percent`
+- Groups at the minimum-size threshold
+
+The detailed validation evidence is stored in:
+
+`data-science/outputs/validation_metrics.json`
+
+---
+
+## 6. Weak-Case Contract
+
+Weak-case evidence is stored in:
+
+`data-science/outputs/weak_case_review.json`
+
+The review identifies:
+
+- Groups at the minimum sample-size threshold
+- Leave-one-out sensitivity findings
+- Highest-value record
+- Interpretation limitations
+
+---
+
+## 7. Versioning
+
+All analytical outputs must identify:
+
+- `data_version = phase3-v1.0.0`
+- `method_version = 1.0.0`
+
+A change to the canonical analytical input requires a corresponding version review.
+
+A material change to the calculation method requires a method-version update.
+
+---
+
+## 8. Quality Status
+
+The current generated results have:
+
+`quality_status = validated`
+
+This indicates that the output passed the implemented Track A validation checks.
+
+---
+
+## 9. Interpretation Boundary
+
+The output is descriptive intelligence.
+
+It must not be interpreted as:
+
+- A causal analysis
+- A predictive model
+- A probability of recovery
+- A forecast
+- A population-wide estimate
+- A guarantee of business impact
+
+The output describes patterns observed in the approved synthetic canonical sample.
+
+---
+
+## 10. Reproducibility
+
+The output must be regenerated by executing the analytical scripts rather than manually editing JSON files.
+
+Primary execution:
+
+`data-science/scripts/run_comparative_intelligence.py`
+
+Validation:
+
+`data-science/scripts/validate_analytical_track.py`
+
+Weak-case review:
+
+`data-science/scripts/review_weak_cases.py`
+
+Export:
+
+`data-science/scripts/export_intelligence_results.py`
+
+All scripts use the approved canonical CSV as their analytical source.
+</file>
+
 <file path="docs/REPRESENTATIVENESS_ASSESSMENT.md">
 # Representativeness Assessment
 
@@ -6280,6 +6115,194 @@ The dataset should therefore be treated as a bounded demonstration dataset rathe
 ## Conclusion
 
 The canonical dataset is suitable for bounded descriptive analytical readiness assessment, subject to the documented limitations. Claims about operational representativeness should not be made from the current dataset alone.
+</file>
+
+<file path="docs/WEAK_CASE_AND_LIMITATION_REVIEW.md">
+# Weak Case and Limitation Review
+
+## Project
+
+**POC-12 — Lost Deal Reason & Recovery Intelligence**
+
+## Approved Track
+
+**Track A — Comparative Intelligence**
+
+## Data Version
+
+`phase3-v1.0.0`
+
+## Purpose
+
+This review documents cases where the comparative intelligence results require additional caution before business interpretation.
+
+The review is based on the approved canonical dataset and the generated validation evidence.
+
+---
+
+## 1. Minimum-Size Groups
+
+The analytical method requires a minimum group size of **3 records**.
+
+Two categories are exactly at this threshold:
+
+| Category | Records | Review |
+|---|---:|---|
+| Timing | 3 | Sensitive to individual observations |
+| Budget | 3 | Sensitive to individual observations |
+
+These groups were retained because they satisfy the predefined inclusion rule.
+
+Their rankings should nevertheless be interpreted with more caution than rankings based on larger groups.
+
+---
+
+## 2. Highest-Value Record
+
+The highest-value record in the canonical sample is:
+
+- Record ID: `CRM-012`
+- Deal value: `1,250,000`
+
+This record is flagged as an extreme-value candidate because a large observation can have a greater influence on group totals and rankings.
+
+The record remains in the primary analysis.
+
+No observation was manually removed.
+
+---
+
+## 3. Leave-One-Out Sensitivity
+
+A leave-one-out sensitivity review was executed for the category rankings.
+
+The purpose was to identify whether removing an individual record changes the overall category ordering.
+
+This is a sensitivity check only.
+
+It does not justify removing records from the canonical dataset.
+
+The detailed machine-readable evidence is available in:
+
+`data-science/outputs/weak_case_review.json`
+
+---
+
+## 4. Missing Groups
+
+The supplied canonical sample contains the observed categories available in the source data.
+
+The analysis does not assume that the supplied categories represent every category that could exist in the broader operational population.
+
+Therefore:
+
+> Absence from this sample must not be interpreted as evidence that a category does not exist operationally.
+
+---
+
+## 5. Missing Values
+
+The primary comparative calculation requires:
+
+- A non-empty grouping value
+- A numeric `deal_value`
+
+Rows that do not provide the required analytical values cannot contribute to the relevant group comparison.
+
+The current canonical dataset provides usable category and deal-value values for the generated category comparison.
+
+---
+
+## 6. Synthetic Data Limitation
+
+The canonical dataset contains **20 synthetic CRM records**.
+
+Therefore, the generated intelligence should be interpreted as a controlled analytical demonstration rather than as evidence about the complete real-world lost-deal population.
+
+---
+
+## 7. Currency Limitation
+
+The canonical metric unit is:
+
+`currency_unspecified`
+
+Therefore, numerical deal-value comparisons should be understood as comparisons within the supplied metric rather than interpreted as a confirmed currency-denominated business amount.
+
+---
+
+## 8. Causal Limitation
+
+The comparative analysis is descriptive.
+
+A higher total deal value or higher ranking does not establish that a category causes deal loss or that focusing on that category will cause recovery.
+
+No causal conclusion is produced by the analytical track.
+
+---
+
+## 9. Predictive Limitation
+
+Track A does not produce:
+
+- Recovery probabilities
+- Predicted outcomes
+- Forecasts
+- Machine-learning predictions
+- Individual deal recovery scores
+
+The output is comparative descriptive intelligence only.
+
+---
+
+## 10. Population Limitation
+
+The supplied sample covers a limited period and a limited number of records.
+
+The results should not automatically be generalized to:
+
+- Future periods
+- Other organizations
+- Other CRM populations
+- Unobserved categories
+- Larger operational populations
+
+---
+
+## 11. Reviewer Interpretation Guidance
+
+The appropriate interpretation is:
+
+> The analysis identifies descriptive differences in the supplied canonical sample and highlights where observed deal-value concentration is located.
+
+The inappropriate interpretation would be:
+
+> The highest-ranked category is definitively the most important cause of lost deals or will produce the greatest recovery if prioritized.
+
+The analytical output does not support that causal or predictive conclusion.
+
+---
+
+## 12. Overall Weak-Case Assessment
+
+The comparative intelligence track remains usable for its approved descriptive purpose.
+
+The principal interpretation risks are:
+
+1. Small groups at the minimum threshold
+2. Influence of a high-value observation
+3. Small synthetic sample size
+4. Unspecified currency
+5. Unknown completeness of the operational population
+
+These limitations are explicitly carried into the intelligence output.
+
+## Evidence
+
+- `data-science/outputs/weak_case_review.json`
+- `data-science/outputs/validation_metrics.json`
+- `data-science/outputs/intelligence_results.json`
+- `data-science/outputs/intelligence_summary.json`
 </file>
 
 <file path="public/file.svg">
@@ -7643,6 +7666,135 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   ],
   "final_result": "DATA READY FOR ANALYTICAL TRACK DEVELOPMENT"
 }
+</file>
+
+<file path="data-science/README.md">
+# Phase 3 — Analytical Track Development
+
+## Project
+
+**POC-12 — Lost Deal Reason & Recovery Intelligence**
+
+## Approved Analytical Track
+
+**Track A — Comparative Intelligence**
+
+## Canonical Input
+
+`data/canonical/intelligence_data.csv`
+
+Data version: `phase3-v1.0.0`
+
+The analytical implementation uses only the approved canonical dataset.
+
+## Analytical Question
+
+> Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?
+
+## Decision Supported
+
+> Use descriptive evidence to identify where recovery attention may be concentrated.
+
+## Method
+
+The primary comparison is performed at the `category` level.
+
+For each category meeting the minimum group size of 3 records, the method calculates:
+
+- Record count
+- Total deal value
+- Average deal value
+- Percentage contribution to total observed deal value
+- Deterministic priority rank
+
+Ranking:
+
+1. Total deal value descending
+2. Category name ascending as the tie-break
+
+Descriptive comparisons are also generated for subcategory, status, and stage within the same approved comparative track.
+
+## Execution Scripts
+
+### Analytical execution
+
+`python3 data-science/scripts/run_comparative_intelligence.py`
+
+Generates: `data-science/outputs/comparative_intelligence.json`
+
+### Validation
+
+`python3 data-science/scripts/validate_analytical_track.py`
+
+Generates: `data-science/outputs/validation_metrics.json`
+
+### Weak-case review
+
+`python3 data-science/scripts/review_weak_cases.py`
+
+Generates: `data-science/outputs/weak_case_review.json`
+
+### Intelligence export
+
+`python3 data-science/scripts/export_intelligence_results.py`
+
+Generates:
+- `data-science/outputs/intelligence_results.json`
+- `data-science/outputs/intelligence_summary.json`
+
+## Validation
+
+The analytical track independently recalculates the category results from the canonical CSV.
+
+Validated checks include:
+
+- Data version
+- Record count
+- Group count
+- Calculation accuracy
+- Contribution total
+- Ranking sequence
+- Deterministic ranking
+- Minimum-size group identification
+
+Current validation result: **PASSED**
+
+Rounded contribution percentages total **100.01%**, within the defined tolerance.
+
+## Weak Cases
+
+The following categories are at the minimum group-size threshold:
+
+- Timing — 3 records
+- Budget — 3 records
+
+The highest-value record is `CRM-012` — `1,250,000`.
+
+## Output Files
+
+- `outputs/comparative_intelligence.json`
+- `outputs/validation_metrics.json`
+- `outputs/weak_case_review.json`
+- `outputs/intelligence_results.json`
+- `outputs/intelligence_summary.json`
+
+## Interpretation Boundary
+
+The output is descriptive intelligence from the supplied synthetic canonical sample.
+
+It does not provide causal conclusions, predictive recovery probabilities, forecasts, machine-learning predictions, or population-wide estimates.
+
+## Reproducibility
+
+All analytical scripts use repository-relative paths.
+
+The canonical dataset is the only analytical input.
+
+Outputs are generated by code and must not be manually edited.
+
+Method version: `1.0.0`
+
+Canonical data version: `phase3-v1.0.0`
 </file>
 
 <file path="docs/SAMPLING_AND_REDUCTION_REPORT.md">

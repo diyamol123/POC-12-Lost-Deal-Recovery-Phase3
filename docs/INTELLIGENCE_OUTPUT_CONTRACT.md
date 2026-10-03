@@ -82,8 +82,10 @@ The `evidence` object contains:
 
 - `record_count`
 - `average_deal_value`
-- `percentage_of_total_value`
+- `contribution_pct`
 - `record_ids`
+
+`contribution_pct` is the percentage contribution of the group's total deal value to the total deal value across included categories.
 
 These fields allow each comparative finding to be traced back to the canonical records.
 
@@ -120,10 +122,10 @@ The summary contains:
 
 Each priority item contains:
 
-- `rank`
-- `group`
-- `total_deal_value`
-- `percentage_of_total_value`
+- `priority_rank`
+- `group_key`
+- `total_value`
+- `contribution_pct`
 
 Priority order is determined only by:
 
@@ -136,10 +138,10 @@ No subjective score or business ranking is added.
 
 ## 5. Validation Contract
 
-The summary must report:
+The validation output must report:
 
 - Overall validation pass/fail
-- Contribution total
+- `contribution_total_percent`
 - Groups at the minimum-size threshold
 
 The detailed validation evidence is stored in:
