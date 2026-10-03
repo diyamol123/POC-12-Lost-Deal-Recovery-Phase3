@@ -9,7 +9,7 @@
   "analytical_tracks": {
     "A Comparative Intelligence": {
       "status": "Supported",
-      "evidence": "The dataset contains categorical fields such as category, subcategory, status, stage, team, and product-derived subcategory, allowing descriptive comparisons."
+      "evidence": "The dataset contains categorical fields such as category, subcategory, status, stage, and product-derived subcategory, allowing descriptive comparisons."
     },
     "B Trend Intelligence": {
       "status": "Conditionally supported",
