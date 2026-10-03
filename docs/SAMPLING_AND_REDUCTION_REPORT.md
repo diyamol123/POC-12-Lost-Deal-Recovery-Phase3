@@ -24,7 +24,7 @@ The complete supplied dataset is already below the Phase 3 default limits:
 The source contains:
 
 - 20 records
-- 14 source fields
+- 13 source fields
 
 Retaining the complete dataset preserves the available:
 
