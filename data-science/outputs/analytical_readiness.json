@@ -1,0 +1,59 @@
+{
+  "source_of_truth": "data/canonical/intelligence_data.csv",
+  "record_count": 20,
+  "primary_data_archetype": {
+    "archetype": "Structured event/transactional CRM records",
+    "evidence": "Each record represents a lost-deal CRM observation with an observed date, entity, category, stage, status, metric value, and source provenance.",
+    "time_series_note": "The presence of observed_at does not by itself establish a time-series dataset."
+  },
+  "analytical_tracks": {
+    "A Comparative Intelligence": {
+      "status": "Supported",
+      "evidence": "The dataset contains categorical fields such as category, subcategory, status, stage, team, and product-derived subcategory, allowing descriptive comparisons."
+    },
+    "B Trend Intelligence": {
+      "status": "Conditionally supported",
+      "evidence": "observed_at is available, but only 20 synthetic records are supplied and the historical depth is limited."
+    },
+    "C Risk & Priority Intelligence": {
+      "status": "Conditionally supported",
+      "evidence": "A status field mapped from source priority is available, but the dataset does not establish a validated real-world risk target or scoring framework."
+    },
+    "D Anomaly Intelligence": {
+      "status": "Conditionally supported",
+      "evidence": "Deal values and categorical fields permit descriptive outlier inspection, but the small synthetic dataset is insufficient for robust anomaly modeling."
+    },
+    "E Segmentation Intelligence": {
+      "status": "Conditionally supported",
+      "evidence": "Categorical dimensions such as subcategory, status, stage, and entity attributes can support descriptive segmentation, but the sample is small."
+    },
+    "F Predictive Intelligence": {
+      "status": "Not supported",
+      "evidence": "The dataset does not provide sufficient historical examples, a genuine predictive target, or enough evidence for reliable model training and validation."
+    },
+    "G Simulation & Scenario Intelligence": {
+      "status": "Not supported",
+      "evidence": "The supplied dataset does not contain sufficient operational parameters or validated relationships to support defensible simulation."
+    },
+    "H Text & Theme Intelligence": {
+      "status": "Conditionally supported",
+      "evidence": "text_value contains action text, but the dataset is only 20 records and therefore provides limited text coverage for reliable theme analysis."
+    }
+  },
+  "primary_analytical_question": "Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?",
+  "intended_user": "A business user reviewing lost CRM deals for recovery planning.",
+  "decision_supported": "Use descriptive evidence from the available lost-deal records to identify where recovery attention may be concentrated.",
+  "predictive_status": {
+    "status": "Rejected for current dataset",
+    "reason": "Insufficient target definition, historical depth, sample size, and validation evidence."
+  },
+  "limitations": [
+    "Only 20 synthetic records are available.",
+    "The source does not establish a complete operational population.",
+    "Currency is unspecified in the source data.",
+    "Geographic coordinates are not available.",
+    "Text coverage is limited.",
+    "Predictive modeling is not justified by the current evidence."
+  ],
+  "final_result": "DATA READY FOR ANALYTICAL TRACK DEVELOPMENT"
+}

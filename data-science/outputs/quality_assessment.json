@@ -1,0 +1,59 @@
+{
+  "completeness": {
+    "record_id": 0,
+    "record_type": 0,
+    "source_name": 0,
+    "is_synthetic": 0,
+    "data_version": 0
+  },
+  "uniqueness": {
+    "record_id_unique": true,
+    "duplicate_record_ids": 0
+  },
+  "validity": {
+    "record_type_present": true,
+    "source_name_present": true,
+    "data_version_present": true,
+    "synthetic_flag_valid": true,
+    "metric_value_numeric": true
+  },
+  "consistency": {
+    "record_type_values": [
+      "lost_deal"
+    ],
+    "metric_names": [
+      "deal_value"
+    ],
+    "metric_units": [
+      "currency_unspecified"
+    ],
+    "data_versions": [
+      "phase3-v1.0.0"
+    ]
+  },
+  "accuracy": {
+    "assessment": "Limited: source is synthetic CRM data, so operational accuracy cannot be independently verified."
+  },
+  "representativeness": {
+    "assessment": "Limited: dataset contains 20 synthetic CRM records and is not evidence of a complete operational population."
+  },
+  "timeliness": {
+    "observed_at_min": "2026-01-08T00:00:00Z",
+    "observed_at_max": "2026-06-05T00:00:00Z"
+  },
+  "provenance": {
+    "source_names": [
+      "Phase 2 synthetic CRM dataset"
+    ],
+    "all_synthetic": true
+  },
+  "safety": {
+    "personal_or_restricted_data_identified": false,
+    "note": "Validation report from Post #1 passed restricted/personal-data checks."
+  },
+  "reproducibility": {
+    "source_of_truth": "data/canonical/intelligence_data.csv",
+    "pipeline_based": true,
+    "record_count": 20
+  }
+}

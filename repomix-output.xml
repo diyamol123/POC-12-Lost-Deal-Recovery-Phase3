@@ -53,12 +53,39 @@ app/
 backend/
   main.py
   requirements.txt
+data/
+  canonical/
+    intelligence_data.csv
+  published/
+    intelligence_data.json
+  quality/
+    data_profile.json
+    sampling_report.md
+    validation_report.json
+  source-sample/
+    source_sample.csv
+  manifest.json
+  README.md
+  schema.json
+docs/
+  CANONICAL_DATA_MAPPING.md
+  CANONICAL_DATA_PACKAGE_VALIDATION.md
+  DATA_SOURCE_INVENTORY.md
+  SAMPLING_AND_REDUCTION_REPORT.md
 public/
   file.svg
   globe.svg
   next.svg
   vercel.svg
   window.svg
+scripts/
+  data_pipeline/
+    extract_data.py
+    profile_data.py
+    publish_data.py
+    sample_data.py
+    standardize_data.py
+    validate_data.py
 .gitignore
 AGENTS.md
 CLAUDE.md
@@ -1521,6 +1548,1460 @@ fastapi
 uvicorn[standard]
 </file>
 
+<file path="data/canonical/intelligence_data.csv">
+record_id,record_type,observed_at,entity_id,related_entity_id,entity_name,category,subcategory,status,stage,metric_name,metric_value,metric_unit,text_value,latitude,longitude,source_name,source_record_id,is_synthetic,data_version
+CRM-001,lost_deal,2026-01-08T00:00:00Z,CRM-001,,Aster Systems,Price,Analytics Suite,HIGH,Negotiation,deal_value,850000,currency_unspecified,Re-engage with ROI comparison and flexible pricing.,,,Phase 2 synthetic CRM dataset,CRM-001,true,phase3-v1.0.0
+CRM-002,lost_deal,2026-01-14T00:00:00Z,CRM-002,,Nova Retail,Competitor,Cloud Platform,HIGH,Proposal,deal_value,720000,currency_unspecified,Review competitor feature gap and schedule executive follow-up.,,,Phase 2 synthetic CRM dataset,CRM-002,true,phase3-v1.0.0
+CRM-003,lost_deal,2026-01-22T00:00:00Z,CRM-003,,Bluewave Foods,Product Fit,Analytics Suite,MEDIUM,Evaluation,deal_value,280000,currency_unspecified,Offer a product-fit workshop and targeted demo.,,,Phase 2 synthetic CRM dataset,CRM-003,true,phase3-v1.0.0
+CRM-004,lost_deal,2026-02-03T00:00:00Z,CRM-004,,Orbit Logistics,Timing,CRM Platform,MEDIUM,Proposal,deal_value,460000,currency_unspecified,Create a 60-day re-engagement reminder.,,,Phase 2 synthetic CRM dataset,CRM-004,true,phase3-v1.0.0
+CRM-005,lost_deal,2026-02-11T00:00:00Z,CRM-005,,Vertex Health,Price,Cloud Platform,HIGH,Negotiation,deal_value,1100000,currency_unspecified,Escalate for commercial review and ROI justification.,,,Phase 2 synthetic CRM dataset,CRM-005,true,phase3-v1.0.0
+CRM-006,lost_deal,2026-02-18T00:00:00Z,CRM-006,,Bright Retail,Budget,CRM Platform,LOW,Qualification,deal_value,190000,currency_unspecified,Revisit during next budget cycle.,,,Phase 2 synthetic CRM dataset,CRM-006,true,phase3-v1.0.0
+CRM-007,lost_deal,2026-02-26T00:00:00Z,CRM-007,,Northstar Finance,Competitor,Analytics Suite,HIGH,Negotiation,deal_value,640000,currency_unspecified,Compare analytics capabilities and migration benefits.,,,Phase 2 synthetic CRM dataset,CRM-007,true,phase3-v1.0.0
+CRM-008,lost_deal,2026-03-04T00:00:00Z,CRM-008,,Harbor Tech,Product Fit,Cloud Platform,MEDIUM,Evaluation,deal_value,230000,currency_unspecified,Run a technical discovery session.,,,Phase 2 synthetic CRM dataset,CRM-008,true,phase3-v1.0.0
+CRM-009,lost_deal,2026-03-12T00:00:00Z,CRM-009,,Zenith Motors,Competitor,CRM Platform,HIGH,Proposal,deal_value,920000,currency_unspecified,Build competitor battlecard and executive outreach.,,,Phase 2 synthetic CRM dataset,CRM-009,true,phase3-v1.0.0
+CRM-010,lost_deal,2026-03-18T00:00:00Z,CRM-010,,Urban Living,Timing,Analytics Suite,MEDIUM,Evaluation,deal_value,370000,currency_unspecified,Schedule future re-engagement based on buying cycle.,,,Phase 2 synthetic CRM dataset,CRM-010,true,phase3-v1.0.0
+CRM-011,lost_deal,2026-03-25T00:00:00Z,CRM-011,,Green Basket,Budget,CRM Platform,LOW,Qualification,deal_value,150000,currency_unspecified,Send lower-tier package when budget becomes available.,,,Phase 2 synthetic CRM dataset,CRM-011,true,phase3-v1.0.0
+CRM-012,lost_deal,2026-04-02T00:00:00Z,CRM-012,,Prime Energy,Price,Cloud Platform,HIGH,Negotiation,deal_value,1250000,currency_unspecified,Conduct executive pricing review and ROI analysis.,,,Phase 2 synthetic CRM dataset,CRM-012,true,phase3-v1.0.0
+CRM-013,lost_deal,2026-04-10T00:00:00Z,CRM-013,,Axis Manufacturing,Product Fit,CRM Platform,MEDIUM,Evaluation,deal_value,410000,currency_unspecified,Map missing requirements and propose configuration.,,,Phase 2 synthetic CRM dataset,CRM-013,true,phase3-v1.0.0
+CRM-014,lost_deal,2026-04-18T00:00:00Z,CRM-014,,Summit Bank,Competitor,Analytics Suite,HIGH,Negotiation,deal_value,980000,currency_unspecified,Present differentiated analytics capabilities.,,,Phase 2 synthetic CRM dataset,CRM-014,true,phase3-v1.0.0
+CRM-015,lost_deal,2026-04-25T00:00:00Z,CRM-015,,Coastal Foods,Timing,Cloud Platform,LOW,Proposal,deal_value,210000,currency_unspecified,Place into quarterly recovery campaign.,,,Phase 2 synthetic CRM dataset,CRM-015,true,phase3-v1.0.0
+CRM-016,lost_deal,2026-05-03T00:00:00Z,CRM-016,,Techline India,Price,CRM Platform,HIGH,Proposal,deal_value,570000,currency_unspecified,Reopen pricing discussion with value-based package.,,,Phase 2 synthetic CRM dataset,CRM-016,true,phase3-v1.0.0
+CRM-017,lost_deal,2026-05-11T00:00:00Z,CRM-017,,Metro Infra,Budget,Cloud Platform,MEDIUM,Qualification,deal_value,690000,currency_unspecified,Monitor budget approval and prepare re-entry plan.,,,Phase 2 synthetic CRM dataset,CRM-017,true,phase3-v1.0.0
+CRM-018,lost_deal,2026-05-19T00:00:00Z,CRM-018,,FreshMart,Competitor,Analytics Suite,LOW,Evaluation,deal_value,175000,currency_unspecified,Share product comparison and customer proof points.,,,Phase 2 synthetic CRM dataset,CRM-018,true,phase3-v1.0.0
+CRM-019,lost_deal,2026-05-27T00:00:00Z,CRM-019,,Medix Labs,Product Fit,CRM Platform,MEDIUM,Proposal,deal_value,520000,currency_unspecified,Schedule solution-design workshop.,,,Phase 2 synthetic CRM dataset,CRM-019,true,phase3-v1.0.0
+CRM-020,lost_deal,2026-06-05T00:00:00Z,CRM-020,,Global Textiles,Price,Analytics Suite,HIGH,Negotiation,deal_value,890000,currency_unspecified,Create executive-level commercial recovery plan.,,,Phase 2 synthetic CRM dataset,CRM-020,true,phase3-v1.0.0
+</file>
+
+<file path="data/published/intelligence_data.json">
+[
+  {
+    "record_id": "CRM-001",
+    "record_type": "lost_deal",
+    "observed_at": "2026-01-08T00:00:00Z",
+    "entity_id": "CRM-001",
+    "related_entity_id": null,
+    "entity_name": "Aster Systems",
+    "category": "Price",
+    "subcategory": "Analytics Suite",
+    "status": "HIGH",
+    "stage": "Negotiation",
+    "metric_name": "deal_value",
+    "metric_value": 850000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Re-engage with ROI comparison and flexible pricing.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-001",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-002",
+    "record_type": "lost_deal",
+    "observed_at": "2026-01-14T00:00:00Z",
+    "entity_id": "CRM-002",
+    "related_entity_id": null,
+    "entity_name": "Nova Retail",
+    "category": "Competitor",
+    "subcategory": "Cloud Platform",
+    "status": "HIGH",
+    "stage": "Proposal",
+    "metric_name": "deal_value",
+    "metric_value": 720000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Review competitor feature gap and schedule executive follow-up.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-002",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-003",
+    "record_type": "lost_deal",
+    "observed_at": "2026-01-22T00:00:00Z",
+    "entity_id": "CRM-003",
+    "related_entity_id": null,
+    "entity_name": "Bluewave Foods",
+    "category": "Product Fit",
+    "subcategory": "Analytics Suite",
+    "status": "MEDIUM",
+    "stage": "Evaluation",
+    "metric_name": "deal_value",
+    "metric_value": 280000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Offer a product-fit workshop and targeted demo.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-003",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-004",
+    "record_type": "lost_deal",
+    "observed_at": "2026-02-03T00:00:00Z",
+    "entity_id": "CRM-004",
+    "related_entity_id": null,
+    "entity_name": "Orbit Logistics",
+    "category": "Timing",
+    "subcategory": "CRM Platform",
+    "status": "MEDIUM",
+    "stage": "Proposal",
+    "metric_name": "deal_value",
+    "metric_value": 460000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Create a 60-day re-engagement reminder.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-004",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-005",
+    "record_type": "lost_deal",
+    "observed_at": "2026-02-11T00:00:00Z",
+    "entity_id": "CRM-005",
+    "related_entity_id": null,
+    "entity_name": "Vertex Health",
+    "category": "Price",
+    "subcategory": "Cloud Platform",
+    "status": "HIGH",
+    "stage": "Negotiation",
+    "metric_name": "deal_value",
+    "metric_value": 1100000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Escalate for commercial review and ROI justification.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-005",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-006",
+    "record_type": "lost_deal",
+    "observed_at": "2026-02-18T00:00:00Z",
+    "entity_id": "CRM-006",
+    "related_entity_id": null,
+    "entity_name": "Bright Retail",
+    "category": "Budget",
+    "subcategory": "CRM Platform",
+    "status": "LOW",
+    "stage": "Qualification",
+    "metric_name": "deal_value",
+    "metric_value": 190000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Revisit during next budget cycle.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-006",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-007",
+    "record_type": "lost_deal",
+    "observed_at": "2026-02-26T00:00:00Z",
+    "entity_id": "CRM-007",
+    "related_entity_id": null,
+    "entity_name": "Northstar Finance",
+    "category": "Competitor",
+    "subcategory": "Analytics Suite",
+    "status": "HIGH",
+    "stage": "Negotiation",
+    "metric_name": "deal_value",
+    "metric_value": 640000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Compare analytics capabilities and migration benefits.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-007",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-008",
+    "record_type": "lost_deal",
+    "observed_at": "2026-03-04T00:00:00Z",
+    "entity_id": "CRM-008",
+    "related_entity_id": null,
+    "entity_name": "Harbor Tech",
+    "category": "Product Fit",
+    "subcategory": "Cloud Platform",
+    "status": "MEDIUM",
+    "stage": "Evaluation",
+    "metric_name": "deal_value",
+    "metric_value": 230000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Run a technical discovery session.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-008",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-009",
+    "record_type": "lost_deal",
+    "observed_at": "2026-03-12T00:00:00Z",
+    "entity_id": "CRM-009",
+    "related_entity_id": null,
+    "entity_name": "Zenith Motors",
+    "category": "Competitor",
+    "subcategory": "CRM Platform",
+    "status": "HIGH",
+    "stage": "Proposal",
+    "metric_name": "deal_value",
+    "metric_value": 920000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Build competitor battlecard and executive outreach.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-009",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-010",
+    "record_type": "lost_deal",
+    "observed_at": "2026-03-18T00:00:00Z",
+    "entity_id": "CRM-010",
+    "related_entity_id": null,
+    "entity_name": "Urban Living",
+    "category": "Timing",
+    "subcategory": "Analytics Suite",
+    "status": "MEDIUM",
+    "stage": "Evaluation",
+    "metric_name": "deal_value",
+    "metric_value": 370000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Schedule future re-engagement based on buying cycle.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-010",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-011",
+    "record_type": "lost_deal",
+    "observed_at": "2026-03-25T00:00:00Z",
+    "entity_id": "CRM-011",
+    "related_entity_id": null,
+    "entity_name": "Green Basket",
+    "category": "Budget",
+    "subcategory": "CRM Platform",
+    "status": "LOW",
+    "stage": "Qualification",
+    "metric_name": "deal_value",
+    "metric_value": 150000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Send lower-tier package when budget becomes available.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-011",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-012",
+    "record_type": "lost_deal",
+    "observed_at": "2026-04-02T00:00:00Z",
+    "entity_id": "CRM-012",
+    "related_entity_id": null,
+    "entity_name": "Prime Energy",
+    "category": "Price",
+    "subcategory": "Cloud Platform",
+    "status": "HIGH",
+    "stage": "Negotiation",
+    "metric_name": "deal_value",
+    "metric_value": 1250000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Conduct executive pricing review and ROI analysis.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-012",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-013",
+    "record_type": "lost_deal",
+    "observed_at": "2026-04-10T00:00:00Z",
+    "entity_id": "CRM-013",
+    "related_entity_id": null,
+    "entity_name": "Axis Manufacturing",
+    "category": "Product Fit",
+    "subcategory": "CRM Platform",
+    "status": "MEDIUM",
+    "stage": "Evaluation",
+    "metric_name": "deal_value",
+    "metric_value": 410000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Map missing requirements and propose configuration.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-013",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-014",
+    "record_type": "lost_deal",
+    "observed_at": "2026-04-18T00:00:00Z",
+    "entity_id": "CRM-014",
+    "related_entity_id": null,
+    "entity_name": "Summit Bank",
+    "category": "Competitor",
+    "subcategory": "Analytics Suite",
+    "status": "HIGH",
+    "stage": "Negotiation",
+    "metric_name": "deal_value",
+    "metric_value": 980000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Present differentiated analytics capabilities.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-014",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-015",
+    "record_type": "lost_deal",
+    "observed_at": "2026-04-25T00:00:00Z",
+    "entity_id": "CRM-015",
+    "related_entity_id": null,
+    "entity_name": "Coastal Foods",
+    "category": "Timing",
+    "subcategory": "Cloud Platform",
+    "status": "LOW",
+    "stage": "Proposal",
+    "metric_name": "deal_value",
+    "metric_value": 210000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Place into quarterly recovery campaign.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-015",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-016",
+    "record_type": "lost_deal",
+    "observed_at": "2026-05-03T00:00:00Z",
+    "entity_id": "CRM-016",
+    "related_entity_id": null,
+    "entity_name": "Techline India",
+    "category": "Price",
+    "subcategory": "CRM Platform",
+    "status": "HIGH",
+    "stage": "Proposal",
+    "metric_name": "deal_value",
+    "metric_value": 570000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Reopen pricing discussion with value-based package.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-016",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-017",
+    "record_type": "lost_deal",
+    "observed_at": "2026-05-11T00:00:00Z",
+    "entity_id": "CRM-017",
+    "related_entity_id": null,
+    "entity_name": "Metro Infra",
+    "category": "Budget",
+    "subcategory": "Cloud Platform",
+    "status": "MEDIUM",
+    "stage": "Qualification",
+    "metric_name": "deal_value",
+    "metric_value": 690000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Monitor budget approval and prepare re-entry plan.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-017",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-018",
+    "record_type": "lost_deal",
+    "observed_at": "2026-05-19T00:00:00Z",
+    "entity_id": "CRM-018",
+    "related_entity_id": null,
+    "entity_name": "FreshMart",
+    "category": "Competitor",
+    "subcategory": "Analytics Suite",
+    "status": "LOW",
+    "stage": "Evaluation",
+    "metric_name": "deal_value",
+    "metric_value": 175000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Share product comparison and customer proof points.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-018",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-019",
+    "record_type": "lost_deal",
+    "observed_at": "2026-05-27T00:00:00Z",
+    "entity_id": "CRM-019",
+    "related_entity_id": null,
+    "entity_name": "Medix Labs",
+    "category": "Product Fit",
+    "subcategory": "CRM Platform",
+    "status": "MEDIUM",
+    "stage": "Proposal",
+    "metric_name": "deal_value",
+    "metric_value": 520000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Schedule solution-design workshop.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-019",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  },
+  {
+    "record_id": "CRM-020",
+    "record_type": "lost_deal",
+    "observed_at": "2026-06-05T00:00:00Z",
+    "entity_id": "CRM-020",
+    "related_entity_id": null,
+    "entity_name": "Global Textiles",
+    "category": "Price",
+    "subcategory": "Analytics Suite",
+    "status": "HIGH",
+    "stage": "Negotiation",
+    "metric_name": "deal_value",
+    "metric_value": 890000.0,
+    "metric_unit": "currency_unspecified",
+    "text_value": "Create executive-level commercial recovery plan.",
+    "latitude": null,
+    "longitude": null,
+    "source_name": "Phase 2 synthetic CRM dataset",
+    "source_record_id": "CRM-020",
+    "is_synthetic": true,
+    "data_version": "phase3-v1.0.0"
+  }
+]
+</file>
+
+<file path="data/quality/data_profile.json">
+{
+  "record_count": 20,
+  "column_count": 20,
+  "columns": [
+    "record_id",
+    "record_type",
+    "observed_at",
+    "entity_id",
+    "related_entity_id",
+    "entity_name",
+    "category",
+    "subcategory",
+    "status",
+    "stage",
+    "metric_name",
+    "metric_value",
+    "metric_unit",
+    "text_value",
+    "latitude",
+    "longitude",
+    "source_name",
+    "source_record_id",
+    "is_synthetic",
+    "data_version"
+  ],
+  "unique_record_ids": 20,
+  "date_range": {
+    "min": "2026-01-08T00:00:00Z",
+    "max": "2026-06-05T00:00:00Z"
+  },
+  "missing_values": {
+    "record_id": 0,
+    "record_type": 0,
+    "observed_at": 0,
+    "entity_id": 0,
+    "related_entity_id": 20,
+    "entity_name": 0,
+    "category": 0,
+    "subcategory": 0,
+    "status": 0,
+    "stage": 0,
+    "metric_name": 0,
+    "metric_value": 0,
+    "metric_unit": 0,
+    "text_value": 0,
+    "latitude": 20,
+    "longitude": 20,
+    "source_name": 0,
+    "source_record_id": 0,
+    "is_synthetic": 0,
+    "data_version": 0
+  },
+  "category_counts": {
+    "record_type": {
+      "lost_deal": 20
+    },
+    "category": {
+      "Price": 5,
+      "Competitor": 5,
+      "Product Fit": 4,
+      "Timing": 3,
+      "Budget": 3
+    },
+    "subcategory": {
+      "Analytics Suite": 7,
+      "Cloud Platform": 6,
+      "CRM Platform": 7
+    },
+    "status": {
+      "HIGH": 9,
+      "MEDIUM": 7,
+      "LOW": 4
+    },
+    "stage": {
+      "Negotiation": 6,
+      "Proposal": 6,
+      "Evaluation": 5,
+      "Qualification": 3
+    }
+  },
+  "synthetic_records": 20,
+  "metric": {
+    "name": "deal_value",
+    "unit": "currency_unspecified",
+    "min": 150000.0,
+    "max": 1250000.0
+  }
+}
+</file>
+
+<file path="data/quality/sampling_report.md">
+# Sampling Report
+
+## Source Dataset
+
+- Source: Phase 2 synthetic CRM dataset
+- Source location: `backend/main.py`
+- Source records available: 20
+- Source fields: 13
+- Source record range: CRM-001 to CRM-020
+
+## Sampling Method
+
+No sampling reduction was performed.
+
+All 20 supplied records were retained because the complete available dataset is already below the Phase 3 limits of 10,000 rows and 50 columns.
+
+No `head()`-based truncation was used.
+
+## Preservation
+
+The retained dataset preserves the supplied:
+
+- Dates
+- Locations
+- Teams
+- Products
+- Companies
+- Segments
+- Loss reasons
+- Competitors
+- Stages
+- Priorities
+- Deal values
+- Recovery actions
+
+## Reduction
+
+- Records removed: 0
+- Records retained: 20
+- Reduction performed: No
+- Random sampling: No
+- Random seed: Not applicable
+
+## Canonical Transformation
+
+The canonical dataset contains 20 records and 20 required canonical fields.
+
+Source fields that are not directly represented as individual canonical columns are documented in:
+
+`docs/CANONICAL_DATA_MAPPING.md`
+
+These include location, team, segment, and competitor.
+
+## Reproducibility
+
+The source extraction and sampling process can be reproduced using:
+
+```text
+scripts/data_pipeline/extract_data.py
+scripts/data_pipeline/sample_data.py
+
+## Limitation
+
+This package represents the complete supplied Phase 2 synthetic CRM dataset. It is not a production CRM export or live production database.
+</file>
+
+<file path="data/quality/validation_report.json">
+{
+  "status": "PASSED",
+  "package_version": "phase3-v1.0.0",
+  "record_count": 20,
+  "column_count": 20,
+  "unique_record_ids": 20,
+  "failures": [],
+  "checks": [
+    {
+      "check": "required_file:data/source-sample/source_sample.csv",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/canonical/intelligence_data.csv",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/published/intelligence_data.json",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/schema.json",
+      "status": "passed"
+    },
+    {
+      "check": "required_file:data/manifest.json",
+      "status": "passed"
+    },
+    {
+      "check": "file_size:data/source-sample/source_sample.csv",
+      "status": "passed",
+      "bytes": 3338
+    },
+    {
+      "check": "file_size:data/canonical/intelligence_data.csv",
+      "status": "passed",
+      "bytes": 5222
+    },
+    {
+      "check": "file_size:data/published/intelligence_data.json",
+      "status": "passed",
+      "bytes": 13814
+    },
+    {
+      "check": "file_size:data/schema.json",
+      "status": "passed",
+      "bytes": 5554
+    },
+    {
+      "check": "file_size:data/manifest.json",
+      "status": "passed",
+      "bytes": 1280
+    },
+    {
+      "check": "data_directory_size",
+      "status": "passed",
+      "bytes": 37211
+    },
+    {
+      "check": "canonical_structure",
+      "status": "passed",
+      "rows": 20,
+      "columns": 20
+    },
+    {
+      "check": "manifest_package_file:data/canonical/intelligence_data.csv",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/source-sample/source_sample.csv",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/schema.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/manifest.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/published/intelligence_data.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/quality/data_profile.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/quality/validation_report.json",
+      "status": "passed"
+    },
+    {
+      "check": "manifest_package_file:data/quality/sampling_report.md",
+      "status": "passed"
+    }
+  ]
+}
+</file>
+
+<file path="data/source-sample/source_sample.csv">
+id,date,location,team,product,company,segment,reason,competitor,stage,value,priority,action
+CRM-001,2026-01-08,Bengaluru,Enterprise,Analytics Suite,Aster Systems,Enterprise,Price,Salesforce,Negotiation,850000,HIGH,Re-engage with ROI comparison and flexible pricing.
+CRM-002,2026-01-14,Mumbai,Enterprise,Cloud Platform,Nova Retail,Enterprise,Competitor,Microsoft,Proposal,720000,HIGH,Review competitor feature gap and schedule executive follow-up.
+CRM-003,2026-01-22,Kochi,SMB,Analytics Suite,Bluewave Foods,SMB,Product Fit,Zoho,Evaluation,280000,MEDIUM,Offer a product-fit workshop and targeted demo.
+CRM-004,2026-02-03,Chennai,Mid-Market,CRM Platform,Orbit Logistics,Mid-Market,Timing,HubSpot,Proposal,460000,MEDIUM,Create a 60-day re-engagement reminder.
+CRM-005,2026-02-11,Hyderabad,Enterprise,Cloud Platform,Vertex Health,Enterprise,Price,AWS,Negotiation,1100000,HIGH,Escalate for commercial review and ROI justification.
+CRM-006,2026-02-18,Pune,SMB,CRM Platform,Bright Retail,SMB,Budget,Zoho,Qualification,190000,LOW,Revisit during next budget cycle.
+CRM-007,2026-02-26,Delhi,Mid-Market,Analytics Suite,Northstar Finance,Mid-Market,Competitor,Power BI,Negotiation,640000,HIGH,Compare analytics capabilities and migration benefits.
+CRM-008,2026-03-04,Kochi,SMB,Cloud Platform,Harbor Tech,SMB,Product Fit,AWS,Evaluation,230000,MEDIUM,Run a technical discovery session.
+CRM-009,2026-03-12,Bengaluru,Enterprise,CRM Platform,Zenith Motors,Enterprise,Competitor,Salesforce,Proposal,920000,HIGH,Build competitor battlecard and executive outreach.
+CRM-010,2026-03-18,Mumbai,Mid-Market,Analytics Suite,Urban Living,Mid-Market,Timing,Tableau,Evaluation,370000,MEDIUM,Schedule future re-engagement based on buying cycle.
+CRM-011,2026-03-25,Chennai,SMB,CRM Platform,Green Basket,SMB,Budget,Zoho,Qualification,150000,LOW,Send lower-tier package when budget becomes available.
+CRM-012,2026-04-02,Hyderabad,Enterprise,Cloud Platform,Prime Energy,Enterprise,Price,Azure,Negotiation,1250000,HIGH,Conduct executive pricing review and ROI analysis.
+CRM-013,2026-04-10,Pune,Mid-Market,CRM Platform,Axis Manufacturing,Mid-Market,Product Fit,HubSpot,Evaluation,410000,MEDIUM,Map missing requirements and propose configuration.
+CRM-014,2026-04-18,Delhi,Enterprise,Analytics Suite,Summit Bank,Enterprise,Competitor,Tableau,Negotiation,980000,HIGH,Present differentiated analytics capabilities.
+CRM-015,2026-04-25,Kochi,SMB,Cloud Platform,Coastal Foods,SMB,Timing,AWS,Proposal,210000,LOW,Place into quarterly recovery campaign.
+CRM-016,2026-05-03,Bengaluru,Mid-Market,CRM Platform,Techline India,Mid-Market,Price,Salesforce,Proposal,570000,HIGH,Reopen pricing discussion with value-based package.
+CRM-017,2026-05-11,Mumbai,Enterprise,Cloud Platform,Metro Infra,Enterprise,Budget,Azure,Qualification,690000,MEDIUM,Monitor budget approval and prepare re-entry plan.
+CRM-018,2026-05-19,Chennai,SMB,Analytics Suite,FreshMart,SMB,Competitor,Power BI,Evaluation,175000,LOW,Share product comparison and customer proof points.
+CRM-019,2026-05-27,Hyderabad,Mid-Market,CRM Platform,Medix Labs,Mid-Market,Product Fit,HubSpot,Proposal,520000,MEDIUM,Schedule solution-design workshop.
+CRM-020,2026-06-05,Pune,Enterprise,Analytics Suite,Global Textiles,Enterprise,Price,Tableau,Negotiation,890000,HIGH,Create executive-level commercial recovery plan.
+</file>
+
+<file path="data/manifest.json">
+{
+  "package_name": "phase3_canonical_data_foundation",
+  "package_version": "phase3-v1.0.0",
+  "description": "Canonical data package for the Phase 3 Lost Deal Recovery application.",
+  "source": {
+    "name": "Phase 2 synthetic CRM dataset",
+    "location": "backend/main.py",
+    "record_count": 20,
+    "source_field_count": 13,
+    "synthetic": true
+  },
+  "canonical": {
+    "file": "data/canonical/intelligence_data.csv",
+    "record_count": 20,
+    "column_count": 20
+  },
+  "source_sample": {
+    "file": "data/source-sample/source_sample.csv",
+    "record_count": 20,
+    "column_count": 13
+  },
+  "schema": {
+    "file": "data/schema.json",
+    "schema_version": "1.0.0"
+  },
+  "sampling": {
+    "reduction_performed": false,
+    "records_retained": 20,
+    "method": "full supplied dataset retained"
+  },
+  "published": {
+    "file": "data/published/intelligence_data.json",
+    "generated_from": "data/canonical/intelligence_data.csv"
+  },
+  "quality": {
+    "profile": "data/quality/data_profile.json",
+    "validation_report": "data/quality/validation_report.json"
+  },
+  "documentation": [
+    "docs/DATA_SOURCE_INVENTORY.md",
+    "docs/SAMPLING_AND_REDUCTION_REPORT.md",
+    "docs/CANONICAL_DATA_MAPPING.md",
+    "docs/CANONICAL_DATA_PACKAGE_VALIDATION.md"
+  ]
+}
+</file>
+
+<file path="data/README.md">
+# Phase 3 Canonical Data Foundation
+
+This directory contains the approved Phase 3 canonical data package for the Lost Deal Recovery application.
+
+## Source
+
+The supplied source is the Phase 2 synthetic CRM dataset defined in `backend/main.py`.
+
+- Source records: 20
+- Source fields: 13
+- Source type: synthetic CRM records
+- Production/live API dependency: none required for this Phase 3 data package
+
+## Canonical source of truth
+
+The single canonical source of truth is:
+
+`data/canonical/intelligence_data.csv`
+
+It contains 20 records and the required 20 canonical fields defined by the Phase 3 guide.
+
+## Package contents
+
+- `source-sample/source_sample.csv` — supplied source records
+- `canonical/intelligence_data.csv` — canonical dataset
+- `published/intelligence_data.json` — generated JSON publication
+- `schema.json` — canonical field definitions and constraints
+- `manifest.json` — package metadata and file inventory
+- `quality/data_profile.json` — data profile
+- `quality/validation_report.json` — machine-readable validation result
+- `quality/sampling_report.md` — sampling record
+
+## Pipeline
+
+The reproducible pipeline is:
+
+`extract_data.py -> sample_data.py -> standardize_data.py -> validate_data.py -> publish_data.py`
+
+Supporting profiling is provided by `profile_data.py`.
+
+All generated published JSON is derived from the canonical CSV.
+
+## Data handling
+
+- UTF-8 CSV with comma delimiters
+- Canonical fields use lowercase snake_case
+- Dates are normalized to UTC ISO timestamps where applicable
+- Missing values are represented as blank CSV values/null JSON values
+- Synthetic records are explicitly marked with `is_synthetic = true`
+- Source provenance and package version are retained
+- No production credentials, API keys, or restricted personal identifiers are included
+
+## Sampling
+
+The complete supplied dataset of 20 records is retained. No reduction was required because the dataset is already within the Phase 3 limits.
+
+## Important limitation
+
+The supplied records are synthetic Phase 2 CRM data. They are not a production export or live database. The source does not explicitly identify a currency for deal values, so the canonical `metric_unit` is recorded as `currency_unspecified` rather than assuming a currency.
+
+## Validation
+
+Run:
+
+`python3 scripts/data_pipeline/validate_data.py`
+
+The validation script checks the canonical structure, required fields, identifiers, dates, numeric and boolean values, size limits, restricted/personal data patterns, schema consistency, manifest consistency, and published JSON consistency.
+</file>
+
+<file path="data/schema.json">
+{
+  "schema_name": "phase3_canonical_intelligence_data",
+  "schema_version": "1.0.0",
+  "description": "Canonical schema for the Phase 3 Lost Deal Recovery synthetic CRM dataset.",
+  "columns": [
+    {
+      "name": "record_id",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Stable unique identifier for the canonical record.",
+      "source_derived": "id",
+      "example": "CRM-001"
+    },
+    {
+      "name": "record_type",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["lost_deal"],
+      "description": "Canonical record classification.",
+      "source_derived": "derived from dataset context",
+      "example": "lost_deal"
+    },
+    {
+      "name": "observed_at",
+      "type": "datetime",
+      "required": true,
+      "nullable": false,
+      "description": "Observation date normalized to ISO UTC datetime. Source provides date only.",
+      "source_derived": "date",
+      "example": "2026-01-08T00:00:00Z"
+    },
+    {
+      "name": "entity_id",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Stable entity reference derived from the source deal ID.",
+      "source_derived": "id",
+      "example": "CRM-001"
+    },
+    {
+      "name": "related_entity_id",
+      "type": "string",
+      "required": false,
+      "nullable": true,
+      "description": "Related entity identifier. Blank because no separate related-entity ID was supplied.",
+      "source_derived": null,
+      "example": null
+    },
+    {
+      "name": "entity_name",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Company associated with the lost deal.",
+      "source_derived": "company",
+      "example": "Aster Systems"
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Lost-deal reason category.",
+      "source_derived": "reason",
+      "example": "Price"
+    },
+    {
+      "name": "subcategory",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Product associated with the deal.",
+      "source_derived": "product",
+      "example": "Analytics Suite"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["HIGH", "MEDIUM", "LOW"],
+      "description": "Operational priority supplied by the source dataset.",
+      "source_derived": "priority",
+      "example": "HIGH"
+    },
+    {
+      "name": "stage",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Deal stage supplied by the source dataset.",
+      "source_derived": "stage",
+      "example": "Negotiation"
+    },
+    {
+      "name": "metric_name",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["deal_value"],
+      "description": "Name of the numeric metric represented by metric_value.",
+      "source_derived": "derived from value",
+      "example": "deal_value"
+    },
+    {
+      "name": "metric_value",
+      "type": "number",
+      "required": true,
+      "nullable": false,
+      "description": "Numeric deal value from the source.",
+      "source_derived": "value",
+      "example": 850000
+    },
+    {
+      "name": "metric_unit",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "allowed": ["currency_unspecified"],
+      "description": "Unit label for the monetary metric. Source does not explicitly identify the currency.",
+      "source_derived": "derived from source limitation",
+      "example": "currency_unspecified"
+    },
+    {
+      "name": "text_value",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "max_length": 500,
+      "description": "Recovery action text supplied by the source.",
+      "source_derived": "action",
+      "example": "Re-engage with ROI comparison and flexible pricing."
+    },
+    {
+      "name": "latitude",
+      "type": "number",
+      "required": false,
+      "nullable": true,
+      "description": "Latitude. No coordinates were supplied.",
+      "source_derived": null,
+      "example": null
+    },
+    {
+      "name": "longitude",
+      "type": "number",
+      "required": false,
+      "nullable": true,
+      "description": "Longitude. No coordinates were supplied.",
+      "source_derived": null,
+      "example": null
+    },
+    {
+      "name": "source_name",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Name identifying the source dataset.",
+      "source_derived": "Phase 2 synthetic CRM dataset",
+      "example": "Phase 2 synthetic CRM dataset"
+    },
+    {
+      "name": "source_record_id",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Identifier of the original source record.",
+      "source_derived": "id",
+      "example": "CRM-001"
+    },
+    {
+      "name": "is_synthetic",
+      "type": "boolean",
+      "required": true,
+      "nullable": false,
+      "allowed": [true],
+      "description": "Indicates that the record is synthetic.",
+      "source_derived": "derived from Phase 2 application context",
+      "example": true
+    },
+    {
+      "name": "data_version",
+      "type": "string",
+      "required": true,
+      "nullable": false,
+      "description": "Version identifier for this canonical data package.",
+      "source_derived": "derived",
+      "example": "phase3-v1.0.0"
+    }
+  ]
+}
+</file>
+
+<file path="docs/CANONICAL_DATA_MAPPING.md">
+# Canonical Data Mapping
+
+## Purpose
+
+This document records the transformation from the Phase 2 synthetic CRM dataset into the Phase 3 canonical data package.
+
+The canonical single source of truth is:
+
+`data/canonical/intelligence_data.csv`
+
+## Source-to-Canonical Mapping
+
+| Source field | Canonical field | Transformation |
+|---|---|---|
+| `id` | `record_id` | Direct mapping; stable source record ID |
+| `id` | `source_record_id` | Direct mapping |
+| — | `record_type` | Derived as `lost_deal` from the Phase 2 Lost Deal Recovery dataset |
+| `date` | `observed_at` | Converted from `YYYY-MM-DD` to ISO UTC datetime at midnight; source contains no time component |
+| `id` | `entity_id` | Uses the source deal ID as the stable entity reference |
+| — | `related_entity_id` | Null; no separate related-entity ID was supplied |
+| `company` | `entity_name` | Direct mapping |
+| `reason` | `category` | Direct semantic mapping of lost-deal reason |
+| `product` | `subcategory` | Direct mapping of product category |
+| `priority` | `status` | Direct mapping of the supplied operational priority value |
+| `stage` | `stage` | Direct mapping |
+| — | `metric_name` | Derived as `deal_value` |
+| `value` | `metric_value` | Numeric deal value |
+| — | `metric_unit` | `currency_unspecified`, because the supplied source does not explicitly identify the currency |
+| `action` | `text_value` | Direct mapping; source action text retained |
+| — | `latitude` | Null; no coordinates supplied |
+| — | `longitude` | Null; no coordinates supplied |
+| — | `source_name` | Derived as `Phase 2 synthetic CRM dataset` |
+| — | `is_synthetic` | Set to `true` for all records |
+| — | `data_version` | Set to `phase3-v1.0.0` |
+
+## Source Fields Not Directly Represented
+
+The following source fields do not have dedicated canonical columns and are therefore not copied into unrelated canonical fields:
+
+- `location`
+- `team`
+- `segment`
+- `competitor`
+
+These fields are retained in the original Phase 2 source representation and are not silently repurposed.
+
+## Null Handling
+
+The following canonical fields are intentionally blank because the supplied source does not provide the required information:
+
+- `related_entity_id`
+- `latitude`
+- `longitude`
+
+No coordinates are geocoded or inferred.
+
+## Synthetic Data
+
+The Phase 2 application identifies the CRM records as synthetic where operational data is unavailable. Therefore:
+
+`is_synthetic = true`
+
+for every canonical record.
+
+## Date Handling
+
+The source contains date-only values such as:
+
+`2026-01-08`
+
+No source time or timezone was provided. The canonical pipeline represents these as:
+
+`2026-01-08T00:00:00Z`
+
+The midnight time is a normalization convention, not a claim that the source recorded an event at that exact time.
+
+## Text Handling
+
+The source `action` field is mapped to `text_value`.
+
+The supplied action strings are retained without adding new content.
+
+## Numeric Handling
+
+The source `value` field is converted to the numeric `metric_value` field.
+
+No currency symbols are stored in the numeric value.
+
+## Record Identity
+
+`record_id` and `source_record_id` are both derived from the stable Phase 2 `id` field.
+
+The current source contains unique IDs from `CRM-001` through `CRM-020`.
+
+## Data Version
+
+All records in this canonical package use:
+
+`phase3-v1.0.0`
+</file>
+
+<file path="docs/CANONICAL_DATA_PACKAGE_VALIDATION.md">
+# Canonical Data Package Validation
+
+## Validation Scope
+
+This document records validation of the Phase 3 canonical data package against the required data foundation checks.
+
+The canonical source of truth is:
+
+`data/canonical/intelligence_data.csv`
+
+The published JSON is generated from that canonical CSV.
+
+## Validation Result
+
+**VALIDATION PASSED**
+
+Validation was executed using:
+
+`scripts/data_pipeline/validate_data.py`
+
+The generated machine-readable result is:
+
+`data/quality/validation_report.json`
+
+## Results
+
+- Records: 20
+- Canonical columns: 20
+- Unique record IDs: 20
+- Published JSON matches canonical CSV
+- Size limits: passed
+- Required fields: passed
+- Date validation: passed
+- Numeric validation: passed
+- Boolean validation: passed
+- Restricted/personal data checks: passed
+- Manifest consistency: passed
+- Schema validation: passed
+
+## Package Files Validated
+
+- `data/source-sample/source_sample.csv`
+- `data/canonical/intelligence_data.csv`
+- `data/published/intelligence_data.json`
+- `data/schema.json`
+- `data/manifest.json`
+- `data/quality/data_profile.json`
+- `data/quality/validation_report.json`
+- `data/quality/sampling_report.md`
+
+## Canonical Data Checks
+
+The validator confirms:
+
+1. The canonical CSV uses the required 20-column order.
+2. Record IDs are present and unique.
+3. Required fields are populated.
+4. Observation timestamps use the expected ISO UTC format.
+5. Numeric values are valid numeric data.
+6. Boolean values use the expected representation.
+7. Text values remain within the defined length limit.
+8. Published JSON is valid and matches the canonical CSV.
+9. Manifest counts and schema information match the actual package.
+10. No restricted or direct personal-data patterns were detected by the validation checks.
+
+## Sampling
+
+All 20 supplied Phase 2 synthetic CRM records were retained.
+
+No random reduction or `head()`-based truncation was performed.
+
+The complete sampling details are documented in:
+
+`data/quality/sampling_report.md`
+
+and:
+
+`docs/SAMPLING_AND_REDUCTION_REPORT.md`
+
+## Data Source Limitation
+
+The package is based on the supplied Phase 2 synthetic CRM dataset located in:
+
+`backend/main.py`
+
+It is not a production CRM export or live production database.
+
+## Currency Limitation
+
+The source dataset does not explicitly identify the currency of the monetary `value` field.
+
+Therefore the canonical package uses:
+
+`metric_unit = currency_unspecified`
+
+No currency was inferred or assigned.
+
+## Deployment Readiness
+
+The validation package does not require a live external API for the Phase 3 data foundation.
+
+The package is designed to be reproducible from the supplied Phase 2 source through the data pipeline scripts.
+
+No production credentials, API keys, or direct personal identifiers are included in the canonical data package.
+
+## Approval Status
+
+The data package has passed the implemented canonical validation checks.
+
+Further Phase 3 analytics, feature engineering, modeling, or intelligence-layer work should use the approved canonical dataset rather than introducing an independent data source.
+</file>
+
+<file path="docs/DATA_SOURCE_INVENTORY.md">
+# Data Source Inventory
+
+## Phase 3 Canonical Data Foundation
+
+### Source 1 — Phase 2 Backend Synthetic CRM Dataset
+
+- **Source location:** `backend/main.py`
+- **Source structure:** Hardcoded `deals` list
+- **Source endpoint:** `/api/deals`
+- **Record count:** 20
+- **Source fields:** 13
+- **Record ID range:** CRM-001 to CRM-020
+- **Date range:** 2026-01-08 to 2026-06-05
+- **Data type:** Synthetic CRM lost-deal records
+- **External API required:** No
+- **Database required:** No
+- **Separate CSV/Excel source supplied:** No
+
+### Current Data-Loading Flow
+
+```text
+backend/main.py
+      ↓
+hardcoded synthetic `deals` list
+      ↓
+GET /api/deals
+      ↓
+frontend consumes deal records
+```
+
+### Source Fields
+
+The Phase 2 source contains:
+
+id
+date
+location
+team
+product
+company
+segment
+reason
+competitor
+stage
+value
+priority
+action
+
+### Sensitive-Data Assessment
+
+The supplied 20 records contain no visible:
+
+- personal names
+- email addresses
+- telephone numbers
+- passwords
+- authentication credentials
+- API keys
+- direct personal identifiers
+
+The records contain company names and business-deal information.
+
+### Synthetic-Data Assessment
+
+The Phase 2 application identifies the CRM records as synthetic where operational data is unavailable. Therefore all canonical records are marked:
+
+is_synthetic = true
+
+### Sampling Decision
+
+No reduction was required.
+
+All 20 available source records are retained because the complete supplied dataset is already well below the Phase 3 sampling limits and retaining all records preserves the available categories, stages, dates, and business cases.
+
+No `head()`-based sampling was used.
+
+### Data-Source Limitation
+
+No separate production CRM export, CSV, Excel file, database dump, or external API dataset was supplied for Phase 3.
+
+Therefore the canonical package is based only on the supplied Phase 2 synthetic CRM dataset.
+</file>
+
+<file path="docs/SAMPLING_AND_REDUCTION_REPORT.md">
+# Sampling and Reduction Report
+
+## Source Dataset
+
+The Phase 2 synthetic CRM dataset contains 20 records.
+
+Source record range:
+
+`CRM-001` through `CRM-020`
+
+## Sampling Decision
+
+No sampling reduction was performed.
+
+All 20 source records were retained in the Phase 3 canonical package.
+
+## Reason
+
+The complete supplied dataset is already below the Phase 3 default limits:
+
+- Maximum sample rows: 10,000
+- Maximum columns: 50
+
+The source contains:
+
+- 20 records
+- 14 source fields
+
+Retaining the complete dataset preserves the available:
+
+- date coverage
+- lost-deal reasons
+- products
+- stages
+- priorities
+- companies
+- competitors
+- business segments
+- locations
+- teams
+
+## Sampling Method
+
+No random sampling was required.
+
+Therefore no sampling seed was required.
+
+The pipeline does not use `df.head()` or another arbitrary first-N-row reduction.
+
+## Reduction
+
+No records were removed.
+
+No source categories were intentionally removed from the source sample.
+
+The canonical schema does not have dedicated fields for every source attribute. Fields without a direct canonical representation are documented in:
+
+`docs/CANONICAL_DATA_MAPPING.md`
+
+## Retention
+
+Source sample:
+
+`data/source-sample/source_sample.csv`
+
+Canonical dataset:
+
+`data/canonical/intelligence_data.csv`
+
+Both contain all 20 available records.
+
+## Reproducibility
+
+The source sample is preserved as a separate input artifact.
+
+The canonical dataset is generated by:
+
+`scripts/data_pipeline/standardize_data.py`
+
+The canonical package uses the fixed data version:
+
+`phase3-v1.0.0`
+
+## Data Limitation
+
+This package represents the complete supplied Phase 2 synthetic CRM dataset. It should not be interpreted as a complete production CRM export because no production CRM export or external operational dataset was supplied.
+</file>
+
 <file path="public/file.svg">
 <svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
 </file>
@@ -1539,6 +3020,728 @@ uvicorn[standard]
 
 <file path="public/window.svg">
 <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+</file>
+
+<file path="scripts/data_pipeline/extract_data.py">
+import ast
+import csv
+from pathlib import Path
+
+SOURCE = Path("backend/main.py")
+OUTPUT = Path("data/source-sample/source_sample.csv")
+
+SOURCE_FIELDS = [
+    "id",
+    "date",
+    "location",
+    "team",
+    "product",
+    "company",
+    "segment",
+    "reason",
+    "competitor",
+    "stage",
+    "value",
+    "priority",
+    "action",
+]
+
+
+def extract_deals():
+    source_text = SOURCE.read_text(encoding="utf-8")
+    tree = ast.parse(source_text)
+
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id == "deals":
+                    return ast.literal_eval(node.value)
+
+    raise RuntimeError("Could not find the `deals` list in backend/main.py")
+
+
+def main():
+    deals = extract_deals()
+
+    if not isinstance(deals, list):
+        raise RuntimeError("The `deals` object is not a list.")
+
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+
+    with OUTPUT.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=SOURCE_FIELDS)
+        writer.writeheader()
+
+        for deal in deals:
+            writer.writerow({field: deal.get(field, "") for field in SOURCE_FIELDS})
+
+    print(f"Created {OUTPUT}")
+    print(f"Records: {len(deals)}")
+    print(f"Columns: {len(SOURCE_FIELDS)}")
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="scripts/data_pipeline/profile_data.py">
+import csv
+import json
+from collections import Counter
+from pathlib import Path
+
+CANONICAL = Path("data/canonical/intelligence_data.csv")
+OUTPUT = Path("data/quality/data_profile.json")
+
+
+def main():
+    with CANONICAL.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+        columns = reader.fieldnames or []
+
+    profile = {
+        "record_count": len(rows),
+        "column_count": len(columns),
+        "columns": columns,
+        "unique_record_ids": len({row["record_id"] for row in rows}),
+        "date_range": {
+            "min": min(row["observed_at"] for row in rows),
+            "max": max(row["observed_at"] for row in rows)
+        },
+        "missing_values": {
+            column: sum(
+                1 for row in rows if row.get(column, "") == ""
+            )
+            for column in columns
+        },
+        "category_counts": {
+            "record_type": dict(Counter(row["record_type"] for row in rows)),
+            "category": dict(Counter(row["category"] for row in rows)),
+            "subcategory": dict(Counter(row["subcategory"] for row in rows)),
+            "status": dict(Counter(row["status"] for row in rows)),
+            "stage": dict(Counter(row["stage"] for row in rows))
+        },
+        "synthetic_records": sum(
+            1 for row in rows if row["is_synthetic"] == "true"
+        ),
+        "metric": {
+            "name": "deal_value",
+            "unit": "currency_unspecified",
+            "min": min(float(row["metric_value"]) for row in rows),
+            "max": max(float(row["metric_value"]) for row in rows)
+        }
+    }
+
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+
+    with OUTPUT.open("w", encoding="utf-8") as f:
+        json.dump(profile, f, indent=2)
+        f.write("\n")
+
+    print(f"Created {OUTPUT}")
+    print(f"Records profiled: {len(rows)}")
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="scripts/data_pipeline/publish_data.py">
+import csv
+import json
+from pathlib import Path
+
+SOURCE = Path("data/canonical/intelligence_data.csv")
+OUTPUT = Path("data/published/intelligence_data.json")
+
+
+def main():
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+
+    with SOURCE.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    records = []
+
+    for row in rows:
+        row["metric_value"] = float(row["metric_value"])
+
+        if row["latitude"] == "":
+            row["latitude"] = None
+        else:
+            row["latitude"] = float(row["latitude"])
+
+        if row["longitude"] == "":
+            row["longitude"] = None
+        else:
+            row["longitude"] = float(row["longitude"])
+
+        if row["related_entity_id"] == "":
+            row["related_entity_id"] = None
+
+        row["is_synthetic"] = row["is_synthetic"].lower() == "true"
+
+        records.append(row)
+
+    with OUTPUT.open("w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+    print(f"Created {OUTPUT}")
+    print(f"Records published: {len(records)}")
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="scripts/data_pipeline/sample_data.py">
+import csv
+from pathlib import Path
+
+SOURCE = Path("data/source-sample/source_sample.csv")
+OUTPUT = Path("data/source-sample/source_sample.csv")
+
+MAX_ROWS = 10000
+MAX_COLUMNS = 50
+
+
+def main():
+    with SOURCE.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+        columns = reader.fieldnames or []
+
+    if len(rows) > MAX_ROWS:
+        raise RuntimeError(
+            f"Source contains {len(rows)} rows, exceeding the limit of {MAX_ROWS}."
+        )
+
+    if len(columns) > MAX_COLUMNS:
+        raise RuntimeError(
+            f"Source contains {len(columns)} columns, exceeding the limit of {MAX_COLUMNS}."
+        )
+
+    # The supplied dataset is already below the sampling limits.
+    # All records are retained; no arbitrary head()-based sampling is performed.
+    with OUTPUT.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=columns)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f"Sampling completed: {len(rows)} records retained")
+    print(f"Columns: {len(columns)}")
+    print("Reduction performed: no")
+
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="scripts/data_pipeline/standardize_data.py">
+import csv
+from pathlib import Path
+from datetime import datetime
+
+SOURCE = Path("data/source-sample/source_sample.csv")
+OUTPUT = Path("data/canonical/intelligence_data.csv")
+
+CANONICAL_COLUMNS = [
+    "record_id",
+    "record_type",
+    "observed_at",
+    "entity_id",
+    "related_entity_id",
+    "entity_name",
+    "category",
+    "subcategory",
+    "status",
+    "stage",
+    "metric_name",
+    "metric_value",
+    "metric_unit",
+    "text_value",
+    "latitude",
+    "longitude",
+    "source_name",
+    "source_record_id",
+    "is_synthetic",
+    "data_version",
+]
+
+DATA_VERSION = "phase3-v1.0.0"
+
+def standardize(row):
+    observed_at = datetime.strptime(row["date"], "%Y-%m-%d").strftime(
+        "%Y-%m-%dT00:00:00Z"
+    )
+
+    return {
+        "record_id": row["id"],
+        "record_type": "lost_deal",
+        "observed_at": observed_at,
+        "entity_id": row["id"],
+        "related_entity_id": "",
+        "entity_name": row["company"],
+        "category": row["reason"],
+        "subcategory": row["product"],
+        "status": row["priority"],
+        "stage": row["stage"],
+        "metric_name": "deal_value",
+        "metric_value": row["value"],
+        "metric_unit": "currency_unspecified",
+        "text_value": row["action"],
+        "latitude": "",
+        "longitude": "",
+        "source_name": "Phase 2 synthetic CRM dataset",
+        "source_record_id": row["id"],
+        "is_synthetic": "true",
+        "data_version": DATA_VERSION,
+    }
+
+def main():
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+
+    with SOURCE.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = [standardize(row) for row in reader]
+
+    with OUTPUT.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=CANONICAL_COLUMNS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f"Created {OUTPUT}")
+    print(f"Records: {len(rows)}")
+    print(f"Columns: {len(CANONICAL_COLUMNS)}")
+
+if __name__ == "__main__":
+    main()
+</file>
+
+<file path="scripts/data_pipeline/validate_data.py">
+import csv
+import json
+import re
+from pathlib import Path
+
+DATA_DIR = Path("data")
+SOURCE = DATA_DIR / "source-sample/source_sample.csv"
+CANONICAL = DATA_DIR / "canonical/intelligence_data.csv"
+PUBLISHED = DATA_DIR / "published/intelligence_data.json"
+SCHEMA = DATA_DIR / "schema.json"
+MANIFEST = DATA_DIR / "manifest.json"
+REPORT = DATA_DIR / "quality/validation_report.json"
+
+EXPECTED_COLUMNS = [
+    "record_id",
+    "record_type",
+    "observed_at",
+    "entity_id",
+    "related_entity_id",
+    "entity_name",
+    "category",
+    "subcategory",
+    "status",
+    "stage",
+    "metric_name",
+    "metric_value",
+    "metric_unit",
+    "text_value",
+    "latitude",
+    "longitude",
+    "source_name",
+    "source_record_id",
+    "is_synthetic",
+    "data_version",
+]
+
+REQUIRED_FIELDS = [
+    "record_id",
+    "record_type",
+    "observed_at",
+    "entity_id",
+    "entity_name",
+    "category",
+    "subcategory",
+    "status",
+    "stage",
+    "metric_name",
+    "metric_value",
+    "metric_unit",
+    "source_name",
+    "source_record_id",
+    "is_synthetic",
+    "data_version",
+]
+
+MAX_ROWS = 10_000
+MAX_COLS = 50
+MAX_DATA_FILE_BYTES = 5 * 1024 * 1024
+MAX_DATA_DIR_BYTES = 10 * 1024 * 1024
+MAX_TEXT_LENGTH = 500
+
+RESTRICTED_PATTERNS = [
+    r"\bpassword\b",
+    r"\bpasswd\b",
+    r"\bsecret\b",
+    r"\bapi[_ -]?key\b",
+    r"\baccess[_ -]?token\b",
+    r"\bauth[_ -]?token\b",
+    r"\bssn\b",
+    r"\bsocial security\b",
+]
+
+EMAIL_PATTERN = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I)
+PHONE_PATTERN = re.compile(r"(?<!\d)(?:\+?\d[\d\s().-]{7,}\d)(?!\d)")
+
+
+def check(condition, message, failures):
+    if not condition:
+        failures.append(message)
+
+
+def file_size(path):
+    return path.stat().st_size
+
+
+def main():
+    failures = []
+    checks = []
+
+    # Required files
+    required_files = [
+        SOURCE,
+        CANONICAL,
+        PUBLISHED,
+        SCHEMA,
+        MANIFEST,
+    ]
+
+    for path in required_files:
+        exists = path.exists()
+        checks.append({
+            "check": f"required_file:{path}",
+            "status": "passed" if exists else "failed"
+        })
+        check(exists, f"Missing required file: {path}", failures)
+
+    if failures:
+        report = {
+            "status": "FAILED",
+            "failures": failures,
+            "checks": checks,
+        }
+        REPORT.parent.mkdir(parents=True, exist_ok=True)
+        REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print("VALIDATION FAILED")
+        for failure in failures:
+            print(f"- {failure}")
+        raise SystemExit(1)
+
+    # File size limits
+    for path in required_files:
+        size_ok = file_size(path) <= MAX_DATA_FILE_BYTES
+        checks.append({
+            "check": f"file_size:{path}",
+            "status": "passed" if size_ok else "failed",
+            "bytes": file_size(path)
+        })
+        check(
+            size_ok,
+            f"File exceeds 5 MB limit: {path}",
+            failures
+        )
+
+    total_data_size = sum(
+        p.stat().st_size for p in DATA_DIR.rglob("*") if p.is_file()
+    )
+
+    checks.append({
+        "check": "data_directory_size",
+        "status": "passed" if total_data_size <= MAX_DATA_DIR_BYTES else "failed",
+        "bytes": total_data_size
+    })
+
+    check(
+        total_data_size <= MAX_DATA_DIR_BYTES,
+        "data directory exceeds 10 MB limit",
+        failures
+    )
+
+    # Read source and canonical CSV
+    with SOURCE.open("r", encoding="utf-8", newline="") as f:
+        source_reader = csv.DictReader(f)
+        source_columns = source_reader.fieldnames or []
+        source_rows = list(source_reader)
+
+    with CANONICAL.open("r", encoding="utf-8", newline="") as f:
+        canonical_reader = csv.DictReader(f)
+        canonical_columns = canonical_reader.fieldnames or []
+        canonical_rows = list(canonical_reader)
+
+    # Column and row limits
+    check(
+        canonical_columns == EXPECTED_COLUMNS,
+        "Canonical columns/order do not exactly match required Phase 3 schema",
+        failures
+    )
+
+    check(
+        len(canonical_columns) <= MAX_COLS,
+        "Canonical dataset exceeds 50-column limit",
+        failures
+    )
+
+    check(
+        len(canonical_rows) <= MAX_ROWS,
+        "Canonical dataset exceeds 10,000-row limit",
+        failures
+    )
+
+    check(
+        len(canonical_rows) > 0,
+        "Canonical dataset is empty",
+        failures
+    )
+
+    checks.append({
+        "check": "canonical_structure",
+        "status": "passed" if canonical_columns == EXPECTED_COLUMNS else "failed",
+        "rows": len(canonical_rows),
+        "columns": len(canonical_columns)
+    })
+
+    # Required fields and IDs
+    record_ids = []
+
+    for index, row in enumerate(canonical_rows, start=1):
+        for field in REQUIRED_FIELDS:
+            value = row.get(field, "")
+            check(
+                value not in ("", None),
+                f"Row {index}: required field '{field}' is empty",
+                failures
+            )
+
+        record_ids.append(row.get("record_id", ""))
+
+        check(
+            len(row.get("text_value", "")) <= MAX_TEXT_LENGTH,
+            f"Row {index}: text_value exceeds 500 characters",
+            failures
+        )
+
+        check(
+            row.get("is_synthetic") in ("true", "false"),
+            f"Row {index}: is_synthetic must be true or false",
+            failures
+        )
+
+        # ISO UTC timestamp
+        timestamp = row.get("observed_at", "")
+        check(
+            bool(re.fullmatch(
+                r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z",
+                timestamp
+            )),
+            f"Row {index}: invalid observed_at format",
+            failures
+        )
+
+        # Numeric fields
+        for field in ["metric_value", "latitude", "longitude"]:
+            value = row.get(field, "")
+            if value != "":
+                try:
+                    float(value)
+                    check(
+                        not re.search(r"[^\d.+\-eE]", value),
+                        f"Row {index}: invalid numeric value in {field}",
+                        failures
+                    )
+                except ValueError:
+                    failures.append(
+                        f"Row {index}: {field} is not numeric"
+                    )
+
+        # Restricted/personal data checks
+        combined = " ".join(row.values())
+
+        for pattern in RESTRICTED_PATTERNS:
+            check(
+                not re.search(pattern, combined, re.I),
+                f"Row {index}: restricted-data pattern detected",
+                failures
+            )
+
+        check(
+            EMAIL_PATTERN.search(combined) is None,
+            f"Row {index}: possible email address detected",
+            failures
+        )
+
+
+    unique_ids = set(record_ids)
+
+    check(
+        len(unique_ids) == len(record_ids),
+        "Duplicate record_id values detected",
+        failures
+    )
+
+    # Load schema and manifest
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+
+    schema_fields = schema.get("columns", [])
+    schema_names = [field.get("name") for field in schema_fields]
+
+    check(
+        schema_names == EXPECTED_COLUMNS,
+        "Schema field order does not match canonical CSV",
+        failures
+    )
+
+    check(
+        manifest.get("source", {}).get("record_count") == len(source_rows),
+        "Manifest source record_count does not match source sample",
+        failures
+    )
+
+    check(
+        manifest.get("canonical", {}).get("record_count") == len(canonical_rows),
+        "Manifest canonical record_count does not match canonical CSV",
+        failures
+    )
+
+    check(
+        manifest.get("canonical", {}).get("column_count") == len(canonical_columns),
+        "Manifest canonical column_count does not match canonical CSV",
+        failures
+    )
+
+    check(
+        manifest.get("source", {}).get("source_field_count") == len(source_columns),
+        "Manifest source_field_count does not match source sample",
+        failures
+    )
+
+    check(
+        manifest.get("source_sample", {}).get("record_count") == len(source_rows),
+        "Manifest source sample record_count does not match source sample",
+        failures
+    )
+
+    # Published JSON validation
+    try:
+        published = json.loads(PUBLISHED.read_text(encoding="utf-8"))
+        check(
+            isinstance(published, list),
+            "Published JSON must contain a list of records",
+            failures
+        )
+    except json.JSONDecodeError as exc:
+        published = []
+        failures.append(f"Published JSON is invalid: {exc}")
+
+    canonical_as_json = []
+
+    for row in canonical_rows:
+        canonical_as_json.append({
+            "record_id": row["record_id"],
+            "record_type": row["record_type"],
+            "observed_at": row["observed_at"],
+            "entity_id": row["entity_id"],
+            "related_entity_id": row["related_entity_id"] or None,
+            "entity_name": row["entity_name"],
+            "category": row["category"],
+            "subcategory": row["subcategory"],
+            "status": row["status"],
+            "stage": row["stage"],
+            "metric_name": row["metric_name"],
+            "metric_value": float(row["metric_value"]),
+            "metric_unit": row["metric_unit"],
+            "text_value": row["text_value"],
+            "latitude": float(row["latitude"]) if row["latitude"] else None,
+            "longitude": float(row["longitude"]) if row["longitude"] else None,
+            "source_name": row["source_name"],
+            "source_record_id": row["source_record_id"],
+            "is_synthetic": row["is_synthetic"] == "true",
+            "data_version": row["data_version"],
+        })
+
+    check(
+        published == canonical_as_json,
+        "Published JSON does not exactly match canonical CSV",
+        failures
+    )
+
+    # Manifest package references
+    package_paths = [
+        "data/canonical/intelligence_data.csv",
+        "data/source-sample/source_sample.csv",
+        "data/schema.json",
+        "data/manifest.json",
+        "data/published/intelligence_data.json",
+        "data/quality/data_profile.json",
+        "data/quality/validation_report.json",
+        "data/quality/sampling_report.md",
+    ]
+
+    for package_path in package_paths:
+        exists = Path(package_path).exists()
+        checks.append({
+            "check": f"manifest_package_file:{package_path}",
+            "status": "passed" if exists else "failed"
+        })
+        check(
+            exists,
+            f"Expected package file missing: {package_path}",
+            failures
+        )
+
+    status = "PASSED" if not failures else "FAILED"
+
+    report = {
+        "status": status,
+        "package_version": manifest.get("package_version"),
+        "record_count": len(canonical_rows),
+        "column_count": len(canonical_columns),
+        "unique_record_ids": len(unique_ids),
+        "failures": failures,
+        "checks": checks,
+    }
+
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
+    REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+
+    if failures:
+        print("VALIDATION FAILED")
+        for failure in failures:
+            print(f"- {failure}")
+        raise SystemExit(1)
+
+    print("VALIDATION PASSED")
+    print(f"Records: {len(canonical_rows)}")
+    print(f"Columns: {len(canonical_columns)}")
+    print(f"Unique record IDs: {len(unique_ids)}")
+    print("Published JSON: matches canonical CSV")
+    print("Size limits: passed")
+    print("Required fields: passed")
+    print("Date validation: passed")
+    print("Numeric validation: passed")
+    print("Boolean validation: passed")
+    print("Restricted/personal data checks: passed")
+    print("Manifest consistency: passed")
+    print("Schema validation: passed")
+    print(f"Report: {REPORT}")
+
+
+if __name__ == "__main__":
+    main()
 </file>
 
 <file path="AGENTS.md">

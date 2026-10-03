@@ -1,0 +1,53 @@
+{
+  "source_of_truth": "data/canonical/intelligence_data.csv",
+  "source_record_count": 20,
+  "canonical_record_count": 20,
+  "sampling_reduction_applied": false,
+  "coverage": {
+    "record_types": {
+      "lost_deal": 20
+    },
+    "categories": {
+      "Price": 5,
+      "Competitor": 5,
+      "Product Fit": 4,
+      "Timing": 3,
+      "Budget": 3
+    },
+    "subcategories": {
+      "Analytics Suite": 7,
+      "CRM Platform": 7,
+      "Cloud Platform": 6
+    },
+    "statuses": {
+      "HIGH": 9,
+      "MEDIUM": 7,
+      "LOW": 4
+    },
+    "stages": {
+      "Negotiation": 6,
+      "Proposal": 6,
+      "Evaluation": 5,
+      "Qualification": 3
+    },
+    "date_range": {
+      "start": "2026-01-08T00:00:00Z",
+      "end": "2026-06-05T00:00:00Z"
+    }
+  },
+  "representativeness_assessment": {
+    "overall": "LIMITED",
+    "reason": "The canonical dataset retains the full supplied source dataset, but it contains only 20 synthetic CRM records. It should be treated as a bounded demonstration dataset rather than a representative sample of a complete operational CRM population.",
+    "source_alignment": "Full supplied source retained with no sampling reduction.",
+    "important_categories_available": true,
+    "important_status_stage_fields_available": true,
+    "operational_population_coverage": "Not established from the supplied synthetic dataset.",
+    "historical_depth": "Limited to the observed dates present in the 20 supplied records."
+  },
+  "limitations": [
+    "Synthetic source data limits claims about real-world representativeness.",
+    "Only 20 records are available.",
+    "No evidence establishes that the dataset represents the full operational CRM population.",
+    "No sampling reduction was performed, so there is no additional sampling loss within the supplied dataset."
+  ]
+}
