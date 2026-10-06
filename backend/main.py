@@ -31,6 +31,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3001",
         "http://127.0.0.1:3001",
+        "http://localhost:3002",
+        "http://127.0.0.1:3002",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -359,3 +361,297 @@ def health():
 @app.get("/api/deals", response_model=list[Deal])
 def get_deals():
     return deals
+
+# ---------------- PHASE 3 POST #4: DATA INTELLIGENCE ----------------
+
+from pathlib import Path as _Path
+from datetime import datetime as _Datetime
+import json as _json
+
+_INTELLIGENCE_ROOT = _Path(__file__).resolve().parents[1] / "data-science" / "outputs"
+_RESULTS_FILE = _INTELLIGENCE_ROOT / "intelligence_results.json"
+_SUMMARY_FILE = _INTELLIGENCE_ROOT / "intelligence_summary.json"
+_VALIDATION_FILE = _INTELLIGENCE_ROOT / "validation_metrics.json"
+
+_APPROVED_TRACK = "Track A — Comparative Intelligence"
+_ALLOWED_SORT = {"priority_rank", "result_value", "group_key"}
+_STALE_MARKERS = (
+    "Version mismatch",
+    "data_version mismatch",
+    "method_version mismatch",
+    "quality status",
+    "Validation package is not approved",
+    "Validation output is not approved",
+    "Generated timestamp mismatch",
+    "generated_at mismatch",
+    "Unsupported quality status",
+)
+
+
+def _load_intelligence_package():
+    try:
+        results = _json.loads(_RESULTS_FILE.read_text(encoding="utf-8"))
+        summary = _json.loads(_SUMMARY_FILE.read_text(encoding="utf-8"))
+        validation = _json.loads(_VALIDATION_FILE.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise ValueError(f"Missing approved intelligence output: {exc.filename}") from exc
+    except _json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid intelligence JSON: {exc}") from exc
+
+    if not isinstance(results, list):
+        raise ValueError("intelligence_results.json must contain a list")
+
+    if not isinstance(summary, dict) or not isinstance(validation, dict):
+        raise ValueError("Summary and validation outputs must be JSON objects")
+
+    if summary.get("result_count") != len(results):
+        raise ValueError("Summary result_count does not match result package")
+
+    if summary.get("data_version") != validation.get("data_version"):
+        raise ValueError("Summary and validation data_version mismatch")
+
+    if summary.get("method_version") != validation.get("method_version"):
+        raise ValueError("Summary and validation method_version mismatch")
+
+    if validation.get("validation_result") != "PASS" or validation.get("passed") is not True:
+        raise ValueError("Validation package is not approved")
+
+    if summary.get("approved_track") != _APPROVED_TRACK:
+        raise ValueError("Unsupported analytical track")
+
+    if summary.get("generated_at") is None:
+        raise ValueError("Summary generated_at is missing")
+
+    required = {
+        "result_id", "result_type", "record_id", "entity_id", "group_key",
+        "period_start", "period_end", "metric_name", "result_value",
+        "result_unit", "result_category", "priority_rank", "finding",
+        "evidence", "method_version", "data_version", "generated_at",
+        "quality_status", "limitation"
+    }
+
+    ids = set()
+
+    for item in results:
+        missing = required - item.keys()
+
+        if missing:
+            raise ValueError(
+                f"Missing intelligence result fields: {sorted(missing)}"
+            )
+
+        result_id = item["result_id"]
+
+        if result_id in ids:
+            raise ValueError(f"Duplicate result_id: {result_id}")
+
+        ids.add(result_id)
+
+        if (
+            item["data_version"] != summary["data_version"]
+            or item["method_version"] != summary["method_version"]
+        ):
+            raise ValueError(f"Version mismatch for {result_id}")
+
+        if item["generated_at"] != summary["generated_at"]:
+            raise ValueError(f"Generated timestamp mismatch for {result_id}")
+
+        if item["quality_status"] != "validated":
+            raise ValueError(f"Unsupported quality status for {result_id}")
+
+        if (
+            item["metric_name"] != "total_deal_value"
+            or isinstance(item["result_value"], bool)
+            or not isinstance(item["result_value"], (int, float))
+        ):
+            raise ValueError(f"Invalid metric contract for {result_id}")
+
+        evidence = item.get("evidence")
+
+        if not isinstance(evidence, dict):
+            raise ValueError(f"Invalid evidence object for {result_id}")
+
+        for key in (
+            "record_count",
+            "average_deal_value",
+            "contribution_pct",
+            "record_ids",
+        ):
+            if key not in evidence:
+                raise ValueError(f"Missing evidence field {key} for {result_id}")
+
+        try:
+            _Datetime.fromisoformat(
+                item["generated_at"].replace("Z", "+00:00")
+            )
+        except ValueError as exc:
+            raise ValueError(
+                f"Invalid generated_at for {result_id}"
+            ) from exc
+
+    return results, summary, validation
+
+
+def _load_intelligence_package_or_http():
+    try:
+        return _load_intelligence_package()
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+
+
+def _intelligence_metadata(summary, validation):
+    return {
+        "data_version": summary["data_version"],
+        "method_version": summary["method_version"],
+        "generated_at": summary["generated_at"],
+        "quality_status": "validated" if validation.get("passed") else "invalid",
+        "approved_track": summary["approved_track"],
+        "source": (
+            "data-science/outputs/intelligence_results.json + "
+            "intelligence_summary.json"
+        ),
+    }
+
+
+def _intelligence_status():
+    try:
+        results, summary, validation = _load_intelligence_package()
+        metadata = _intelligence_metadata(summary, validation)
+
+        return {
+            "status": "validated",
+            **metadata,
+            "result_count": len(results),
+        }
+    except ValueError as exc:
+        detail = str(exc)
+        status = (
+            "stale"
+            if any(marker in detail for marker in _STALE_MARKERS)
+            else "error"
+        )
+
+        return {
+            "status": status,
+            "detail": detail,
+        }
+
+
+@app.get("/api/intelligence/health")
+def intelligence_health():
+    status = _intelligence_status()
+
+    if status["status"] == "validated":
+        return {
+            "status": "ok",
+            "quality_status": "validated",
+        }
+
+    return {
+        "status": status["status"],
+        "detail": status.get("detail"),
+    }
+
+
+@app.get("/api/intelligence/status")
+def intelligence_status():
+    return _intelligence_status()
+
+
+@app.get("/api/intelligence/metadata")
+def intelligence_metadata():
+    results, summary, validation = _load_intelligence_package_or_http()
+
+    return {
+        "metadata": _intelligence_metadata(summary, validation),
+        "validation": validation,
+        "result_count": len(results),
+    }
+
+
+@app.get("/api/intelligence/summary")
+def intelligence_summary():
+    _, summary, _ = _load_intelligence_package_or_http()
+    return summary
+
+
+@app.get("/api/intelligence/results")
+def intelligence_results(
+    result_type: str | None = None,
+    result_category: str | None = None,
+    group_key: str | None = None,
+    quality_status: str | None = None,
+    page: int = 1,
+    page_size: int = 25,
+    sort_by: str = "priority_rank",
+    sort_order: str = "asc",
+):
+    if page < 1:
+        raise HTTPException(status_code=400, detail="page must be >= 1")
+
+    if page_size < 1 or page_size > 100:
+        raise HTTPException(
+            status_code=400,
+            detail="page_size must be between 1 and 100",
+        )
+
+    if sort_by not in _ALLOWED_SORT:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported sort_by: {sort_by}",
+        )
+
+    if sort_order not in {"asc", "desc"}:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported sort_order: {sort_order}",
+        )
+
+    results, summary, validation = _load_intelligence_package_or_http()
+
+    if result_type:
+        results = [r for r in results if r["result_type"] == result_type]
+
+    if result_category:
+        results = [r for r in results if r["result_category"] == result_category]
+
+    if group_key:
+        results = [r for r in results if r["group_key"] == group_key]
+
+    if quality_status:
+        results = [r for r in results if r["quality_status"] == quality_status]
+
+    results = sorted(
+        results,
+        key=lambda r: r[sort_by],
+        reverse=sort_order == "desc",
+    )
+
+    total = len(results)
+    start = (page - 1) * page_size
+    end = start + page_size
+
+    return {
+        "metadata": _intelligence_metadata(summary, validation),
+        "items": results[start:end],
+        "pagination": {
+            "page": page,
+            "page_size": page_size,
+            "total_items": total,
+            "total_pages": (total + page_size - 1) // page_size,
+        },
+    }
+
+
+@app.get("/api/intelligence/results/{result_id}")
+def intelligence_result(result_id: str):
+    results, _, _ = _load_intelligence_package_or_http()
+
+    for result in results:
+        if result["result_id"] == result_id:
+            return result
+
+    raise HTTPException(
+        status_code=404,
+        detail="Intelligence result not found",
+    )
