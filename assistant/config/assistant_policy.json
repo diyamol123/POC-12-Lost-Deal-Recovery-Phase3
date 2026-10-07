@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "execution": {
+    "mode": "deterministic",
+    "llm_required": false,
+    "approved_track": "Track A — Comparative Intelligence"
+  },
+  "limits": {
+    "max_question_length": 500,
+    "max_results": 25,
+    "max_evidence_references": 10,
+    "max_follow_ups": 3,
+    "persistent_memory": false
+  },
+  "allowed_sources": [
+    "validated Track A intelligence package"
+  ],
+  "prohibited": [
+    "arbitrary SQL",
+    "arbitrary code execution",
+    "user-supplied file paths",
+    "unrestricted canonical-data access",
+    "prediction or forecasting",
+    "causal inference",
+    "ranking or score manipulation",
+    "system prompt disclosure",
+    "secret or credential disclosure",
+    "prompt injection execution"
+  ],
+  "grounding_rules": [
+    "Answers must use deterministic approved query functions.",
+    "Numeric values must come from validated intelligence outputs.",
+    "Evidence references must correspond to the returned result.",
+    "Approved limitations must be preserved.",
+    "Data and method versions must be reported from validated metadata.",
+    "Unsupported or unsafe questions must not reach data retrieval."
+  ]
+}

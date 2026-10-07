@@ -35,8 +35,8 @@ def test_data_intelligence_journey():
 
         # 1-3: operational page and existing functionality.
         driver.get(f"{BASE_URL}/")
-        wait.until(lambda d: "LOST DEAL INTELLIGENCE" in d.page_source and "Operational View" in d.page_source)
-        wait.until(lambda d: "LOST DEALS" in d.page_source)
+        wait.until(lambda d: d.page_source is not None and "LOST DEAL INTELLIGENCE" in d.page_source and "Operational View" in d.page_source)
+        wait.until(lambda d: d.page_source is not None and "LOST DEALS" in d.page_source)
         assert "FILTER" in driver.page_source or "filter" in driver.page_source.lower()
 
         # Navigation to Data Intelligence.
@@ -63,14 +63,11 @@ def test_data_intelligence_journey():
         wait.until(lambda d: "INTELLIGENCE FILTERS" in d.page_source)
 
         # 7-8: open result evidence and verify finding/evidence/limitation.
-        result_buttons = driver.find_elements(By.CSS_SELECTOR, "button")
-        clickable_result = None
-
-        for button in result_buttons:
-            label = (button.text or "").strip()
-            if label and label not in {"Retry", "Close", "Clear filters"}:
-                clickable_result = button
-                break
+        result_buttons = driver.find_elements(
+            By.CSS_SELECTOR,
+            'button[aria-label^="View evidence for "]',
+        )
+        clickable_result = result_buttons[0] if result_buttons else None
 
         if clickable_result:
             driver.execute_script(

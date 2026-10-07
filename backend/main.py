@@ -1,6 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+
+
+class AssistantQuestion(BaseModel):
+    question: str
 
 
 class Deal(BaseModel):
@@ -535,6 +540,19 @@ def _intelligence_status():
             "status": status,
             "detail": detail,
         }
+
+
+@app.post("/api/assistant/query")
+def assistant_query(payload: AssistantQuestion):
+    from backend.assistant.service import answer_question
+    from backend.assistant.errors import AssistantNotFoundError, AssistantValidationError
+
+    try:
+        return answer_question(payload.question)
+    except AssistantNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except AssistantValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.get("/api/intelligence/health")

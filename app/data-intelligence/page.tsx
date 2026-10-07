@@ -22,6 +22,7 @@ import MethodologyPanel from "@/app/components/data-intelligence/MethodologyPane
 import LimitationsPanel from "@/app/components/data-intelligence/LimitationsPanel";
 import DataFreshnessBadge from "@/app/components/data-intelligence/DataFreshnessBadge";
 import IntelligenceStatePanel from "@/app/components/data-intelligence/IntelligenceStatePanel";
+import GroundedAssistant from "@/app/components/grounded-assistant/GroundedAssistant";
 
 export default function DataIntelligencePage() {
   const [pkg, setPkg] = useState<IntelligencePackage | null>(null);
@@ -176,6 +177,7 @@ export default function DataIntelligencePage() {
 
         <IntelligenceHeader metadata={pkg.metadata} />
         <DataFreshnessBadge metadata={pkg.metadata} stale={false} />
+        <GroundedAssistant />
         <IntelligenceSummaryCards summary={pkg.summary} />
 
         <IntelligenceFilters

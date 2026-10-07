@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "mode": "deterministic",
+  "llm_required": false,
+  "approved_track": "Track A — Comparative Intelligence",
+  "intents": [
+    "top_category",
+    "top_categories",
+    "category_rank",
+    "category_explanation",
+    "category_evidence",
+    "compare_categories",
+    "analysis_limitations",
+    "package_versions",
+    "validation_status"
+  ],
+  "max_question_length": 500,
+  "max_results": 25,
+  "max_evidence_references": 10,
+  "persistent_memory": false
+}

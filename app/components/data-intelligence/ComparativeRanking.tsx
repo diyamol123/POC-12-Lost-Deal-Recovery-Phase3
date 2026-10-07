@@ -26,6 +26,7 @@ export default function ComparativeRanking({
           <button
             key={result.result_id}
             type="button"
+            aria-label={`View evidence for ${result.group_key}`}
             onClick={() => onSelect(result)}
             className="w-full rounded-xl border border-[#1F2937] bg-[#030712] p-4 text-left transition hover:border-[#38BDF8]/30"
           >

@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "retrieval_mode": "deterministic",
+  "approved_query_functions": {
+    "top_category": "get_top_category",
+    "top_categories": "get_top_categories",
+    "category_rank": "get_category_rank",
+    "category_explanation": "get_category_explanation",
+    "category_evidence": "get_category_evidence",
+    "compare_categories": "compare_categories",
+    "analysis_limitations": "get_analysis_limitations",
+    "package_versions": "get_package_versions",
+    "validation_status": "get_validation_status"
+  },
+  "constraints": {
+    "approved_source": "validated Track A intelligence package",
+    "arbitrary_sql": false,
+    "arbitrary_code_execution": false,
+    "user_supplied_paths": false,
+    "unrestricted_record_access": false,
+    "max_results": 25,
+    "max_evidence_references": 10
+  }
+}
