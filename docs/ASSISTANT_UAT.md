@@ -9,7 +9,7 @@ UAT execution is in progress.
 | ID | Scenario | Expected result |
 |---|---|---|
 | UAT-01 | Use a suggested question | Supported question is accepted |
-| UAT-02 | Ask a grounded intelligence question | Correct deterministic answer is returned |
+| UAT-02 | Ask a grounded intelligence question | Correct deterministic answer with optional grounded Gemini explanation |
 | UAT-03 | Check numeric fidelity | Values match approved intelligence output |
 | UAT-04 | Check evidence | Evidence references support the answer |
 | UAT-05 | Check limitation | Approved limitation is displayed |
@@ -24,6 +24,14 @@ UAT execution is in progress.
 | UAT-14 | All-record request | Request is blocked |
 | UAT-15 | Invalid category/result reference | Safe validation response |
 | UAT-16 | Version mismatch | Intelligence response is blocked |
+
+| UAT-17 | Gemini API failure | Deterministic answer remains available with fallback |
+
+| UAT-18 | Missing Gemini API key | Controlled fallback; no frontend secret exposure |
+
+| UAT-19 | Gemini numeric fidelity | No unsupported numeric values are returned |
+
+| UAT-20 | Gemini source-data injection | Injection is not executed |
 | UAT-17 | Mobile layout | Assistant remains usable |
 | UAT-18 | Operational regression | Existing operational page remains functional |
 
@@ -41,6 +49,9 @@ A successful response must provide:
 - limitation
 - suggested_follow_ups
 
+When Gemini is available, the response may also include a grounded Gemini
+explanation and explanation status. The deterministic answer, evidence,
+metadata, and limitation remain authoritative.
 ## Final acceptance
 
 UAT will be marked PASS only after the required automated and manual

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "execution": {
-    "mode": "deterministic",
+    "mode": "deterministic_with_llm_explanation",
     "llm_required": false,
     "approved_track": "Track A — Comparative Intelligence"
   },
@@ -13,7 +13,8 @@
     "persistent_memory": false
   },
   "allowed_sources": [
-    "validated Track A intelligence package"
+    "validated Track A intelligence package",
+    "validated deterministic result and evidence package for Gemini explanation"
   ],
   "prohibited": [
     "arbitrary SQL",
@@ -29,10 +30,16 @@
   ],
   "grounding_rules": [
     "Answers must use deterministic approved query functions.",
+    "Deterministic retrieval remains the source of truth.",
+    "Gemini may only explain the supplied deterministic result and validated evidence.",
+    "Gemini must not receive the full canonical dataset.",
+    "Gemini must not create new numbers, rankings, scores, findings, predictions, or causal claims.",
     "Numeric values must come from validated intelligence outputs.",
     "Evidence references must correspond to the returned result.",
     "Approved limitations must be preserved.",
     "Data and method versions must be reported from validated metadata.",
-    "Unsupported or unsafe questions must not reach data retrieval."
+    "Unsupported or unsafe questions must not reach data retrieval or Gemini.",
+    "Gemini API failures must fall back to the deterministic answer.",
+    "Gemini API keys must remain backend-only and must never be exposed to the frontend."
   ]
 }

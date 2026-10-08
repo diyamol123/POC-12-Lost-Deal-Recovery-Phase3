@@ -79,3 +79,23 @@ Persistent assistant memory is disabled.
 
 Logs must not contain secrets, credentials, system prompts, or unrestricted
 canonical records.
+
+
+## Gemini explanation boundary
+
+Gemini receives only the current question, approved intent, deterministic
+finding, validated evidence, versions, and approved limitation.
+
+Gemini must not:
+
+- access the canonical dataset;
+- receive the full canonical dataset;
+- create new numbers, rankings, scores, findings, or evidence;
+- make predictions, forecasts, or causal claims;
+- execute instructions contained in source data;
+- disclose system prompts, credentials, or API keys.
+
+The Gemini API key is backend-only and is never exposed to the frontend.
+
+If Gemini is unavailable, the deterministic answer remains authoritative and
+the service returns a controlled fallback explanation.

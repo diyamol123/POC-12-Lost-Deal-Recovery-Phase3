@@ -26,7 +26,7 @@ from .queries import (
     get_validation_status,
 )
 from .router import classify_question
-
+from .gemini_explanation import GeminiExplanationError, explain_deterministic_result
 
 QUERY_FUNCTIONS = {
     "top_category": get_top_category,
@@ -172,6 +172,64 @@ def _extract_follow_ups(intent: str) -> list[str]:
     return follow_ups.get(intent, [])[:3]
 
 
+def _numeric_values(value: Any) -> set[float]:
+    """Extract numeric values from grounded data for fidelity checking."""
+
+    import re
+
+    if isinstance(value, bool) or value is None:
+        return set()
+
+    if isinstance(value, (int, float)):
+        return {float(value)}
+
+    if isinstance(value, dict):
+        numbers: set[float] = set()
+        for item in value.values():
+            numbers.update(_numeric_values(item))
+        return numbers
+
+    if isinstance(value, (list, tuple)):
+        numbers: set[float] = set()
+        for item in value:
+            numbers.update(_numeric_values(item))
+        return numbers
+
+    if isinstance(value, str):
+        numbers: set[float] = set()
+        for match in re.findall(r"(?<![A-Za-z])[-+]?\d[\d,]*(?:\.\d+)?", value):
+            try:
+                numbers.add(float(match.replace(",", "")))
+            except ValueError:
+                continue
+        return numbers
+
+    return set()
+
+
+def _has_numeric_fidelity(
+    explanation: str,
+    *,
+    result: dict[str, Any],
+    metadata: dict[str, Any],
+    limitation: str,
+) -> bool:
+    """Reject explanations containing numeric values absent from grounded data."""
+
+    allowed_numbers = (
+        _numeric_values(result)
+        | _numeric_values(metadata)
+        | _numeric_values(limitation)
+    )
+
+    explanation_numbers = _numeric_values(explanation)
+
+    return all(
+        any(abs(number - allowed) <= max(1e-9, abs(allowed) * 1e-9) for allowed in allowed_numbers)
+        for number in explanation_numbers
+    )
+
+
 def answer_question(question: str) -> dict[str, Any]:
     """Return a grounded response that follows the approved response contract."""
 
@@ -196,10 +254,39 @@ def answer_question(question: str) -> dict[str, Any]:
             "The deterministic query returned invalid metadata."
         )
 
-    limitation = result.get(
-        "limitation",
-        "Results are descriptive and subject to the limitations of the approved intelligence package.",
+    limitation = str(
+        result.get(
+            "limitation",
+            "Results are descriptive and subject to the limitations of the approved intelligence package.",
+        )
     )
+
+    try:
+        gemini_explanation = explain_deterministic_result(
+            question=question,
+            intent=match.intent,
+            result=result,
+            evidence_references=_extract_evidence_references(result),
+            metadata=metadata,
+            limitation=limitation,
+        )
+        if not _has_numeric_fidelity(
+            gemini_explanation,
+            result=result,
+            metadata=metadata,
+            limitation=limitation,
+        ):
+            raise GeminiExplanationError(
+                "Gemini explanation failed numeric grounding validation."
+            )
+
+        explanation_status = "AVAILABLE"
+    except GeminiExplanationError:
+        gemini_explanation = (
+            "Gemini explanation is currently unavailable. "
+            "The deterministic result remains authoritative."
+        )
+        explanation_status = "UNAVAILABLE"
 
     return {
         "answer_id": f"assistant-{uuid4().hex}",
@@ -210,6 +297,8 @@ def answer_question(question: str) -> dict[str, Any]:
         "key_values": _extract_key_values(result),
         "metadata": metadata,
         "limitation": str(limitation),
+        "gemini_explanation": gemini_explanation,
+        "explanation_status": explanation_status,
         "suggested_follow_ups": _extract_follow_ups(match.intent),
         "parameters": match.parameters,
         "result": result if "results" not in result else None,

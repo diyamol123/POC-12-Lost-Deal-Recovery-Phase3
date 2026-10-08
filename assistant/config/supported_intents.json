@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "mode": "deterministic",
+  "mode": "deterministic_with_llm_explanation",
   "llm_required": false,
-  "approved_track": "Track A — Comparative Intelligence",
+  "approved_track": "Track A \u2014 Comparative Intelligence",
   "intents": [
     "top_category",
     "top_categories",

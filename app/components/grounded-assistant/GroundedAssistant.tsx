@@ -136,13 +136,12 @@ export default function GroundedAssistant() {
           </h2>
           <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-500">
             Ask a supported question about the approved intelligence package.
-            Answers are deterministic and grounded in the validated Track A
-            results.
+            Answers are retrieved deterministically from validated Track A results. Gemini only explains the validated result and evidence.
           </p>
         </div>
 
         <span className="rounded-full border border-[#38BDF8]/20 px-2.5 py-1 text-[9px] uppercase tracking-wider text-[#38BDF8]">
-          Deterministic · No LLM
+          Deterministic Retrieval · Gemini Explanation
         </span>
       </div>
 
@@ -214,6 +213,24 @@ export default function GroundedAssistant() {
               {getAnswer(response)}
             </p>
           </div>
+
+          {response.gemini_explanation && (
+            <div className="rounded-lg border border-[#818CF8]/20 bg-[#818CF8]/5 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-[9px] font-semibold uppercase tracking-wider text-[#818CF8]">
+                  Gemini explanation
+                </div>
+                <span className="text-[9px] uppercase tracking-wider text-slate-600">
+                  {response.explanation_status === "AVAILABLE"
+                    ? "Grounded"
+                    : "Fallback"}
+                </span>
+              </div>
+              <p className="mt-2 whitespace-pre-line text-xs leading-5 text-slate-300">
+                {response.gemini_explanation}
+              </p>
+            </div>
+          )}
 
           {response.evidence.length > 0 && (
             <div>

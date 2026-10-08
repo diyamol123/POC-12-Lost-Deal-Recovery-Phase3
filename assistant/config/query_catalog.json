@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "retrieval_mode": "deterministic",
+  "retrieval_mode": "deterministic_source_of_truth",
   "approved_query_functions": {
     "top_category": "get_top_category",
     "top_categories": "get_top_categories",
@@ -20,5 +20,8 @@
     "unrestricted_record_access": false,
     "max_results": 25,
     "max_evidence_references": 10
-  }
+  },
+  "explanation_mode": "gemini_grounded_optional",
+  "gemini_receives_full_dataset": false,
+  "gemini_may_create_findings": false
 }

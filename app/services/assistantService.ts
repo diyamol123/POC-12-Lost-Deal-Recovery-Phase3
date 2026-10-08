@@ -20,6 +20,10 @@ export interface AssistantResponse {
     approved_track: string;
   };
   limitation: string;
+
+  gemini_explanation?: string;
+
+  explanation_status?: "AVAILABLE" | "UNAVAILABLE";
   scope_status: string;
   confidence: string;
 }
