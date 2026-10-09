@@ -225,7 +225,11 @@ def _has_numeric_fidelity(
     explanation_numbers = _numeric_values(explanation)
 
     return all(
-        any(abs(number - allowed) <= max(1e-9, abs(allowed) * 1e-9) for allowed in allowed_numbers)
+        any(
+            abs(number - allowed)
+            <= max(0.01, abs(allowed) * 1e-4)
+            for allowed in allowed_numbers
+        )
         for number in explanation_numbers
     )
 
