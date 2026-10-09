@@ -55,5 +55,14 @@ export async function askGroundedAssistant(
     );
   }
 
-  return payload as AssistantResponse;
+  const normalizedResult =
+    payload?.result?.result &&
+    typeof payload.result.result === "object"
+      ? payload.result.result
+      : payload?.result ?? null;
+
+  return {
+    ...payload,
+    result: normalizedResult,
+  } as AssistantResponse;
 }
