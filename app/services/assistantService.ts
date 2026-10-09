@@ -7,11 +7,15 @@ export interface AssistantEvidence {
 }
 
 export interface AssistantResponse {
+  answer_id: string;
+  status: string;
   intent: string;
+  answer: string;
   parameters: Record<string, unknown>;
-  result?: Record<string, unknown>;
+  result?: Record<string, unknown> | null;
   results?: Record<string, unknown>[];
-  evidence: AssistantEvidence[];
+  evidence_references: string[];
+  key_values: Record<string, unknown>;
   metadata: {
     data_version: string;
     method_version: string;

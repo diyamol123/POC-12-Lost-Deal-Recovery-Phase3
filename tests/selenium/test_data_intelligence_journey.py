@@ -99,7 +99,43 @@ def test_data_intelligence_journey():
                 category_select.select_by_index(1)
                 assert "INTELLIGENCE FILTERS" in driver.page_source
 
-        # 11-12: return and confirm operational page still works.
+        # 11: grounded assistant — supported Gemini-backed question.
+        assistant_input = wait.until(
+            lambda d: d.find_element(By.ID, "assistant-question")
+        )
+        assistant_input.clear()
+        assistant_input.send_keys("Compare Price and Competitor")
+        assistant_input.find_element(By.XPATH, "..").find_element(
+            By.CSS_SELECTOR, 'button[type="submit"]'
+        ).click()
+
+        wait.until(lambda d: "GROUNDED DATA ASSISTANT" in d.page_source)
+        wait.until(lambda d: "Grounded answer" in d.page_source)
+
+        assert "Price" in driver.page_source
+        assert "Competitor" in driver.page_source
+        assert "Gemini explanation" in driver.page_source
+        assert "Grounded" in driver.page_source
+        assert "Evidence" in driver.page_source
+        assert "POC12-CAT-01" in driver.page_source
+        assert "POC12-CAT-02" in driver.page_source
+
+        # 12: unsupported predictive question must be rejected.
+        assistant_input = driver.find_element(By.ID, "assistant-question")
+        assistant_input.clear()
+        assistant_input.send_keys(
+            "Can you predict which category will lose the most deals next month?"
+        )
+        assistant_input.find_element(By.XPATH, "..").find_element(
+            By.CSS_SELECTOR, 'button[type="submit"]'
+        ).click()
+
+        alert = wait.until(
+            lambda d: d.find_element(By.CSS_SELECTOR, '[role="alert"]')
+        )
+        assert "Predictive or forecasting questions are outside the approved scope." in alert.text
+
+        # 13: return and confirm operational page still works.
         operational_links = driver.find_elements(
             By.PARTIAL_LINK_TEXT, "Operational View"
         )

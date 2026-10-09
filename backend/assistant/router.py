@@ -1,4 +1,3 @@
-
 """Deterministic intent routing for the Phase 3 grounded assistant."""
 
 from __future__ import annotations
@@ -22,7 +21,9 @@ _CATEGORY = r"([A-Za-z][A-Za-z -]{0,99}?)"
 
 
 def _clean(value: str) -> str:
-    return " ".join(value.strip(" \t\n\r?.!,").split())
+    cleaned = " ".join(value.strip(" \t\n\r?.!,").split())
+    cleaned = re.sub(r"\s+categories?$", "", cleaned, flags=re.IGNORECASE)
+    return cleaned
 
 
 def _require_category(value: str | None, message: str) -> str:
@@ -52,18 +53,23 @@ def classify_question(question: str) -> IntentMatch:
 
     if re.search(r"\b(compare|comparison|versus|vs\.?)\b", lowered):
         pair = re.search(
-            rf"(?:compare|comparison(?:\s+of)?)\s+{_CATEGORY}\s+(?:and|vs\.?|versus)\s+{_CATEGORY}(?:\?|$)",
+            rf"(?:compare|comparison(?:\s+of)?)\s+{_CATEGORY}\s+(?:and|vs\.?|versus)\s+{_CATEGORY}(?:\s+categories?)?(?:\?|$)",
             text,
             flags=re.IGNORECASE,
         )
+
         if not pair:
             pair = re.search(
-                rf"{_CATEGORY}\s+(?:vs\.?|versus)\s+{_CATEGORY}(?:\?|$)",
+                rf"{_CATEGORY}\s+(?:vs\.?|versus)\s+{_CATEGORY}(?:\s+categories?)?(?:\?|$)",
                 text,
                 flags=re.IGNORECASE,
             )
+
         if not pair:
-            raise AssistantValidationError("Comparison requires two supported categories.")
+            raise AssistantValidationError(
+                "Comparison requires two supported categories."
+            )
+
         return IntentMatch(
             "compare_categories",
             {
@@ -78,39 +84,56 @@ def classify_question(question: str) -> IntentMatch:
             text,
             re.IGNORECASE,
         )
+
         if not match:
             match = re.search(
                 rf"what\s+(?:evidence|proof)\s+(?:supports?|is there for)\s+{_CATEGORY}(?:\?|$)",
                 text,
                 re.IGNORECASE,
             )
+
         if not match:
-            raise AssistantValidationError("Please specify the category whose evidence you want.")
+            raise AssistantValidationError(
+                "Please specify the category whose evidence you want."
+            )
+
         return IntentMatch(
             "category_evidence",
             {"group_key": _clean(match.group(1))},
         )
 
-    if re.search(r"\bwhy\b", lowered) and re.search(r"\b(rank|ranking|position)\b", lowered):
+    if re.search(r"\bwhy\b", lowered) and re.search(
+        r"\b(rank|ranking|position)\b",
+        lowered,
+    ):
         match = re.search(
             rf"why\s+is\s+{_CATEGORY}\s+ranked\s+at\s+its\s+current\s+position(?:\?|$)",
             text,
             re.IGNORECASE,
         )
+
         if not match:
             match = re.search(
                 rf"why\s+is\s+{_CATEGORY}\s+(?:ranked|positioned)(?:\?|$)",
                 text,
                 re.IGNORECASE,
             )
+
         if not match:
-            raise AssistantValidationError("Please specify the category you want explained.")
+            raise AssistantValidationError(
+                "Please specify the category you want explained."
+            )
+
         return IntentMatch(
             "category_explanation",
             {"group_key": _clean(match.group(1))},
         )
+
     if re.search(r"\b(rank|ranking|position)\b", lowered):
-        if re.fullmatch(r"(?:what\s+is\s+)?(?:the\s+)?(?:rank|ranking|position)\??", lowered):
+        if re.fullmatch(
+            r"(?:what\s+is\s+)?(?:the\s+)?(?:rank|ranking|position)\??",
+            lowered,
+        ):
             raise AssistantValidationError(
                 "Please specify the category whose ranking you want."
             )
@@ -120,26 +143,44 @@ def classify_question(question: str) -> IntentMatch:
             text,
             re.IGNORECASE,
         )
+
         if not match:
             match = re.search(
                 rf"what\s+is\s+{_CATEGORY}'?s?\s+(?:rank|ranking|position)(?:\?|$)",
                 text,
                 re.IGNORECASE,
             )
+
         if not match:
             raise AssistantValidationError(
                 "Please specify the category whose ranking you want."
             )
+
         return IntentMatch(
             "category_rank",
             {"group_key": _clean(match.group(1))},
         )
+
     top_match = re.search(r"\btop\s+(\d+)\b", lowered)
-    if top_match and re.search(r"\b(category|categories|lost-deal)\b", lowered):
+
+    if top_match and re.search(
+        r"\b(category|categories|lost-deal)\b",
+        lowered,
+    ):
         limit = int(top_match.group(1))
+
         if limit > 25:
-            raise AssistantValidationError("The requested result limit exceeds the maximum of 25.")
+            raise AssistantValidationError(
+                "The requested result limit exceeds the maximum of 25."
+            )
+
         return IntentMatch("top_categories", {"limit": limit})
+
+    if re.search(
+        r"\btop\s+(?:lost-deal\s+)?categories\b",
+        lowered,
+    ):
+        return IntentMatch("top_categories", {"limit": 5})
 
     if re.search(r"\b(highest|largest|top)\b", lowered) and re.search(
         r"\b(total deal value|deal value|category|lost-deal)\b",

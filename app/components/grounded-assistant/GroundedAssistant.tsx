@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   askGroundedAssistant,
   type AssistantResponse,
+  type AssistantEvidence,
 } from "@/app/services/assistantService";
 
 const SUGGESTED_QUESTIONS = [
@@ -36,8 +37,17 @@ function formatValue(value: unknown): string {
   return String(value);
 }
 
+function getEvidence(response: AssistantResponse): AssistantEvidence[] {
+  const results = response.results || (response.result ? [response.result] : []);
+
+  return results
+    .map((result) => result.evidence)
+    .filter((evidence): evidence is AssistantEvidence => Boolean(evidence));
+}
+
 function getAnswer(response: AssistantResponse): string {
   const result = response.result;
+  const evidence = getEvidence(response);
 
   if (response.intent === "top_category" && result) {
     return `${result.group_key} ranks #${result.priority_rank} with a total deal value of ${formatValue(result.result_value)}.`;
@@ -52,7 +62,7 @@ function getAnswer(response: AssistantResponse): string {
   }
 
   if (response.intent === "category_evidence" && result) {
-    return `The approved evidence for ${result.group_key} contains ${formatValue(response.evidence[0]?.record_count)} records and a ${formatValue(response.evidence[0]?.contribution_pct)}% contribution to the observed total.`;
+    return `The approved evidence for ${result.group_key} contains ${formatValue(evidence[0]?.record_count)} records and a ${formatValue(evidence[0]?.contribution_pct)}% contribution to the observed total.`;
   }
 
   if (response.intent === "top_categories" && response.results) {
@@ -232,14 +242,14 @@ export default function GroundedAssistant() {
             </div>
           )}
 
-          {response.evidence.length > 0 && (
+          {getEvidence(response).length > 0 && (
             <div>
               <div className="text-[9px] font-semibold uppercase tracking-wider text-slate-600">
                 Evidence
               </div>
               <div className="mt-2 space-y-1 text-xs text-slate-400">
-                {response.evidence.map((evidence) => (
-                  <div key={evidence.reference || "evidence"}>
+                {getEvidence(response).map((evidence, index) => (
+                  <div key={evidence.reference || response.evidence_references[index] || `evidence-${index}`}>
                     {evidence.reference || "Approved result"} ·{" "}
                     {formatValue(evidence.record_count)} records ·{" "}
                     {formatValue(evidence.contribution_pct)}% contribution

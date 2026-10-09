@@ -72,37 +72,52 @@ def _build_grounding_payload(
 ) -> dict[str, Any]:
     """Build the smallest approved payload needed for explanation."""
 
-    deterministic_result = result.get("result", result)
+    raw_results = result.get("results")
+    if isinstance(raw_results, list):
+        deterministic_results = [
+            item for item in raw_results
+            if isinstance(item, dict)
+        ]
+    else:
+        single_result = result.get("result", result)
+        deterministic_results = (
+            [single_result]
+            if isinstance(single_result, dict)
+            else []
+        )
 
-    if not isinstance(deterministic_result, dict):
-        deterministic_result = {}
+    grounded_results = []
 
-    evidence = deterministic_result.get("evidence")
+    for item in deterministic_results:
+        evidence = item.get("evidence", {})
 
-    if not isinstance(evidence, dict):
-        evidence = {}
+        if not isinstance(evidence, dict):
+            evidence = {}
+
+        grounded_results.append(
+            {
+                "result_id": item.get("result_id"),
+                "group_key": item.get("group_key"),
+                "result_value": item.get("result_value"),
+                "result_unit": item.get("result_unit"),
+                "result_category": item.get("result_category"),
+                "priority_rank": item.get("priority_rank"),
+                "finding": item.get("finding"),
+                "evidence": {
+                    "record_count": evidence.get("record_count"),
+                    "average_deal_value": evidence.get("average_deal_value"),
+                    "contribution_pct": evidence.get("contribution_pct"),
+                    "record_ids": evidence.get("record_ids", [])[:10],
+                    "reference": evidence.get("reference"),
+                },
+            }
+        )
 
     return {
         "question": question,
         "intent": intent,
-        "deterministic_finding": deterministic_result.get("finding"),
-        "deterministic_result": {
-            "result_category": deterministic_result.get("result_category"),
-            "priority_rank": deterministic_result.get("priority_rank"),
-            "group_key": deterministic_result.get("group_key"),
-            "result_value": deterministic_result.get("result_value"),
-            "result_unit": deterministic_result.get("result_unit"),
-        },
-        "validated_evidence": {
-            "record_count": evidence.get("record_count"),
-            "average_deal_value": evidence.get("average_deal_value"),
-            "contribution_pct": evidence.get("contribution_pct"),
-            "references": [
-                item.get("reference")
-                for item in evidence_references[:10]
-                if isinstance(item, dict) and item.get("reference")
-            ],
-        },
+        "deterministic_results": grounded_results,
+        "validated_evidence_references": evidence_references[:10],
         "versions": {
             "data_version": metadata.get("data_version"),
             "method_version": metadata.get("method_version"),
