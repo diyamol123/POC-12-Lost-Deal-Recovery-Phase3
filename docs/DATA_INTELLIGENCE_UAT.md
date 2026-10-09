@@ -13,7 +13,7 @@
 | Limitations | Approved warnings are visible | Approved limitations and unsupported uses were visible | PASS | Selenium journey |
 | Error state | Unsafe source fails safely | Controlled API/UI error handling is covered by automated tests; no unsafe rendering observed | PASS | `tests/intelligence-api`, `tests/intelligence-ui` |
 | Stale state | Version mismatch is clearly displayed | Controlled stale-state withholding is covered by automated UI tests | PASS | `tests/intelligence-ui` |
-| Mobile | Layout remains usable | Responsive classes/specification are implemented, but no dedicated mobile browser runtime evidence was captured | NOT RUNTIME VALIDATED | UI specification |
+| Mobile | Layout remains usable | Mobile browser runtime validation passed at 500x844 with no horizontal overflow | PASS | Mobile Selenium viewport check |
 | Regression | Operational page remains functional | Operational route/source regression tests passed and Selenium returned successfully to Operational View | PASS | `tests/regression` + Selenium |
 
 ## Automated Coverage
