@@ -1,0 +1,34 @@
+{
+  "approved_track": "Track A \u2014 Comparative Intelligence",
+  "data_version": "phase3-v1.0.0",
+  "method_version": "1.0.0",
+  "validation_result": "PASS",
+  "passed": true,
+  "record_count": 20,
+  "primary_group_count": 5,
+  "minimum_group_size": 3,
+  "contribution_total_percent": 100.0,
+  "small_groups_at_threshold": [
+    "Timing",
+    "Budget"
+  ],
+  "baseline": {
+    "total_value": 11605000.0,
+    "average_value": 580250.0
+  },
+  "checks": {
+    "data_version": true,
+    "method_version": true,
+    "record_count": true,
+    "minimum_group_size": true,
+    "group_count": true,
+    "calculation_accuracy": true,
+    "ranking_accuracy": true,
+    "sequential_ranking": true,
+    "deterministic_tie_handling": true,
+    "contribution_total": true,
+    "baseline_total": true,
+    "baseline_average": true,
+    "small_group_review_identified": true
+  }
+}

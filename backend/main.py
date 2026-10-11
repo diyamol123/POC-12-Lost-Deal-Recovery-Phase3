@@ -375,7 +375,7 @@ from pathlib import Path as _Path
 from datetime import datetime as _Datetime
 import json as _json
 
-_INTELLIGENCE_ROOT = _Path(__file__).resolve().parents[1] / "data-science" / "outputs"
+_INTELLIGENCE_ROOT = _Path(__file__).resolve().parent / "data-science" / "outputs"
 _RESULTS_FILE = _INTELLIGENCE_ROOT / "intelligence_results.json"
 _SUMMARY_FILE = _INTELLIGENCE_ROOT / "intelligence_summary.json"
 _VALIDATION_FILE = _INTELLIGENCE_ROOT / "validation_metrics.json"
