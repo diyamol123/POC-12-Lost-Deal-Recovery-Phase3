@@ -56,15 +56,16 @@ export default function DashboardCharts({
     0
   );
 
-  let running = 0;
+  const cumulative = paretoValues.reduce<number[]>((values, value) => {
+    const running = (values.at(-1) ?? 0) + value;
 
-  const cumulative = paretoValues.map((value) => {
-    running += value;
-
-    return total > 0
+    values.push(running);
+    return values;
+  }, []).map((running) =>
+    total > 0
       ? Math.round((running / total) * 100)
-      : 0;
-  });
+      : 0
+  );
 
   const paretoOption = {
     backgroundColor: "transparent",

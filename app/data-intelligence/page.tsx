@@ -82,7 +82,11 @@ export default function DataIntelligencePage() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(load, []);
+  useEffect(() => {
+    // The loader intentionally initializes page state on mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void load();
+  }, []);
 
   const groups = useMemo(
     () =>

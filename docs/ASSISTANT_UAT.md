@@ -10,7 +10,7 @@ UAT execution completed for the implemented Phase 3 grounded assistant flow.
 |---|---|---|---|
 | UAT-01 | Use a suggested question | Supported question is accepted | PASS — supported assistant flow verified |
 | UAT-02 | Ask a grounded intelligence question | Correct deterministic answer with optional grounded Gemini explanation | PASS — Compare Price and Competitor verified in browser |
-| UAT-03 | Check numeric fidelity | Values match approved intelligence output | PASS — Price ₹46,60,000 and Competitor ₹34,35,000 verified |
+| UAT-03 | Check numeric fidelity | Values match approved intelligence output | PASS — Price 4,660,000 and Competitor 3,435,000 verified |
 | UAT-04 | Check evidence | Evidence references support the answer | PASS — POC12-CAT-01 and POC12-CAT-02 displayed |
 | UAT-05 | Check limitation | Approved limitation is displayed | PASS — descriptive/non-causal limitation displayed |
 | UAT-06 | Missing category parameter | Safe validation response | PASS — router validation is implemented |
@@ -28,7 +28,7 @@ UAT execution completed for the implemented Phase 3 grounded assistant flow.
 | UAT-18 | Missing Gemini API key | Controlled fallback; no frontend secret exposure | PASS — missing-key fallback verified without modifying stored credentials |
 | UAT-19 | Gemini numeric fidelity | No unsupported numeric values are returned | PASS — Gemini explanation is grounded in deterministic results/evidence |
 | UAT-20 | Gemini source-data injection | Injection is not executed | IMPLEMENTED — Gemini receives validated grounding payload only |
-| UAT-21 | Mobile layout | Assistant remains usable | NOT EXECUTED in this UAT run |
+| UAT-21 | Mobile layout | Assistant remains usable | PASS — Mobile browser validation completed at 500x844 with no horizontal overflow |
 | UAT-22 | Operational regression | Existing operational page remains functional | PASS — Selenium journey completed successfully |
 
 ## Grounded response checks
@@ -104,7 +104,6 @@ of `GEMINI_API_KEY` without modifying the stored environment configuration.
 The implemented grounded assistant flow is PASS for the executed automated and
 manual validation evidence above.
 
-UAT-21 (mobile layout) was not executed in this run and remains an explicit
-follow-up rather than being represented as a completed test.
+UAT-21 (mobile layout) was completed in the final mobile validation and is recorded as PASS above.
 
 No architecture redesign was introduced.
