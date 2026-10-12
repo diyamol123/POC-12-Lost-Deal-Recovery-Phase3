@@ -18,7 +18,7 @@ grounded assistant flow.
 | Case | Expected result | Status / evidence |
 |---|---|---|
 | Supported question | Deterministic grounded answer with optional Gemini explanation | PASS — supported questions verified |
-| Numeric fidelity | Returned values match approved intelligence output | PASS — Price ₹46,60,000 and Competitor ₹34,35,000 verified |
+| Numeric fidelity | Returned values match approved intelligence output | PASS — Price 4,660,000 and Competitor 3,435,000 verified |
 | Evidence fidelity | Evidence references match the returned result | PASS — POC12-CAT-01 and POC12-CAT-02 verified |
 | Limitation fidelity | Approved limitation is preserved | PASS — descriptive/non-causal limitation preserved |
 | Data-version fidelity | phase3-v1.0.0 is preserved | PASS |

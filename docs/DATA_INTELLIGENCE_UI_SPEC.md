@@ -9,7 +9,7 @@
 
 ### Loading
 
-Skeleton content while status/package requests are pending.
+Skeleton content while status/package requests are in progress.
 
 ### Validated
 

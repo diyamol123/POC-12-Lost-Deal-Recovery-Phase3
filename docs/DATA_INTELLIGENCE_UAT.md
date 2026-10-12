@@ -37,9 +37,9 @@
   - `evidence/screenshots/mobile_operational.png`
   - `evidence/screenshots/mobile_data_intelligence.png`
   - `evidence/screenshots/desktop_data_intelligence_evidence.png`
-- Reviewer approval: pending
+- Reviewer approval: PASS — owner/reviewer validation completed
 
-The UAT records completed validation as PASS. Final reviewer approval remains pending.
+The UAT records completed validation as PASS. Owner/reviewer validation is complete.
 
 ### Container Build Validation
 

@@ -1,93 +1,99 @@
-# PoC 12 — Lost Deal Reason & Recovery Intelligence
+# POC-12 — Lost Deal Recovery
 
-A decision-support dashboard for analysing lost CRM deals, identifying recurring loss reasons and competitive signals, and surfacing recovery-oriented actions.
+## Phase 3 Certified Release
 
-## Overview
+Phase 3 adds a validated **Data Intelligence** layer to the Lost Deal Recovery application while preserving the existing operational page.
 
-This PoC transforms lost-deal records into an interactive intelligence dashboard.
+### Release
 
-Users can:
+- Release: `phase3-v1.0.0`
+- Track: `Track A — Comparative Intelligence`
+- Data version: `phase3-v1.0.0`
+- Method version: `1.0.0`
+- Architecture version: `1.1.0`
+- Response contract: `1.1.0`
+- Canonical records: 20
+- Standardized columns: 20
+- Minimum group size: 3
+- Primary metric: `deal_value`
 
-- Analyse lost deals by location, team, product, segment, loss reason, and priority
-- Monitor key recovery and loss indicators
-- Explore loss reasons using analytical charts
-- Analyse customer-segment patterns
-- Review competitive loss signals
-- Open an Intelligence Panel for contextual interpretation
-- Review deal-level recovery information
-- Export dashboard data as CSV and JSON
+### Analytical scope
 
-> **Data note:** This PoC uses a synthetic CRM loss/follow-up dataset for demonstration and decision-support purposes. Company names and records are synthetic.
+The approved intelligence output compares lost-deal value across:
 
----
+1. Price
+2. Competitor
+3. Product Fit
+4. Timing
+5. Budget
 
-## Key Features
+The analysis is descriptive and based on the canonical synthetic dataset.
 
-### Dashboard Intelligence
+Key validated results:
 
-- KPI summary
-- Interactive filtering
-- Loss-reason analysis
-- Segment analysis
-- Competitive analysis
-- Intelligence Panel
-- Recovery recommendations
-- Deal-level recovery table
+| Group | Total deal value | Contribution |
+|---|---:|---:|
+| Price | 4,660,000 | 40.16% |
+| Competitor | 3,435,000 | 29.60% |
+| Product Fit | 1,440,000 | 12.41% |
+| Timing | 1,040,000 | 8.96% |
+| Budget | 1,030,000 | 8.88% |
 
-### User Interactions
+The dataset does not specify a currency.
 
-- Filter combinations
-- Interactive chart tooltips
-- Chart selection
-- Intelligence Panel
-- Information interface
-- CSV export
-- JSON export
+### Intelligence API
 
-### Responsive Design
+The Phase 3 backend exposes:
 
-The dashboard was tested across:
+- `GET /api/intelligence/status`
+- `GET /api/intelligence/metadata`
+- `GET /api/intelligence/summary`
+- `GET /api/intelligence/results`
+- `GET /api/intelligence/results/{result_id}`
 
-- Desktop
-- Tablet
-- Mobile
+The deterministic analytical outputs are authoritative.
 
----
+### Assistant grounding
 
-## Technology Stack
+Assistant Mode B uses deterministic retrieval as the authoritative source.
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- Apache ECharts
-- ECharts React integration
+Gemini is limited to explaining validated deterministic findings, evidence, versions, quality status, and limitations. It does not receive the full dataset and does not replace the deterministic analytical result.
 
----
+Fallback behavior remains available when Gemini is unavailable.
 
-## Project Structure
+### Validation
+
+The final certification evidence covers:
+
+- canonical data validation
+- analytical regeneration and validation
+- intelligence contract validation
+- application build
+- operational regression
+- Data Intelligence validation
+- assistant grounding
+- automated tests
+- Selenium validation
+- final UAT
+- production deployment validation
+- clean-clone reproducibility
+- evidence and handover documentation
+
+### Test baseline
+
+The certified test suite includes the Phase 3 application, backend, intelligence contract, assistant, and Selenium coverage.
+
+Final clean-clone validation must reproduce the same results from the certified repository.
+
+### Deployment
+
+Production:
+
+https://poc-12-lost-deal-recovery.vercel.app
+
+### Evidence
+
+Final evidence is stored under:
 
 ```text
-poc-12-lost-deal-recovery/
-│
-├── app/
-│   ├── components/
-│   │   ├── DashboardCharts.tsx
-│   │   ├── DecisionPanel.tsx
-│   │   ├── IntelligencePanel.tsx
-│   │   └── RecoveryTable.tsx
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-│
-├── public/
-│
-├── VAR_REPORT.md
-├── UAT_CHECKLIST.md
-├── README.md
-├── package.json
-├── package-lock.json
-└── ...
-## Live Deployment
-
-https://poc-12-lost-deal-recovery.vercel.app/
+final-evidence/
