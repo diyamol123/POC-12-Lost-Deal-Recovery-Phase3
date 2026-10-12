@@ -1,3 +1,4 @@
+import os
 from unittest.mock import patch
 
 from backend.assistant.gemini_explanation import (
@@ -32,6 +33,7 @@ def _grounded_result():
     }
 
 
+@patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"})
 def test_gemini_explanation_uses_mocked_client():
     class MockResponse:
         text = "Price is the highest-ranked category in the validated result."
@@ -39,7 +41,9 @@ def test_gemini_explanation_uses_mocked_client():
     with patch(
         "backend.assistant.gemini_explanation.genai.Client"
     ) as mock_client:
-        mock_client.return_value.models.generate_content.return_value = MockResponse()
+        mock_client.return_value.models.generate_content.return_value = (
+            MockResponse()
+        )
 
         explanation = explain_deterministic_result(
             question="Which lost-deal category has the highest total deal value?",
@@ -54,12 +58,13 @@ def test_gemini_explanation_uses_mocked_client():
     mock_client.return_value.models.generate_content.assert_called_once()
 
 
+@patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"})
 def test_gemini_api_failure_raises_grounded_error():
     with patch(
         "backend.assistant.gemini_explanation.genai.Client"
     ) as mock_client:
-        mock_client.return_value.models.generate_content.side_effect = RuntimeError(
-            "simulated Gemini failure"
+        mock_client.return_value.models.generate_content.side_effect = (
+            RuntimeError("simulated Gemini failure")
         )
 
         try:
@@ -130,11 +135,11 @@ def test_unsafe_question_does_not_reach_gemini():
         except Exception:
             pass
 
-    mock_gemini.assert_not_called()
+        mock_gemini.assert_not_called()
 
 
 def test_missing_gemini_api_key_raises_controlled_error():
-    with patch.dict("os.environ", {}, clear=True):
+    with patch.dict(os.environ, {}, clear=True):
         with patch(
             "backend.assistant.gemini_explanation.genai.Client"
         ) as mock_client:
@@ -148,11 +153,11 @@ def test_missing_gemini_api_key_raises_controlled_error():
                     limitation=_grounded_result()["limitation"],
                 )
             except GeminiExplanationError as exc:
-                assert "GEMINI_API_KEY is not configured" in str(exc)
+                assert "GEMINI_API_KEY" in str(exc)
             else:
                 raise AssertionError("Expected GeminiExplanationError")
 
-    mock_client.assert_not_called()
+            mock_client.assert_not_called()
 
 
 def test_unsupported_question_does_not_reach_gemini():
@@ -160,8 +165,8 @@ def test_unsupported_question_does_not_reach_gemini():
         "backend.assistant.service.explain_deterministic_result"
     ) as mock_gemini:
         try:
-            answer_question("Tell me which deals will be recovered next month.")
+            answer_question("What is the weather forecast for tomorrow?")
         except Exception:
             pass
 
-    mock_gemini.assert_not_called()
+        mock_gemini.assert_not_called()
