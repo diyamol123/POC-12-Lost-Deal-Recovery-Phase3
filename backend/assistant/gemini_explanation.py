@@ -7,7 +7,6 @@ Gemini receives only a small, validated explanation payload.
 from __future__ import annotations
 
 import os
-import time
 from typing import Any
 
 from dotenv import load_dotenv
@@ -161,27 +160,15 @@ def explain_deterministic_result(
         "Do not add any information that is not supported by the input."
     )
 
-    last_error: Exception | None = None
-
-    for attempt in range(3):
-        try:
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=prompt,
-            )
-            break
-        except Exception as exc:
-            last_error = exc
-            if attempt < 2:
-                time.sleep(1)
-            else:
-                raise GeminiExplanationError(
-                    "Gemini explanation is temporarily unavailable."
-                ) from exc
-    else:
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=prompt,
+        )
+    except Exception as exc:
         raise GeminiExplanationError(
             "Gemini explanation is temporarily unavailable."
-        ) from last_error
+        ) from exc
 
     explanation = getattr(response, "text", None)
 
