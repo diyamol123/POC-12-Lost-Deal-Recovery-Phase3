@@ -542,12 +542,20 @@ def _intelligence_status():
             "status": status,
             "detail": detail,
         }
-
-
 @app.post("/api/assistant/query")
 def assistant_query(payload: AssistantQuestion):
-    from backend.assistant.service import answer_question
-    from backend.assistant.errors import AssistantNotFoundError, AssistantValidationError
+    try:
+        from .assistant.service import answer_question
+        from .assistant.errors import (
+            AssistantNotFoundError,
+            AssistantValidationError,
+        )
+    except ImportError:
+        from assistant.service import answer_question
+        from assistant.errors import (
+            AssistantNotFoundError,
+            AssistantValidationError,
+        )
 
     try:
         return answer_question(payload.question)
@@ -555,7 +563,6 @@ def assistant_query(payload: AssistantQuestion):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except AssistantValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-
 
 @app.get("/api/intelligence/health")
 def intelligence_health():

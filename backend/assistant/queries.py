@@ -9,7 +9,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from backend.main import _load_intelligence_package
+
+try:
+    from backend.main import _load_intelligence_package
+except ModuleNotFoundError as exc:
+    if exc.name != "backend":
+        raise
+    from main import _load_intelligence_package
 
 from .errors import (
     AssistantNotFoundError,
