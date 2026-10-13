@@ -10,6 +10,7 @@ record access are permitted here.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 from uuid import uuid4
 
@@ -26,7 +27,12 @@ from .queries import (
     get_validation_status,
 )
 from .router import classify_question
-from .gemini_explanation import GeminiExplanationError, explain_deterministic_result
+from .gemini_explanation import (
+    GeminiExplanationError,
+    explain_deterministic_result,
+)
+
+logger = logging.getLogger(__name__)
 
 QUERY_FUNCTIONS = {
     "top_category": get_top_category,
@@ -52,7 +58,10 @@ def _build_answer(result: dict[str, Any]) -> str:
         return str(result["finding"])
 
     if "results" in result:
-        return "The requested comparative intelligence results are shown in the evidence and key values."
+        return (
+            "The requested comparative intelligence results "
+            "are shown in the evidence and key values."
+        )
 
     if "limitation" in result and result.get("result_category") == "limitations":
         return str(result["limitation"])
@@ -68,7 +77,10 @@ def _build_answer(result: dict[str, Any]) -> str:
     if "validation_result" in result:
         return str(result["validation_result"])
 
-    return "The requested grounded intelligence result is available in the evidence package."
+    return (
+        "The requested grounded intelligence result is available "
+        "in the evidence package."
+    )
 
 
 def _extract_key_values(result: dict[str, Any]) -> dict[str, Any]:
@@ -125,47 +137,47 @@ def _extract_follow_ups(intent: str) -> list[str]:
         "top_category": [
             "Ask for the top lost-deal categories.",
             "Ask why the top category has its current rank.",
-            "Ask what evidence supports the result."
+            "Ask what evidence supports the result.",
         ],
         "top_categories": [
             "Compare two categories.",
             "Ask for the ranking of a category.",
-            "Ask what limitations apply."
+            "Ask what limitations apply.",
         ],
         "category_rank": [
             "Ask why the category has this rank.",
             "Ask for evidence supporting the category.",
-            "Compare it with another category."
+            "Compare it with another category.",
         ],
         "category_explanation": [
             "Ask for the evidence supporting the category.",
             "Compare the category with another category.",
-            "Ask about the analysis limitations."
+            "Ask about the analysis limitations.",
         ],
         "category_evidence": [
             "Ask for the category ranking.",
             "Ask why the category has its current rank.",
-            "Compare it with another category."
+            "Compare it with another category.",
         ],
         "compare_categories": [
             "Ask for the ranking of either category.",
             "Ask for evidence supporting a category.",
-            "Ask about the analysis limitations."
+            "Ask about the analysis limitations.",
         ],
         "analysis_limitations": [
             "Ask for the current data and method versions.",
             "Ask for the validation status.",
-            "Ask for the top lost-deal category."
+            "Ask for the top lost-deal category.",
         ],
         "package_versions": [
             "Ask for the validation status.",
             "Ask about the analysis limitations.",
-            "Ask for the top lost-deal category."
+            "Ask for the top lost-deal category.",
         ],
         "validation_status": [
             "Ask for the current data and method versions.",
             "Ask about the analysis limitations.",
-            "Ask for the top lost-deal category."
+            "Ask for the top lost-deal category.",
         ],
     }
 
@@ -197,7 +209,10 @@ def _numeric_values(value: Any) -> set[float]:
 
     if isinstance(value, str):
         numbers: set[float] = set()
-        for match in re.findall(r"(?<![A-Za-z])[-+]?\d[\d,]*(?:\.\d+)?", value):
+        for match in re.findall(
+            r"(?<![A-Za-z])[-+]?\d[\d,]*(?:\.\d+)?",
+            value,
+        ):
             try:
                 numbers.add(float(match.replace(",", "")))
             except ValueError:
@@ -214,7 +229,7 @@ def _has_numeric_fidelity(
     metadata: dict[str, Any],
     limitation: str,
 ) -> bool:
-    """Reject explanations containing numeric values absent from grounded data."""
+    """Reject explanations containing unsupported numeric values."""
 
     allowed_numbers = (
         _numeric_values(result)
@@ -235,7 +250,7 @@ def _has_numeric_fidelity(
 
 
 def answer_question(question: str) -> dict[str, Any]:
-    """Return a grounded response that follows the approved response contract."""
+    """Return a grounded response following the approved response contract."""
 
     match = classify_question(question)
 
@@ -261,7 +276,8 @@ def answer_question(question: str) -> dict[str, Any]:
     limitation = str(
         result.get(
             "limitation",
-            "Results are descriptive and subject to the limitations of the approved intelligence package.",
+            "Results are descriptive and subject to the limitations "
+            "of the approved intelligence package.",
         )
     )
 
@@ -274,6 +290,7 @@ def answer_question(question: str) -> dict[str, Any]:
             metadata=metadata,
             limitation=limitation,
         )
+
         if not _has_numeric_fidelity(
             gemini_explanation,
             result=result,
@@ -285,7 +302,15 @@ def answer_question(question: str) -> dict[str, Any]:
             )
 
         explanation_status = "AVAILABLE"
-    except GeminiExplanationError:
+
+    except GeminiExplanationError as exc:
+        # Log the failure reason on the server only. Do not expose internal
+        # errors, request payloads, or credentials to the user.
+        logger.warning(
+            "Gemini explanation unavailable; intent=%s; error=%s",
+            match.intent,
+            str(exc),
+        )
         gemini_explanation = (
             "Gemini explanation is currently unavailable. "
             "The deterministic result remains authoritative."
@@ -300,7 +325,7 @@ def answer_question(question: str) -> dict[str, Any]:
         "evidence_references": _extract_evidence_references(result),
         "key_values": _extract_key_values(result),
         "metadata": metadata,
-        "limitation": str(limitation),
+        "limitation": limitation,
         "gemini_explanation": gemini_explanation,
         "explanation_status": explanation_status,
         "suggested_follow_ups": _extract_follow_ups(match.intent),
