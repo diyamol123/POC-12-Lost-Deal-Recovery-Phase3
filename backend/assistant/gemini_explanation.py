@@ -12,6 +12,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 load_dotenv(".env")
 
@@ -58,7 +59,10 @@ def _get_client() -> genai.Client:
             "Gemini explanation is unavailable because GEMINI_API_KEY is not configured."
         )
 
-    return genai.Client(api_key=api_key)
+    return genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(timeout=20000),
+    )
 
 
 def _build_grounding_payload(
