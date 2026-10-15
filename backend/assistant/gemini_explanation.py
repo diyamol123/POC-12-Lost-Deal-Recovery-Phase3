@@ -60,7 +60,7 @@ def _get_client() -> genai.Client:
 
     return genai.Client(
         api_key=api_key,
-        http_options=types.HttpOptions(timeout=20000),
+        http_options=types.HttpOptions(timeout=60000),
     )
 
 
@@ -161,17 +161,17 @@ def explain_deterministic_result(
     )
 
     try:
-        response = client.models.generate_content(
+        response = client.interactions.create(
             model=MODEL_NAME,
-            contents=prompt,
+            input=prompt,
+            store=False,
         )
     except Exception as exc:
         raise GeminiExplanationError(
             "Gemini explanation is temporarily unavailable."
         ) from exc
 
-    explanation = getattr(response, "text", None)
-
+    explanation = getattr(response, "output_text", None)
     if not explanation or not explanation.strip():
         raise GeminiExplanationError(
             "Gemini returned an empty explanation."
