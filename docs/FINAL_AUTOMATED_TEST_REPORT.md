@@ -2,7 +2,7 @@
 
 ## Status
 
-The recorded automated checks passed. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production. Final Phase 3 certification remains pending the security-risk decision and completion of the release evidence review.
+The recorded automated checks passed. The Vercel dashboard screenshot captured on 2026-10-18 shows commit `96c9730` as Ready in Production. Final Phase 3 certification remains pending the security-risk decision and completion of the release evidence review.
 
 ## Executed Results
 
@@ -31,7 +31,20 @@ Assistant safety cases marked `IMPLEMENTED` in the assistant validation and UAT 
 
 ## Production Deployment
 
-Live production checks returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`; health reported `ok` and status reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, while local outputs were regenerated on October 15. The reviewed contract does not define a maximum snapshot age, so this difference is recorded without asserting that the snapshot is stale. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production.
+Live production checks returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`; health reported `ok` and status reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, while local outputs were regenerated on October 15. The reviewed contract does not define a maximum snapshot age, so this difference is recorded without asserting that the snapshot is stale. The Vercel dashboard screenshot captured on 2026-10-18 shows commit `96c9730` as Ready in Production, matching local `main` at the time of review. The earlier `9c795a6` deployment is historical evidence.
 ## Conclusion
 
 The recorded automated checks and clean-clone validation passed. Production dependencies have no reported vulnerabilities, but five high-severity development dependency findings remain. Live production API checks have passed for the four reviewed intelligence endpoints. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age. Final certification remains pending the security-risk decision and completion of the remaining release evidence.
+
+## Dependency Audit Scope — Verification
+
+The dependency-scope verification recorded the following results:
+
+- `npm audit --omit=dev`: zero vulnerabilities reported.
+- `npm audit`: five high-severity findings remain in the full dependency tree.
+- `npm ls braces micromatch fast-glob --omit=dev`: the production dependency tree was empty for these packages.
+- `npm explain braces`: `braces@3.0.3` is present through the development-only chain `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch` → `braces`.
+
+The production-only audit result does not resolve or dismiss the full-audit findings. No patched `braces` version has been established by this verification. The suggested downgrade of `eslint-config-next` to `14.2.35` was not applied because the project uses Next.js 16.4.1.
+
+**Status:** Development dependency findings remain unresolved. Final release certification requires an appropriate remediation or documented risk acceptance by the responsible release authority.

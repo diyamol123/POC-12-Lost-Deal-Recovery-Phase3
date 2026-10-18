@@ -2,7 +2,7 @@
 
 ## Status
 
-PASS
+Recorded endpoint checks: PASS. Deployment commit matched to local main using Vercel dashboard evidence. Final certification: PENDING.
 
 ## Production URL
 
@@ -10,7 +10,7 @@ https://poc-12-lost-deal-recovery.vercel.app
 
 ## Deployment Commit
 
-`34b063a`
+Latest Production deployment shown in the Vercel dashboard screenshot captured on 2026-10-18: `96c9730` (Ready, Production). This matches local `main` commit `96c97305e20b174b33e59009b7551a0cf44a312b`. The screenshot also lists the earlier deployment `9c795a6`. The previous report's `34b063a` reference is superseded by this newer deployment evidence.
 
 ## Live Validation
 

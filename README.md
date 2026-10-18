@@ -1,6 +1,6 @@
 # POC-12 — Lost Deal Recovery
 
-## Phase 3 Certified Release
+## Phase 3 Release Candidate — Certification Pending
 
 Phase 3 adds a validated **Data Intelligence** layer to the Lost Deal Recovery application while preserving the existing operational page.
 
@@ -63,7 +63,7 @@ Fallback behavior remains available when Gemini is unavailable.
 
 ### Validation
 
-The final certification evidence covers:
+The planned certification evidence covers:
 
 - canonical data validation
 - analytical regeneration and validation
@@ -81,9 +81,9 @@ The final certification evidence covers:
 
 ### Test baseline
 
-The certified test suite includes the Phase 3 application, backend, intelligence contract, assistant, and Selenium coverage.
+Recorded validation includes the Phase 3 application, backend, intelligence contract, assistant, and Selenium coverage. See `docs/FINAL_AUTOMATED_TEST_REPORT.md` for the recorded results and outstanding security findings.
 
-Final clean-clone validation must reproduce the same results from the certified repository.
+Clean-clone validation has been recorded as passed. Final certification remains pending the documented security-risk decision and release-evidence review.
 
 ### Deployment
 
