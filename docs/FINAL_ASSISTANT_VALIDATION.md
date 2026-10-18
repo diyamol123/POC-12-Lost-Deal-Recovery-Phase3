@@ -2,7 +2,7 @@
 
 ## Status
 
-**Executed validation checks passed for the documented Phase 3 grounded-assistant scope. Final Phase 3 certification remains pending production deployment verification and completion of the release evidence review.**
+**Executed validation checks passed for the documented Phase 3 grounded-assistant scope. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production. Final Phase 3 certification remains pending the security-risk decision and completion of the release evidence review.**
 
 This report distinguishes checks recorded as executed from protections documented as implemented but not separately exercised end-to-end.
 
@@ -87,12 +87,12 @@ The historical checks recorded a validated status response, successful metadata 
 
 The recorded production snapshot timestamp was `2026-10-11T12:34:47Z`. This is older than the local analytical outputs regenerated during final validation. The difference is documented as a snapshot-timestamp difference; it is not evidence of a fresh production data regeneration.
 
-During the latest verification attempt, the production site's SSL connection timed out. **Current production endpoint availability and the latest deployed commit are unverified.** The historical successful responses are retained as evidence of earlier checks, not as proof of current production health.
+Live production checks performed during this review returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`. The health endpoint returned `ok`, and the status endpoint reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, earlier than the local outputs regenerated on October 15. The contract reviewed does not define a maximum snapshot age, so this difference is documented without claiming that it proves staleness. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production; this is deployment evidence, not a guarantee of ongoing availability.
 
 ## Conclusion
 
 The recorded assistant validation, fallback checks, intelligence contract, automated tests, linting, browser journey, and Next.js production build passed within their documented scopes.
 
-Five high-severity development dependency findings remain unresolved. The current production deployment has not been verified, and the safety controls listed as `IMPLEMENTED` have not all been individually exercised end-to-end.
+Five high-severity development dependency findings remain unresolved. Live production checks returned HTTP 200 for the four reviewed intelligence endpoints, with health reported as `ok` and status as `validated`. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age; this difference alone does not establish staleness. The safety controls listed as `IMPLEMENTED` have not all been individually exercised end-to-end.
 
-Final Phase 3 certification remains pending production deployment verification, completion of the release evidence review, and the final repository and Repomix checks.
+Final Phase 3 certification remains pending the security-risk decision, release evidence review, and final repository and Repomix checks.

@@ -2,7 +2,7 @@
 
 ## Status
 
-Final validation is substantially complete. Final certification remains pending production deployment verification, the final repository and evidence audit, final Repomix generation, and the release decision.
+Final validation is substantially complete. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as **Ready in Production**. Final certification remains pending the security-risk decision, final repository and evidence review, final Repomix generation, and release decision.
 
 ## Verified During Final Validation
 
@@ -23,6 +23,7 @@ Final validation is substantially complete. Final certification remains pending 
 ## Clean-Clone Validation
 
 The clean-clone validation passed:
+
 - Python tests: 59 passed.
 - TypeScript intelligence contract: 2 passed, 0 failed.
 - ESLint passed.
@@ -34,6 +35,7 @@ The security dependency update was committed and pushed as `c4e45b8` (`fix: upda
 ## Production Validation
 
 Earlier production API checks returned validated Track A results with:
+
 - 20 synthetic records.
 - 5 approved groups.
 - 100% contribution total.
@@ -41,21 +43,22 @@ Earlier production API checks returned validated Track A results with:
 
 The production endpoints reported `generated_at` as `2026-10-11T12:34:47Z`. This is older than the locally regenerated analytical outputs and is recorded as a snapshot difference, not as a fresh production data regeneration.
 
-The latest attempt to verify the production site and API timed out during the SSL connection. Therefore, the current production deployment and whether it includes commit `c4e45b8` have not been confirmed. Historical API success does not establish the current deployment status.
+Live production checks during this review returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`. The health endpoint returned `ok`, and the status endpoint reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, earlier than the local outputs regenerated on October 15. The reviewed contract does not define a maximum snapshot age, so this difference is documented without claiming that it proves staleness. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` with status **Ready in Production**; this confirms the deployment state shown in that evidence, not ongoing availability.
 
 ## Release History
 
-The existing `phase3-v1.0.0` annotated tag points to commit `142b3947a573f3bff2591520f80f61d5728cd9d4` (`docs: add final Phase 3 Repomix`). The security-fix commit `c4e45b8` is on `main`. The existing tag has not been moved.
+The existing `phase3-v1.0.0` annotated tag points to commit `142b3947a573f3bff2591520f80f61d5728cd9d4` (`docs: add final Phase 3 Repomix`). The security-fix commit `c4e45b8` is on `main`. The Vercel dashboard screenshot shows commit `9c795a6` as Ready in Production. The existing tag has not been moved.
 
 ## Remaining Release Actions
 
-1. Verify the current production deployment and relevant API endpoints.
+1. Record the completed live production API checks and document the production-versus-local snapshot timestamp difference; confirm a freshness threshold if one is required.
 2. Complete the final repository and evidence audit.
-3. Review and update the automated-test, assistant-validation, and completion reports so their claims match the evidence.
+3. Review the automated-test, assistant-validation, and completion reports to ensure their claims match the available evidence.
 4. Generate and review the final Repomix artifact after documentation and evidence changes are complete.
 5. Commit and push the verified final changes.
-6. Decide whether a new release tag is appropriate only after all required checks pass. Do not move the existing `phase3-v1.0.0` tag.
+6. Decide whether a new release tag is appropriate only after all required checks and release decisions are complete. Do not move the existing `phase3-v1.0.0` tag.
+7. Resolve the five high-severity development dependency findings or obtain an explicit, documented risk-acceptance decision from the authorized project owner before certification.
 
 ## Conclusion
 
-Automated tests, lint, the Next.js 16.4.1 production build, clean-clone validation, and the production dependency audit passed. Five high-severity development dependency findings remain, and the current production deployment could not be verified because the SSL connection timed out. Final certification remains pending the outstanding release actions.
+Automated tests, lint, the Next.js 16.4.1 production build, clean-clone validation, and the production dependency audit passed in the recorded checks. The Vercel dashboard screenshot shows commit `9c795a6` as Ready in Production. Live production checks returned HTTP 200 for the four reviewed intelligence endpoints; health reported `ok` and status reported `validated`. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age. Five high-severity development dependency findings remain unresolved. Final Phase 3 certification remains pending the outstanding security-risk decision and release evidence review.

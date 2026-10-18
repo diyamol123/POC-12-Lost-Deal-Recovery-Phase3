@@ -15,7 +15,7 @@ or other automated processes.</purpose><file_format>The content is organized as 
 - Be aware that this file may contain sensitive information. Handle it with
   the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching these patterns are excluded: repomix-*.xml, repomix-*.md
+- Files matching these patterns are excluded: repomix-output.xml, repomix-output-final.xml, repomix-output-post4-final.xml, repomix-output-post5-final.xml, repomix-phase3-certified-final.xml, repomix-phase3-final.md, repomix-phase3-pre-certification.md
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Content has been formatted for parsing in xml style
@@ -223,104 +223,7 @@ README.md
 tsconfig.json
 UAT_CHECKLIST.md
 VAR_REPORT.md
-vercel.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="docs/FINAL_ASSISTANT_VALIDATION.md"># Final Assistant Validation Report
-
-## Status
-
-**Executed validation checks passed for the documented Phase 3 grounded-assistant scope. Final Phase 3 certification remains pending production deployment verification and completion of the release evidence review.**
-
-This report distinguishes checks recorded as executed from protections documented as implemented but not separately exercised end-to-end.
-
-## Approved Scope
-
-- **Track:** Track A — Comparative Intelligence
-- **Data version:** `phase3-v1.0.0`
-- **Method version:** `1.0.0`
-- Deterministic retrieval is authoritative.
-- Gemini is an optional explanation layer only.
-- Results are descriptive and do not establish causality.
-
-## Executed Assistant Validation
-
-The existing grounding-validation and assistant-UAT reports record successful execution of the following scenarios:
-
-- Supported grounded questions, including top categories and category ranking.
-- Numeric fidelity for Price (`4,660,000`) and Competitor (`3,435,000`).
-- Evidence fidelity for `POC12-CAT-01` and `POC12-CAT-02`.
-- Data-version and method-version fidelity.
-- Preservation of approved limitations.
-- Rejection of an unsupported predictive request.
-- Real Gemini explanation with deterministic findings and evidence preserved.
-- Gemini-unavailable fallback with the deterministic answer retained.
-- Missing-`GEMINI_API_KEY` fallback.
-- Mobile layout validation at 500 × 844, as documented in the existing UAT report.
-- Operational-page regression through the Selenium journey.
-
-The documented real Gemini execution reported `explanation_status=AVAILABLE`. The documented fallback returned `explanation_status=UNAVAILABLE` while preserving the deterministic answer and evidence.
-
-These results reflect the recorded validation evidence; they do not imply that every assistant safety control was individually exercised end-to-end.
-
-## Current Automated Verification
-
-The following checks passed during the final local validation pass:
-
-| Check | Result |
-|---|---|
-| Python test suite (`PYTHONPATH=. python3 -m pytest tests -q`) | 59 passed |
-| TypeScript intelligence output contract (`npx tsx tests/intelligence-contract/test_intelligence_validator.test.ts`) | 2 passed, 0 failed |
-| Selenium Data Intelligence journey | 1 passed |
-| ESLint (`npm run lint`) | Passed |
-| Next.js production build | Passed on Next.js 16.4.1 |
-| Production dependency audit (`npm audit --omit=dev`) | 0 vulnerabilities reported |
-| Full dependency audit (`npm audit`) | 5 high-severity development dependency findings remain |
-
-The Python, TypeScript, and Selenium results were recorded from separate commands. They are reported separately and are not represented as one combined test-suite count.
-
-The clean-clone validation record also reports successful Python tests, TypeScript contract validation, ESLint, and a production build.
-
-## Security Audit Notes
-
-The full dependency audit reported five high-severity findings associated with the development dependency chain involving `braces`, `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`.
-
-The suggested automatic fix would downgrade `eslint-config-next` to version `14.2.35`, which is not an appropriate automatic fix for this Next.js 16 project.
-
-The findings remain unresolved. Do not describe the full dependency tree as vulnerability-free. The production-only audit reported zero vulnerabilities, but that result does not clear the development dependency findings.
-
-## Controls Not Separately Exercised End-to-End
-
-The existing grounding-validation and UAT reports mark the following cases `IMPLEMENTED` rather than independently executed end-to-end:
-
-- Prompt injection and source-text injection.
-- System-prompt, secret, and credential requests.
-- Arbitrary SQL/code and unrestricted all-record requests.
-- Causal requests and ranking/score manipulation.
-- Invalid category/result references and version mismatch.
-- Full-dataset exposure prevention in the Gemini grounding payload.
-
-These protections are documented as implemented or covered by code-path review. This report does not claim a separate end-to-end execution for each one.
-
-## Production Deployment and Snapshot
-
-Historical production checks recorded successful HTTP 200 responses from the following endpoints:
-
-- `/api/intelligence/status`
-- `/api/intelligence/metadata`
-- `/api/intelligence/summary`
-- `/api/intelligence/results`
-
-The historical checks recorded a validated status response, successful metadata validation, five approved rankings, and five results with valid pagination.
-
-The recorded production snapshot timestamp was `2026-10-11T12:34:47Z`. This is older than the local analytical outputs regenerated during final validation. The difference is documented as a snapshot-timestamp difference; it is not evidence of a fresh production data regeneration.
-
-During the latest verification attempt, the production site&apos;s SSL connection timed out. **Current production endpoint availability and the latest deployed commit are unverified.** The historical successful responses are retained as evidence of earlier checks, not as proof of current production health.
-
-## Conclusion
-
-The recorded assistant validation, fallback checks, intelligence contract, automated tests, linting, browser journey, and Next.js production build passed within their documented scopes.
-
-Five high-severity development dependency findings remain unresolved. The current production deployment has not been verified, and the safety controls listed as `IMPLEMENTED` have not all been individually exercised end-to-end.
-
-Final Phase 3 certification remains pending production deployment verification, completion of the release evidence review, and the final repository and Repomix checks.</file><file path="app/components/data-intelligence/DataFreshnessBadge.tsx">import type { IntelligenceMetadata } from &quot;@/app/types/intelligence&quot;;
+vercel.json</directory_structure><files>This section contains the contents of the repository&apos;s files.<file path="app/components/data-intelligence/DataFreshnessBadge.tsx">import type { IntelligenceMetadata } from &quot;@/app/types/intelligence&quot;;
 
 export default function DataFreshnessBadge({ stale }: { metadata: IntelligenceMetadata; stale: boolean }) {
   return (
@@ -5898,45 +5801,104 @@ The dataset is synthetic. Currency is unspecified. Timing and Budget each contai
 
 ## Final Result
 
-Analytical revalidation: PASS.</file><file path="docs/FINAL_AUTOMATED_TEST_REPORT.md"># Final Automated Test Report
+Analytical revalidation: PASS.</file><file path="docs/FINAL_ASSISTANT_VALIDATION.md"># Final Assistant Validation Report
 
 ## Status
 
-PASS for the automated checks executed during the final validation pass.
+**Executed validation checks passed for the documented Phase 3 grounded-assistant scope. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production. Final Phase 3 certification remains pending the security-risk decision and completion of the release evidence review.**
 
-## Executed Results
+This report distinguishes checks recorded as executed from protections documented as implemented but not separately exercised end-to-end.
+
+## Approved Scope
+
+- **Track:** Track A — Comparative Intelligence
+- **Data version:** `phase3-v1.0.0`
+- **Method version:** `1.0.0`
+- Deterministic retrieval is authoritative.
+- Gemini is an optional explanation layer only.
+- Results are descriptive and do not establish causality.
+
+## Executed Assistant Validation
+
+The existing grounding-validation and assistant-UAT reports record successful execution of the following scenarios:
+
+- Supported grounded questions, including top categories and category ranking.
+- Numeric fidelity for Price (`4,660,000`) and Competitor (`3,435,000`).
+- Evidence fidelity for `POC12-CAT-01` and `POC12-CAT-02`.
+- Data-version and method-version fidelity.
+- Preservation of approved limitations.
+- Rejection of an unsupported predictive request.
+- Real Gemini explanation with deterministic findings and evidence preserved.
+- Gemini-unavailable fallback with the deterministic answer retained.
+- Missing-`GEMINI_API_KEY` fallback.
+- Mobile layout validation at 500 × 844, as documented in the existing UAT report.
+- Operational-page regression through the Selenium journey.
+
+The documented real Gemini execution reported `explanation_status=AVAILABLE`. The documented fallback returned `explanation_status=UNAVAILABLE` while preserving the deterministic answer and evidence.
+
+These results reflect the recorded validation evidence; they do not imply that every assistant safety control was individually exercised end-to-end.
+
+## Current Automated Verification
+
+The following checks passed during the final local validation pass:
 
 | Check | Result |
 |---|---|
 | Python test suite (`PYTHONPATH=. python3 -m pytest tests -q`) | 59 passed |
-| TypeScript intelligence contract (`npx tsx tests/intelligence-contract/test_intelligence_validator.test.ts`) | 2 passed, 0 failed |
-| Selenium Data Intelligence journey (standalone rerun) | 1 passed |
+| TypeScript intelligence output contract (`npx tsx tests/intelligence-contract/test_intelligence_validator.test.ts`) | 2 passed, 0 failed |
+| Selenium Data Intelligence journey | 1 passed |
 | ESLint (`npm run lint`) | Passed |
-| Next.js production build (`npm run build`) | Passed |
+| Next.js production build | Passed on Next.js 16.4.1 |
+| Production dependency audit (`npm audit --omit=dev`) | 0 vulnerabilities reported |
+| Full dependency audit (`npm audit`) | 5 high-severity development dependency findings remain |
 
-The standalone Selenium journey was also run separately for confirmation.
-It may overlap with the Python test suite and is not added to the unique test
-count.
+The Python, TypeScript, and Selenium results were recorded from separate commands. They are reported separately and are not represented as one combined test-suite count.
 
-## Scope and Limitations
+The clean-clone validation record also reports successful Python tests, TypeScript contract validation, ESLint, and a production build.
 
-The executed checks cover the repository&apos;s automated tests, intelligence
-output contract, browser journey, linting, and production build.
+## Security Audit Notes
 
-Assistant safety cases marked `IMPLEMENTED` in the assistant validation and
-UAT reports are not claimed as individually executed end-to-end tests here.
-See `docs/FINAL_ASSISTANT_VALIDATION.md` for that distinction.
+The full dependency audit reported five high-severity findings associated with the development dependency chain involving `braces`, `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`.
 
-## Clean Clone
+The suggested automatic fix would downgrade `eslint-config-next` to version `14.2.35`, which is not an appropriate automatic fix for this Next.js 16 project.
 
-A new clean-clone execution has not been independently confirmed during this
-final validation pass. Earlier clean-clone results may be documented in
-historical reports, but this report does not present them as a new run.
+The findings remain unresolved. Do not describe the full dependency tree as vulnerability-free. The production-only audit reported zero vulnerabilities, but that result does not clear the development dependency findings.
+
+## Controls Not Separately Exercised End-to-End
+
+The existing grounding-validation and UAT reports mark the following cases `IMPLEMENTED` rather than independently executed end-to-end:
+
+- Prompt injection and source-text injection.
+- System-prompt, secret, and credential requests.
+- Arbitrary SQL/code and unrestricted all-record requests.
+- Causal requests and ranking/score manipulation.
+- Invalid category/result references and version mismatch.
+- Full-dataset exposure prevention in the Gemini grounding payload.
+
+These protections are documented as implemented or covered by code-path review. This report does not claim a separate end-to-end execution for each one.
+
+## Production Deployment and Snapshot
+
+Historical production checks recorded successful HTTP 200 responses from the following endpoints:
+
+- `/api/intelligence/status`
+- `/api/intelligence/metadata`
+- `/api/intelligence/summary`
+- `/api/intelligence/results`
+
+The historical checks recorded a validated status response, successful metadata validation, five approved rankings, and five results with valid pagination.
+
+The recorded production snapshot timestamp was `2026-10-11T12:34:47Z`. This is older than the local analytical outputs regenerated during final validation. The difference is documented as a snapshot-timestamp difference; it is not evidence of a fresh production data regeneration.
+
+Live production checks performed during this review returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`. The health endpoint returned `ok`, and the status endpoint reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, earlier than the local outputs regenerated on October 15. The contract reviewed does not define a maximum snapshot age, so this difference is documented without claiming that it proves staleness. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production; this is deployment evidence, not a guarantee of ongoing availability.
 
 ## Conclusion
 
-All checks listed under Executed Results passed in the recorded final
-validation pass. The clean-clone status remains unconfirmed for this pass.</file><file path="docs/FINAL_DATA_INTELLIGENCE_VALIDATION.md"># Final Data Intelligence Validation
+The recorded assistant validation, fallback checks, intelligence contract, automated tests, linting, browser journey, and Next.js production build passed within their documented scopes.
+
+Five high-severity development dependency findings remain unresolved. Live production checks returned HTTP 200 for the four reviewed intelligence endpoints, with health reported as `ok` and status as `validated`. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age; this difference alone does not establish staleness. The safety controls listed as `IMPLEMENTED` have not all been individually exercised end-to-end.
+
+Final Phase 3 certification remains pending the security-risk decision, release evidence review, and final repository and Repomix checks.</file><file path="docs/FINAL_DATA_INTELLIGENCE_VALIDATION.md"># Final Data Intelligence Validation
 
 ## Status
 
@@ -6238,67 +6200,7 @@ Each result exposes the approved finding, evidence object, record IDs, quality s
 
 ## Analytical Boundary
 
-No frontend analytical calculation or ranking is introduced. The UI presents approved generated results.</file><file path="docs/PHASE3_COMPLETION_REPORT.md"># Phase 3 Completion Report
-
-## Status
-
-Final validation is substantially complete. Final certification remains pending production deployment verification, the final repository and evidence audit, final Repomix generation, and the release decision.
-
-## Verified During Final Validation
-
-- Canonical analytical outputs regenerated successfully.
-- Regenerated analytical content matches the committed outputs after excluding `generated_at` fields.
-- Intelligence output-contract validation passed.
-- Python test suite: 59 passed.
-- TypeScript intelligence contract: 2 passed, 0 failed.
-- Standalone Selenium Data Intelligence journey: 1 passed. This result is reported separately and is not added to the unique test count because it may overlap with the Python test suite.
-- ESLint passed.
-- Next.js production build passed on Next.js 16.4.1.
-- Installed versions of `next` and `eslint-config-next` were confirmed as 16.4.1.
-- `npm audit --omit=dev` reported zero production dependency vulnerabilities.
-- Full `npm audit` reported five high-severity findings in the development dependency chain involving `braces`, `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`. The suggested automatic fix downgrades `eslint-config-next` to 14.2.35 and is not appropriate for the current Next.js 16 setup. The findings remain unresolved and must be disclosed.
-- `git diff --check` passed after restoring the final report and analytical-output changes.
-- Final assistant validation evidence distinguishes checks that were executed from protections not individually exercised end-to-end.
-
-## Clean-Clone Validation
-
-The clean-clone validation passed:
-- Python tests: 59 passed.
-- TypeScript intelligence contract: 2 passed, 0 failed.
-- ESLint passed.
-- Next.js production build passed on Next.js 16.4.1.
-- Production dependency audit reported zero vulnerabilities.
-
-The security dependency update was committed and pushed as `c4e45b8` (`fix: update Next.js security dependencies`). The original working folder was updated to that commit, and the saved analytical-output and report changes were restored.
-
-## Production Validation
-
-Earlier production API checks returned validated Track A results with:
-- 20 synthetic records.
-- 5 approved groups.
-- 100% contribution total.
-- Approved data and method versions.
-
-The production endpoints reported `generated_at` as `2026-10-11T12:34:47Z`. This is older than the locally regenerated analytical outputs and is recorded as a snapshot difference, not as a fresh production data regeneration.
-
-The latest attempt to verify the production site and API timed out during the SSL connection. Therefore, the current production deployment and whether it includes commit `c4e45b8` have not been confirmed. Historical API success does not establish the current deployment status.
-
-## Release History
-
-The existing `phase3-v1.0.0` annotated tag points to commit `142b3947a573f3bff2591520f80f61d5728cd9d4` (`docs: add final Phase 3 Repomix`). The security-fix commit `c4e45b8` is on `main`. The existing tag has not been moved.
-
-## Remaining Release Actions
-
-1. Verify the current production deployment and relevant API endpoints.
-2. Complete the final repository and evidence audit.
-3. Review and update the automated-test, assistant-validation, and completion reports so their claims match the evidence.
-4. Generate and review the final Repomix artifact after documentation and evidence changes are complete.
-5. Commit and push the verified final changes.
-6. Decide whether a new release tag is appropriate only after all required checks pass. Do not move the existing `phase3-v1.0.0` tag.
-
-## Conclusion
-
-Automated tests, lint, the Next.js 16.4.1 production build, clean-clone validation, and the production dependency audit passed. Five high-severity development dependency findings remain, and the current production deployment could not be verified because the SSL connection timed out. Final certification remains pending the outstanding release actions.</file><file path="docs/PHASE3_DEMO_WALKTHROUGH.md"># Phase 3 Demo Walkthrough
+No frontend analytical calculation or ranking is introduced. The UI presents approved generated results.</file><file path="docs/PHASE3_DEMO_WALKTHROUGH.md"># Phase 3 Demo Walkthrough
 
 ## Live Application
 
@@ -10510,7 +10412,43 @@ The page renders the approved `important_limitations` output and does not invent
 
 ## Responsive Behaviour
 
-The layout uses responsive grid/flex classes and the evidence panel is full-width on narrow screens.</file><file path="docs/INTELLIGENCE_OUTPUT_CONTRACT.md"># Intelligence Output Contract
+The layout uses responsive grid/flex classes and the evidence panel is full-width on narrow screens.</file><file path="docs/FINAL_AUTOMATED_TEST_REPORT.md"># Final Automated Test Report
+
+## Status
+
+The recorded automated checks passed. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production. Final Phase 3 certification remains pending the security-risk decision and completion of the release evidence review.
+
+## Executed Results
+
+| Check | Result |
+|---|---|
+| Python test suite (`PYTHONPATH=. python3 -m pytest tests -q`) | 59 passed |
+| TypeScript intelligence contract (`npx tsx tests/intelligence-contract/test_intelligence_validator.test.ts`) | 2 passed, 0 failed |
+| Selenium Data Intelligence journey (standalone rerun) | 1 passed |
+| ESLint (`npm run lint`) | Passed |
+| Next.js production build (`npm run build`) | Passed on Next.js 16.4.1 |
+| Clean-clone validation | Python tests, TypeScript contract, ESLint, and production build passed |
+| Production dependency audit (`npm audit --omit=dev`) | 0 vulnerabilities |
+| Full dependency audit (`npm audit`) | 5 high-severity development dependency findings remain |
+
+The standalone Selenium journey was also run separately for confirmation. It may overlap with the Python test suite and is not added to the unique test count.
+
+## Security Audit Notes
+
+The full audit reports a vulnerable `braces` dependency through `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`. The suggested automatic fix downgrades `eslint-config-next` to 14.2.35, which is not appropriate for the current Next.js 16 setup. The findings remain unresolved; do not describe the full dependency tree as vulnerability-free.
+
+## Scope and Limitations
+
+The executed checks cover the repository&apos;s automated tests, intelligence output contract, browser journey, linting, and production build.
+
+Assistant safety cases marked `IMPLEMENTED` in the assistant validation and UAT reports are not claimed as individually executed end-to-end tests here. See `docs/FINAL_ASSISTANT_VALIDATION.md` for that distinction.
+
+## Production Deployment
+
+Live production checks returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`; health reported `ok` and status reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, while local outputs were regenerated on October 15. The reviewed contract does not define a maximum snapshot age, so this difference is recorded without asserting that the snapshot is stale. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as Ready in Production.
+## Conclusion
+
+The recorded automated checks and clean-clone validation passed. Production dependencies have no reported vulnerabilities, but five high-severity development dependency findings remain. Live production API checks have passed for the four reviewed intelligence endpoints. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age. Final certification remains pending the security-risk decision and completion of the remaining release evidence.</file><file path="docs/INTELLIGENCE_OUTPUT_CONTRACT.md"># Intelligence Output Contract
 
 ## Project
 
@@ -10815,7 +10753,70 @@ Remaining release evidence:
 - Data Intelligence evidence/methodology/limitations: `evidence/screenshots/desktop_data_intelligence_evidence.png`
 - Data Intelligence accessibility validation: PASS
 - Mobile runtime validation: PASS
-- Reviewer approval: PASS — owner/reviewer validation completed</file><file path="docs/SAMPLING_AND_REDUCTION_REPORT.md"># Sampling and Reduction Report
+- Reviewer approval: PASS — owner/reviewer validation completed</file><file path="docs/PHASE3_COMPLETION_REPORT.md"># Phase 3 Completion Report
+
+## Status
+
+Final validation is substantially complete. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` as **Ready in Production**. Final certification remains pending the security-risk decision, final repository and evidence review, final Repomix generation, and release decision.
+
+## Verified During Final Validation
+
+- Canonical analytical outputs regenerated successfully.
+- Regenerated analytical content matches the committed outputs after excluding `generated_at` fields.
+- Intelligence output-contract validation passed.
+- Python test suite: 59 passed.
+- TypeScript intelligence contract: 2 passed, 0 failed.
+- Standalone Selenium Data Intelligence journey: 1 passed. This result is reported separately and is not added to the unique test count because it may overlap with the Python test suite.
+- ESLint passed.
+- Next.js production build passed on Next.js 16.4.1.
+- Installed versions of `next` and `eslint-config-next` were confirmed as 16.4.1.
+- `npm audit --omit=dev` reported zero production dependency vulnerabilities.
+- Full `npm audit` reported five high-severity findings in the development dependency chain involving `braces`, `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`. The suggested automatic fix downgrades `eslint-config-next` to 14.2.35 and is not appropriate for the current Next.js 16 setup. The findings remain unresolved and must be disclosed.
+- `git diff --check` passed after restoring the final report and analytical-output changes.
+- Final assistant validation evidence distinguishes checks that were executed from protections not individually exercised end-to-end.
+
+## Clean-Clone Validation
+
+The clean-clone validation passed:
+
+- Python tests: 59 passed.
+- TypeScript intelligence contract: 2 passed, 0 failed.
+- ESLint passed.
+- Next.js production build passed on Next.js 16.4.1.
+- Production dependency audit reported zero vulnerabilities.
+
+The security dependency update was committed and pushed as `c4e45b8` (`fix: update Next.js security dependencies`). The original working folder was updated to that commit, and the saved analytical-output and report changes were restored.
+
+## Production Validation
+
+Earlier production API checks returned validated Track A results with:
+
+- 20 synthetic records.
+- 5 approved groups.
+- 100% contribution total.
+- Approved data and method versions.
+
+The production endpoints reported `generated_at` as `2026-10-11T12:34:47Z`. This is older than the locally regenerated analytical outputs and is recorded as a snapshot difference, not as a fresh production data regeneration.
+
+Live production checks during this review returned HTTP 200 for `/api/intelligence/health`, `/api/intelligence/metadata`, `/api/intelligence/summary`, and `/api/intelligence/status`. The health endpoint returned `ok`, and the status endpoint reported `validated`. The production snapshot timestamp was `2026-10-11T12:34:47Z`, earlier than the local outputs regenerated on October 15. The reviewed contract does not define a maximum snapshot age, so this difference is documented without claiming that it proves staleness. The Vercel dashboard screenshot captured on 2026-10-15 shows commit `9c795a6` with status **Ready in Production**; this confirms the deployment state shown in that evidence, not ongoing availability.
+
+## Release History
+
+The existing `phase3-v1.0.0` annotated tag points to commit `142b3947a573f3bff2591520f80f61d5728cd9d4` (`docs: add final Phase 3 Repomix`). The security-fix commit `c4e45b8` is on `main`. The Vercel dashboard screenshot shows commit `9c795a6` as Ready in Production. The existing tag has not been moved.
+
+## Remaining Release Actions
+
+1. Record the completed live production API checks and document the production-versus-local snapshot timestamp difference; confirm a freshness threshold if one is required.
+2. Complete the final repository and evidence audit.
+3. Review the automated-test, assistant-validation, and completion reports to ensure their claims match the available evidence.
+4. Generate and review the final Repomix artifact after documentation and evidence changes are complete.
+5. Commit and push the verified final changes.
+6. Decide whether a new release tag is appropriate only after all required checks and release decisions are complete. Do not move the existing `phase3-v1.0.0` tag.
+7. Resolve the five high-severity development dependency findings or obtain an explicit, documented risk-acceptance decision from the authorized project owner before certification.
+
+## Conclusion
+
+Automated tests, lint, the Next.js 16.4.1 production build, clean-clone validation, and the production dependency audit passed in the recorded checks. The Vercel dashboard screenshot shows commit `9c795a6` as Ready in Production. Live production checks returned HTTP 200 for the four reviewed intelligence endpoints; health reported `ok` and status reported `validated`. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age. Five high-severity development dependency findings remain unresolved. Final Phase 3 certification remains pending the outstanding security-risk decision and release evidence review.</file><file path="docs/SAMPLING_AND_REDUCTION_REPORT.md"># Sampling and Reduction Report
 
 ## Source Dataset
 
@@ -11650,337 +11651,6 @@ export default function RootLayout({ children }: LayoutProps&lt;&quot;/&quot;&gt
       &lt;body className=&quot;min-h-full flex flex-col&quot;&gt;&lt;AppNavigation /&gt;{children}&lt;/body&gt;
     &lt;/html&gt;
   );
-}</file><file path="data-science/outputs/baseline_results.json">{
-  &quot;baseline_name&quot;: &quot;overall_mean_and_total&quot;,
-  &quot;baseline_record_count&quot;: 20,
-  &quot;baseline_total_value&quot;: 11605000.0,
-  &quot;baseline_average_value&quot;: 580250.0,
-  &quot;baseline_unit&quot;: &quot;currency_unspecified&quot;,
-  &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-  &quot;method_version&quot;: &quot;1.0.0&quot;,
-  &quot;generated_at&quot;: &quot;2026-10-15T02:47:10.415615+00:00&quot;
-}</file><file path="data-science/outputs/comparative_intelligence.json">{
-  &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-  &quot;method_version&quot;: &quot;1.0.0&quot;,
-  &quot;primary_dimension&quot;: &quot;category&quot;,
-  &quot;minimum_group_size&quot;: 3,
-  &quot;baseline&quot;: {
-    &quot;baseline_name&quot;: &quot;overall_mean_and_total&quot;,
-    &quot;baseline_record_count&quot;: 20,
-    &quot;baseline_total_value&quot;: 11605000.0,
-    &quot;baseline_average_value&quot;: 580250.0,
-    &quot;baseline_unit&quot;: &quot;currency_unspecified&quot;,
-    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-    &quot;method_version&quot;: &quot;1.0.0&quot;,
-    &quot;generated_at&quot;: &quot;2026-10-15T02:47:10.415615+00:00&quot;
-  },
-  &quot;groups&quot;: [
-    {
-      &quot;group_key&quot;: &quot;Price&quot;,
-      &quot;record_count&quot;: 5,
-      &quot;total_value&quot;: 4660000.0,
-      &quot;average_value&quot;: 932000.0,
-      &quot;contribution_pct&quot;: 40.15510555794916,
-      &quot;priority_rank&quot;: 1,
-      &quot;baseline_comparison&quot;: &quot;above_overall_average&quot;,
-      &quot;record_ids&quot;: [
-        &quot;CRM-001&quot;,
-        &quot;CRM-005&quot;,
-        &quot;CRM-012&quot;,
-        &quot;CRM-016&quot;,
-        &quot;CRM-020&quot;
-      ]
-    },
-    {
-      &quot;group_key&quot;: &quot;Competitor&quot;,
-      &quot;record_count&quot;: 5,
-      &quot;total_value&quot;: 3435000.0,
-      &quot;average_value&quot;: 687000.0,
-      &quot;contribution_pct&quot;: 29.59931064196467,
-      &quot;priority_rank&quot;: 2,
-      &quot;baseline_comparison&quot;: &quot;above_overall_average&quot;,
-      &quot;record_ids&quot;: [
-        &quot;CRM-002&quot;,
-        &quot;CRM-007&quot;,
-        &quot;CRM-009&quot;,
-        &quot;CRM-014&quot;,
-        &quot;CRM-018&quot;
-      ]
-    },
-    {
-      &quot;group_key&quot;: &quot;Product Fit&quot;,
-      &quot;record_count&quot;: 4,
-      &quot;total_value&quot;: 1440000.0,
-      &quot;average_value&quot;: 360000.0,
-      &quot;contribution_pct&quot;: 12.408444635932787,
-      &quot;priority_rank&quot;: 3,
-      &quot;baseline_comparison&quot;: &quot;at_or_below_overall_average&quot;,
-      &quot;record_ids&quot;: [
-        &quot;CRM-003&quot;,
-        &quot;CRM-008&quot;,
-        &quot;CRM-013&quot;,
-        &quot;CRM-019&quot;
-      ]
-    },
-    {
-      &quot;group_key&quot;: &quot;Timing&quot;,
-      &quot;record_count&quot;: 3,
-      &quot;total_value&quot;: 1040000.0,
-      &quot;average_value&quot;: 346666.6666666667,
-      &quot;contribution_pct&quot;: 8.96165445928479,
-      &quot;priority_rank&quot;: 4,
-      &quot;baseline_comparison&quot;: &quot;at_or_below_overall_average&quot;,
-      &quot;record_ids&quot;: [
-        &quot;CRM-004&quot;,
-        &quot;CRM-010&quot;,
-        &quot;CRM-015&quot;
-      ]
-    },
-    {
-      &quot;group_key&quot;: &quot;Budget&quot;,
-      &quot;record_count&quot;: 3,
-      &quot;total_value&quot;: 1030000.0,
-      &quot;average_value&quot;: 343333.3333333333,
-      &quot;contribution_pct&quot;: 8.875484704868592,
-      &quot;priority_rank&quot;: 5,
-      &quot;baseline_comparison&quot;: &quot;at_or_below_overall_average&quot;,
-      &quot;record_ids&quot;: [
-        &quot;CRM-006&quot;,
-        &quot;CRM-011&quot;,
-        &quot;CRM-017&quot;
-      ]
-    }
-  ],
-  &quot;generated_at&quot;: &quot;2026-10-15T02:47:10.421057+00:00&quot;
-}</file><file path="data-science/outputs/intelligence_results.json">[
-  {
-    &quot;result_id&quot;: &quot;POC12-CAT-01&quot;,
-    &quot;result_type&quot;: &quot;comparative_group&quot;,
-    &quot;record_id&quot;: null,
-    &quot;entity_id&quot;: null,
-    &quot;group_key&quot;: &quot;Price&quot;,
-    &quot;period_start&quot;: null,
-    &quot;period_end&quot;: null,
-    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
-    &quot;result_value&quot;: 4660000.0,
-    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
-    &quot;result_category&quot;: &quot;rank_1&quot;,
-    &quot;priority_rank&quot;: 1,
-    &quot;finding&quot;: &quot;Price ranks 1 by total deal value among categories meeting the minimum group-size threshold.&quot;,
-    &quot;evidence&quot;: {
-      &quot;record_count&quot;: 5,
-      &quot;average_deal_value&quot;: 932000.0,
-      &quot;contribution_pct&quot;: 40.15510555794916,
-      &quot;record_ids&quot;: [
-        &quot;CRM-001&quot;,
-        &quot;CRM-005&quot;,
-        &quot;CRM-012&quot;,
-        &quot;CRM-016&quot;,
-        &quot;CRM-020&quot;
-      ]
-    },
-    &quot;method_version&quot;: &quot;1.0.0&quot;,
-    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
-    &quot;quality_status&quot;: &quot;validated&quot;,
-    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
-  },
-  {
-    &quot;result_id&quot;: &quot;POC12-CAT-02&quot;,
-    &quot;result_type&quot;: &quot;comparative_group&quot;,
-    &quot;record_id&quot;: null,
-    &quot;entity_id&quot;: null,
-    &quot;group_key&quot;: &quot;Competitor&quot;,
-    &quot;period_start&quot;: null,
-    &quot;period_end&quot;: null,
-    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
-    &quot;result_value&quot;: 3435000.0,
-    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
-    &quot;result_category&quot;: &quot;rank_2&quot;,
-    &quot;priority_rank&quot;: 2,
-    &quot;finding&quot;: &quot;Competitor ranks 2 by total deal value among categories meeting the minimum group-size threshold.&quot;,
-    &quot;evidence&quot;: {
-      &quot;record_count&quot;: 5,
-      &quot;average_deal_value&quot;: 687000.0,
-      &quot;contribution_pct&quot;: 29.59931064196467,
-      &quot;record_ids&quot;: [
-        &quot;CRM-002&quot;,
-        &quot;CRM-007&quot;,
-        &quot;CRM-009&quot;,
-        &quot;CRM-014&quot;,
-        &quot;CRM-018&quot;
-      ]
-    },
-    &quot;method_version&quot;: &quot;1.0.0&quot;,
-    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
-    &quot;quality_status&quot;: &quot;validated&quot;,
-    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
-  },
-  {
-    &quot;result_id&quot;: &quot;POC12-CAT-03&quot;,
-    &quot;result_type&quot;: &quot;comparative_group&quot;,
-    &quot;record_id&quot;: null,
-    &quot;entity_id&quot;: null,
-    &quot;group_key&quot;: &quot;Product Fit&quot;,
-    &quot;period_start&quot;: null,
-    &quot;period_end&quot;: null,
-    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
-    &quot;result_value&quot;: 1440000.0,
-    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
-    &quot;result_category&quot;: &quot;rank_3&quot;,
-    &quot;priority_rank&quot;: 3,
-    &quot;finding&quot;: &quot;Product Fit ranks 3 by total deal value among categories meeting the minimum group-size threshold.&quot;,
-    &quot;evidence&quot;: {
-      &quot;record_count&quot;: 4,
-      &quot;average_deal_value&quot;: 360000.0,
-      &quot;contribution_pct&quot;: 12.408444635932787,
-      &quot;record_ids&quot;: [
-        &quot;CRM-003&quot;,
-        &quot;CRM-008&quot;,
-        &quot;CRM-013&quot;,
-        &quot;CRM-019&quot;
-      ]
-    },
-    &quot;method_version&quot;: &quot;1.0.0&quot;,
-    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
-    &quot;quality_status&quot;: &quot;validated&quot;,
-    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
-  },
-  {
-    &quot;result_id&quot;: &quot;POC12-CAT-04&quot;,
-    &quot;result_type&quot;: &quot;comparative_group&quot;,
-    &quot;record_id&quot;: null,
-    &quot;entity_id&quot;: null,
-    &quot;group_key&quot;: &quot;Timing&quot;,
-    &quot;period_start&quot;: null,
-    &quot;period_end&quot;: null,
-    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
-    &quot;result_value&quot;: 1040000.0,
-    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
-    &quot;result_category&quot;: &quot;rank_4&quot;,
-    &quot;priority_rank&quot;: 4,
-    &quot;finding&quot;: &quot;Timing ranks 4 by total deal value among categories meeting the minimum group-size threshold.&quot;,
-    &quot;evidence&quot;: {
-      &quot;record_count&quot;: 3,
-      &quot;average_deal_value&quot;: 346666.6666666667,
-      &quot;contribution_pct&quot;: 8.96165445928479,
-      &quot;record_ids&quot;: [
-        &quot;CRM-004&quot;,
-        &quot;CRM-010&quot;,
-        &quot;CRM-015&quot;
-      ]
-    },
-    &quot;method_version&quot;: &quot;1.0.0&quot;,
-    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
-    &quot;quality_status&quot;: &quot;validated&quot;,
-    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
-  },
-  {
-    &quot;result_id&quot;: &quot;POC12-CAT-05&quot;,
-    &quot;result_type&quot;: &quot;comparative_group&quot;,
-    &quot;record_id&quot;: null,
-    &quot;entity_id&quot;: null,
-    &quot;group_key&quot;: &quot;Budget&quot;,
-    &quot;period_start&quot;: null,
-    &quot;period_end&quot;: null,
-    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
-    &quot;result_value&quot;: 1030000.0,
-    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
-    &quot;result_category&quot;: &quot;rank_5&quot;,
-    &quot;priority_rank&quot;: 5,
-    &quot;finding&quot;: &quot;Budget ranks 5 by total deal value among categories meeting the minimum group-size threshold.&quot;,
-    &quot;evidence&quot;: {
-      &quot;record_count&quot;: 3,
-      &quot;average_deal_value&quot;: 343333.3333333333,
-      &quot;contribution_pct&quot;: 8.875484704868592,
-      &quot;record_ids&quot;: [
-        &quot;CRM-006&quot;,
-        &quot;CRM-011&quot;,
-        &quot;CRM-017&quot;
-      ]
-    },
-    &quot;method_version&quot;: &quot;1.0.0&quot;,
-    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
-    &quot;quality_status&quot;: &quot;validated&quot;,
-    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
-  }
-]</file><file path="data-science/outputs/intelligence_summary.json">{
-  &quot;project_id&quot;: &quot;POC-12&quot;,
-  &quot;project_title&quot;: &quot;Lost Deal Reason &amp; Recovery Intelligence&quot;,
-  &quot;approved_track&quot;: &quot;Track A \u2014 Comparative Intelligence&quot;,
-  &quot;primary_question&quot;: &quot;Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?&quot;,
-  &quot;decision&quot;: &quot;Use descriptive evidence to identify where recovery attention may be concentrated.&quot;,
-  &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
-  &quot;method_version&quot;: &quot;1.0.0&quot;,
-  &quot;result_count&quot;: 5,
-  &quot;key_findings&quot;: [
-    &quot;Price ranks 1 by total deal value, with 40.16% of the observed total.&quot;,
-    &quot;Competitor ranks 2 by total deal value, with 29.60% of the observed total.&quot;,
-    &quot;Product Fit ranks 3 by total deal value, with 12.41% of the observed total.&quot;,
-    &quot;Timing ranks 4 by total deal value, with 8.96% of the observed total.&quot;,
-    &quot;Budget ranks 5 by total deal value, with 8.88% of the observed total.&quot;
-  ],
-  &quot;priority_items&quot;: [
-    {
-      &quot;priority_rank&quot;: 1,
-      &quot;group_key&quot;: &quot;Price&quot;,
-      &quot;total_value&quot;: 4660000.0,
-      &quot;contribution_pct&quot;: 40.15510555794916
-    },
-    {
-      &quot;priority_rank&quot;: 2,
-      &quot;group_key&quot;: &quot;Competitor&quot;,
-      &quot;total_value&quot;: 3435000.0,
-      &quot;contribution_pct&quot;: 29.59931064196467
-    },
-    {
-      &quot;priority_rank&quot;: 3,
-      &quot;group_key&quot;: &quot;Product Fit&quot;,
-      &quot;total_value&quot;: 1440000.0,
-      &quot;contribution_pct&quot;: 12.408444635932787
-    },
-    {
-      &quot;priority_rank&quot;: 4,
-      &quot;group_key&quot;: &quot;Timing&quot;,
-      &quot;total_value&quot;: 1040000.0,
-      &quot;contribution_pct&quot;: 8.96165445928479
-    },
-    {
-      &quot;priority_rank&quot;: 5,
-      &quot;group_key&quot;: &quot;Budget&quot;,
-      &quot;total_value&quot;: 1030000.0,
-      &quot;contribution_pct&quot;: 8.875484704868592
-    }
-  ],
-  &quot;validation_result&quot;: {
-    &quot;passed&quot;: true,
-    &quot;contribution_total_percent&quot;: 100.0,
-    &quot;small_groups_at_threshold&quot;: [
-      &quot;Timing&quot;,
-      &quot;Budget&quot;
-    ]
-  },
-  &quot;weak_case_review&quot;: {
-    &quot;minimum_size_cases&quot;: 2,
-    &quot;highest_value_record&quot;: {
-      &quot;record_id&quot;: &quot;CRM-012&quot;,
-      &quot;category&quot;: &quot;Price&quot;,
-      &quot;metric_value&quot;: 1250000.0,
-      &quot;assessment&quot;: &quot;This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis.&quot;
-    }
-  },
-  &quot;important_limitations&quot;: [
-    &quot;The analysis uses 20 synthetic canonical records.&quot;,
-    &quot;Currency is unspecified.&quot;,
-    &quot;Timing and Budget contain only three records each.&quot;,
-    &quot;The sample may not represent the complete operational population.&quot;,
-    &quot;Results are descriptive and do not establish causality.&quot;
-  ],
-  &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;
 }</file><file path="tests/assistant/test_gemini_explanation.py">import os
 from unittest.mock import ANY, patch
 
@@ -13366,7 +13036,338 @@ __all__ = [
     &quot;answer_question&quot;,
     &quot;AssistantNotFoundError&quot;,
     &quot;AssistantValidationError&quot;,
-]</file><file path="docs/ASSISTANT_GROUNDING_VALIDATION.md"># Grounded Data Assistant — Grounding Validation
+]</file><file path="data-science/outputs/baseline_results.json">{
+  &quot;baseline_name&quot;: &quot;overall_mean_and_total&quot;,
+  &quot;baseline_record_count&quot;: 20,
+  &quot;baseline_total_value&quot;: 11605000.0,
+  &quot;baseline_average_value&quot;: 580250.0,
+  &quot;baseline_unit&quot;: &quot;currency_unspecified&quot;,
+  &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+  &quot;method_version&quot;: &quot;1.0.0&quot;,
+  &quot;generated_at&quot;: &quot;2026-10-15T02:47:10.415615+00:00&quot;
+}</file><file path="data-science/outputs/comparative_intelligence.json">{
+  &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+  &quot;method_version&quot;: &quot;1.0.0&quot;,
+  &quot;primary_dimension&quot;: &quot;category&quot;,
+  &quot;minimum_group_size&quot;: 3,
+  &quot;baseline&quot;: {
+    &quot;baseline_name&quot;: &quot;overall_mean_and_total&quot;,
+    &quot;baseline_record_count&quot;: 20,
+    &quot;baseline_total_value&quot;: 11605000.0,
+    &quot;baseline_average_value&quot;: 580250.0,
+    &quot;baseline_unit&quot;: &quot;currency_unspecified&quot;,
+    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+    &quot;method_version&quot;: &quot;1.0.0&quot;,
+    &quot;generated_at&quot;: &quot;2026-10-15T02:47:10.415615+00:00&quot;
+  },
+  &quot;groups&quot;: [
+    {
+      &quot;group_key&quot;: &quot;Price&quot;,
+      &quot;record_count&quot;: 5,
+      &quot;total_value&quot;: 4660000.0,
+      &quot;average_value&quot;: 932000.0,
+      &quot;contribution_pct&quot;: 40.15510555794916,
+      &quot;priority_rank&quot;: 1,
+      &quot;baseline_comparison&quot;: &quot;above_overall_average&quot;,
+      &quot;record_ids&quot;: [
+        &quot;CRM-001&quot;,
+        &quot;CRM-005&quot;,
+        &quot;CRM-012&quot;,
+        &quot;CRM-016&quot;,
+        &quot;CRM-020&quot;
+      ]
+    },
+    {
+      &quot;group_key&quot;: &quot;Competitor&quot;,
+      &quot;record_count&quot;: 5,
+      &quot;total_value&quot;: 3435000.0,
+      &quot;average_value&quot;: 687000.0,
+      &quot;contribution_pct&quot;: 29.59931064196467,
+      &quot;priority_rank&quot;: 2,
+      &quot;baseline_comparison&quot;: &quot;above_overall_average&quot;,
+      &quot;record_ids&quot;: [
+        &quot;CRM-002&quot;,
+        &quot;CRM-007&quot;,
+        &quot;CRM-009&quot;,
+        &quot;CRM-014&quot;,
+        &quot;CRM-018&quot;
+      ]
+    },
+    {
+      &quot;group_key&quot;: &quot;Product Fit&quot;,
+      &quot;record_count&quot;: 4,
+      &quot;total_value&quot;: 1440000.0,
+      &quot;average_value&quot;: 360000.0,
+      &quot;contribution_pct&quot;: 12.408444635932787,
+      &quot;priority_rank&quot;: 3,
+      &quot;baseline_comparison&quot;: &quot;at_or_below_overall_average&quot;,
+      &quot;record_ids&quot;: [
+        &quot;CRM-003&quot;,
+        &quot;CRM-008&quot;,
+        &quot;CRM-013&quot;,
+        &quot;CRM-019&quot;
+      ]
+    },
+    {
+      &quot;group_key&quot;: &quot;Timing&quot;,
+      &quot;record_count&quot;: 3,
+      &quot;total_value&quot;: 1040000.0,
+      &quot;average_value&quot;: 346666.6666666667,
+      &quot;contribution_pct&quot;: 8.96165445928479,
+      &quot;priority_rank&quot;: 4,
+      &quot;baseline_comparison&quot;: &quot;at_or_below_overall_average&quot;,
+      &quot;record_ids&quot;: [
+        &quot;CRM-004&quot;,
+        &quot;CRM-010&quot;,
+        &quot;CRM-015&quot;
+      ]
+    },
+    {
+      &quot;group_key&quot;: &quot;Budget&quot;,
+      &quot;record_count&quot;: 3,
+      &quot;total_value&quot;: 1030000.0,
+      &quot;average_value&quot;: 343333.3333333333,
+      &quot;contribution_pct&quot;: 8.875484704868592,
+      &quot;priority_rank&quot;: 5,
+      &quot;baseline_comparison&quot;: &quot;at_or_below_overall_average&quot;,
+      &quot;record_ids&quot;: [
+        &quot;CRM-006&quot;,
+        &quot;CRM-011&quot;,
+        &quot;CRM-017&quot;
+      ]
+    }
+  ],
+  &quot;generated_at&quot;: &quot;2026-10-15T02:47:10.421057+00:00&quot;
+}</file><file path="data-science/outputs/intelligence_results.json">[
+  {
+    &quot;result_id&quot;: &quot;POC12-CAT-01&quot;,
+    &quot;result_type&quot;: &quot;comparative_group&quot;,
+    &quot;record_id&quot;: null,
+    &quot;entity_id&quot;: null,
+    &quot;group_key&quot;: &quot;Price&quot;,
+    &quot;period_start&quot;: null,
+    &quot;period_end&quot;: null,
+    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
+    &quot;result_value&quot;: 4660000.0,
+    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
+    &quot;result_category&quot;: &quot;rank_1&quot;,
+    &quot;priority_rank&quot;: 1,
+    &quot;finding&quot;: &quot;Price ranks 1 by total deal value among categories meeting the minimum group-size threshold.&quot;,
+    &quot;evidence&quot;: {
+      &quot;record_count&quot;: 5,
+      &quot;average_deal_value&quot;: 932000.0,
+      &quot;contribution_pct&quot;: 40.15510555794916,
+      &quot;record_ids&quot;: [
+        &quot;CRM-001&quot;,
+        &quot;CRM-005&quot;,
+        &quot;CRM-012&quot;,
+        &quot;CRM-016&quot;,
+        &quot;CRM-020&quot;
+      ]
+    },
+    &quot;method_version&quot;: &quot;1.0.0&quot;,
+    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
+    &quot;quality_status&quot;: &quot;validated&quot;,
+    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
+  },
+  {
+    &quot;result_id&quot;: &quot;POC12-CAT-02&quot;,
+    &quot;result_type&quot;: &quot;comparative_group&quot;,
+    &quot;record_id&quot;: null,
+    &quot;entity_id&quot;: null,
+    &quot;group_key&quot;: &quot;Competitor&quot;,
+    &quot;period_start&quot;: null,
+    &quot;period_end&quot;: null,
+    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
+    &quot;result_value&quot;: 3435000.0,
+    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
+    &quot;result_category&quot;: &quot;rank_2&quot;,
+    &quot;priority_rank&quot;: 2,
+    &quot;finding&quot;: &quot;Competitor ranks 2 by total deal value among categories meeting the minimum group-size threshold.&quot;,
+    &quot;evidence&quot;: {
+      &quot;record_count&quot;: 5,
+      &quot;average_deal_value&quot;: 687000.0,
+      &quot;contribution_pct&quot;: 29.59931064196467,
+      &quot;record_ids&quot;: [
+        &quot;CRM-002&quot;,
+        &quot;CRM-007&quot;,
+        &quot;CRM-009&quot;,
+        &quot;CRM-014&quot;,
+        &quot;CRM-018&quot;
+      ]
+    },
+    &quot;method_version&quot;: &quot;1.0.0&quot;,
+    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
+    &quot;quality_status&quot;: &quot;validated&quot;,
+    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
+  },
+  {
+    &quot;result_id&quot;: &quot;POC12-CAT-03&quot;,
+    &quot;result_type&quot;: &quot;comparative_group&quot;,
+    &quot;record_id&quot;: null,
+    &quot;entity_id&quot;: null,
+    &quot;group_key&quot;: &quot;Product Fit&quot;,
+    &quot;period_start&quot;: null,
+    &quot;period_end&quot;: null,
+    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
+    &quot;result_value&quot;: 1440000.0,
+    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
+    &quot;result_category&quot;: &quot;rank_3&quot;,
+    &quot;priority_rank&quot;: 3,
+    &quot;finding&quot;: &quot;Product Fit ranks 3 by total deal value among categories meeting the minimum group-size threshold.&quot;,
+    &quot;evidence&quot;: {
+      &quot;record_count&quot;: 4,
+      &quot;average_deal_value&quot;: 360000.0,
+      &quot;contribution_pct&quot;: 12.408444635932787,
+      &quot;record_ids&quot;: [
+        &quot;CRM-003&quot;,
+        &quot;CRM-008&quot;,
+        &quot;CRM-013&quot;,
+        &quot;CRM-019&quot;
+      ]
+    },
+    &quot;method_version&quot;: &quot;1.0.0&quot;,
+    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
+    &quot;quality_status&quot;: &quot;validated&quot;,
+    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
+  },
+  {
+    &quot;result_id&quot;: &quot;POC12-CAT-04&quot;,
+    &quot;result_type&quot;: &quot;comparative_group&quot;,
+    &quot;record_id&quot;: null,
+    &quot;entity_id&quot;: null,
+    &quot;group_key&quot;: &quot;Timing&quot;,
+    &quot;period_start&quot;: null,
+    &quot;period_end&quot;: null,
+    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
+    &quot;result_value&quot;: 1040000.0,
+    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
+    &quot;result_category&quot;: &quot;rank_4&quot;,
+    &quot;priority_rank&quot;: 4,
+    &quot;finding&quot;: &quot;Timing ranks 4 by total deal value among categories meeting the minimum group-size threshold.&quot;,
+    &quot;evidence&quot;: {
+      &quot;record_count&quot;: 3,
+      &quot;average_deal_value&quot;: 346666.6666666667,
+      &quot;contribution_pct&quot;: 8.96165445928479,
+      &quot;record_ids&quot;: [
+        &quot;CRM-004&quot;,
+        &quot;CRM-010&quot;,
+        &quot;CRM-015&quot;
+      ]
+    },
+    &quot;method_version&quot;: &quot;1.0.0&quot;,
+    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
+    &quot;quality_status&quot;: &quot;validated&quot;,
+    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
+  },
+  {
+    &quot;result_id&quot;: &quot;POC12-CAT-05&quot;,
+    &quot;result_type&quot;: &quot;comparative_group&quot;,
+    &quot;record_id&quot;: null,
+    &quot;entity_id&quot;: null,
+    &quot;group_key&quot;: &quot;Budget&quot;,
+    &quot;period_start&quot;: null,
+    &quot;period_end&quot;: null,
+    &quot;metric_name&quot;: &quot;total_deal_value&quot;,
+    &quot;result_value&quot;: 1030000.0,
+    &quot;result_unit&quot;: &quot;currency_unspecified&quot;,
+    &quot;result_category&quot;: &quot;rank_5&quot;,
+    &quot;priority_rank&quot;: 5,
+    &quot;finding&quot;: &quot;Budget ranks 5 by total deal value among categories meeting the minimum group-size threshold.&quot;,
+    &quot;evidence&quot;: {
+      &quot;record_count&quot;: 3,
+      &quot;average_deal_value&quot;: 343333.3333333333,
+      &quot;contribution_pct&quot;: 8.875484704868592,
+      &quot;record_ids&quot;: [
+        &quot;CRM-006&quot;,
+        &quot;CRM-011&quot;,
+        &quot;CRM-017&quot;
+      ]
+    },
+    &quot;method_version&quot;: &quot;1.0.0&quot;,
+    &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+    &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;,
+    &quot;quality_status&quot;: &quot;validated&quot;,
+    &quot;limitation&quot;: &quot;Descriptive result from the supplied synthetic canonical sample; not causal evidence.&quot;
+  }
+]</file><file path="data-science/outputs/intelligence_summary.json">{
+  &quot;project_id&quot;: &quot;POC-12&quot;,
+  &quot;project_title&quot;: &quot;Lost Deal Reason &amp; Recovery Intelligence&quot;,
+  &quot;approved_track&quot;: &quot;Track A \u2014 Comparative Intelligence&quot;,
+  &quot;primary_question&quot;: &quot;Which lost-deal categories, stages, statuses, and deal-value patterns are most important for understanding where recovery opportunities exist?&quot;,
+  &quot;decision&quot;: &quot;Use descriptive evidence to identify where recovery attention may be concentrated.&quot;,
+  &quot;data_version&quot;: &quot;phase3-v1.0.0&quot;,
+  &quot;method_version&quot;: &quot;1.0.0&quot;,
+  &quot;result_count&quot;: 5,
+  &quot;key_findings&quot;: [
+    &quot;Price ranks 1 by total deal value, with 40.16% of the observed total.&quot;,
+    &quot;Competitor ranks 2 by total deal value, with 29.60% of the observed total.&quot;,
+    &quot;Product Fit ranks 3 by total deal value, with 12.41% of the observed total.&quot;,
+    &quot;Timing ranks 4 by total deal value, with 8.96% of the observed total.&quot;,
+    &quot;Budget ranks 5 by total deal value, with 8.88% of the observed total.&quot;
+  ],
+  &quot;priority_items&quot;: [
+    {
+      &quot;priority_rank&quot;: 1,
+      &quot;group_key&quot;: &quot;Price&quot;,
+      &quot;total_value&quot;: 4660000.0,
+      &quot;contribution_pct&quot;: 40.15510555794916
+    },
+    {
+      &quot;priority_rank&quot;: 2,
+      &quot;group_key&quot;: &quot;Competitor&quot;,
+      &quot;total_value&quot;: 3435000.0,
+      &quot;contribution_pct&quot;: 29.59931064196467
+    },
+    {
+      &quot;priority_rank&quot;: 3,
+      &quot;group_key&quot;: &quot;Product Fit&quot;,
+      &quot;total_value&quot;: 1440000.0,
+      &quot;contribution_pct&quot;: 12.408444635932787
+    },
+    {
+      &quot;priority_rank&quot;: 4,
+      &quot;group_key&quot;: &quot;Timing&quot;,
+      &quot;total_value&quot;: 1040000.0,
+      &quot;contribution_pct&quot;: 8.96165445928479
+    },
+    {
+      &quot;priority_rank&quot;: 5,
+      &quot;group_key&quot;: &quot;Budget&quot;,
+      &quot;total_value&quot;: 1030000.0,
+      &quot;contribution_pct&quot;: 8.875484704868592
+    }
+  ],
+  &quot;validation_result&quot;: {
+    &quot;passed&quot;: true,
+    &quot;contribution_total_percent&quot;: 100.0,
+    &quot;small_groups_at_threshold&quot;: [
+      &quot;Timing&quot;,
+      &quot;Budget&quot;
+    ]
+  },
+  &quot;weak_case_review&quot;: {
+    &quot;minimum_size_cases&quot;: 2,
+    &quot;highest_value_record&quot;: {
+      &quot;record_id&quot;: &quot;CRM-012&quot;,
+      &quot;category&quot;: &quot;Price&quot;,
+      &quot;metric_value&quot;: 1250000.0,
+      &quot;assessment&quot;: &quot;This record is flagged as an extreme-value candidate for interpretation because it has the highest deal value in the canonical sample. The review does not remove it from the primary analysis.&quot;
+    }
+  },
+  &quot;important_limitations&quot;: [
+    &quot;The analysis uses 20 synthetic canonical records.&quot;,
+    &quot;Currency is unspecified.&quot;,
+    &quot;Timing and Budget contain only three records each.&quot;,
+    &quot;The sample may not represent the complete operational population.&quot;,
+    &quot;Results are descriptive and do not establish causality.&quot;
+  ],
+  &quot;generated_at&quot;: &quot;2026-10-15T02:50:42Z&quot;
+}</file><file path="docs/ASSISTANT_GROUNDING_VALIDATION.md"># Grounded Data Assistant — Grounding Validation
 
 ## Status
 
