@@ -53,7 +53,7 @@ def classify_question(question: str) -> IntentMatch:
 
     if re.search(r"\b(compare|comparison|versus|vs\.?)\b", lowered):
         pair = re.search(
-            rf"(?:compare|comparison(?:\s+of)?)\s+{_CATEGORY}\s+(?:and|vs\.?|versus)\s+{_CATEGORY}(?:\s+categories?)?(?:\?|$)",
+            rf"(?:compare|comparison(?:\s+of)?)\s+{_CATEGORY}\s+(?:and|vs\.?|versus)\s+{_CATEGORY}(?:\s+categories?)?(?:\s+by\s+total\s+deal\s+value)?(?:\?|$)",
             text,
             flags=re.IGNORECASE,
         )

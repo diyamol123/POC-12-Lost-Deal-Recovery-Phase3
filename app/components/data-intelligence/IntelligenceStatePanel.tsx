@@ -7,7 +7,11 @@ type Props = {
   onRetry?: () => void;
 };
 
-export default function IntelligenceStatePanel({ state, detail, onRetry }: Props) {
+export default function IntelligenceStatePanel({
+  state,
+  detail,
+  onRetry,
+}: Props) {
   const stale = state === "stale";
 
   return (
@@ -42,6 +46,7 @@ export default function IntelligenceStatePanel({ state, detail, onRetry }: Props
         <div className="mt-5 flex flex-wrap gap-2">
           {onRetry && (
             <button
+              type="button"
               onClick={onRetry}
               className="rounded-lg border border-[#38BDF8]/30 px-4 py-2 text-xs text-[#38BDF8]"
             >

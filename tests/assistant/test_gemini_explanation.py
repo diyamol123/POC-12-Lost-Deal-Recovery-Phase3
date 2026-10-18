@@ -140,3 +140,28 @@ def test_unsafe_question_does_not_reach_gemini():
             raise AssertionError("Expected causal question to be rejected")
 
     mock_explain.assert_not_called()
+
+
+def test_grounding_payload_excludes_unapproved_dataset_fields():
+    from backend.assistant.gemini_explanation import _build_grounding_payload
+
+    result = _grounded_result()
+    result["raw_dataset"] = [{"secret_note": "must not be sent"}]
+    result["unapproved_field"] = "must not be sent"
+
+    payload = _build_grounding_payload(
+        question="What is the top category?",
+        intent="top_category",
+        result=result,
+        evidence_references=["POC12-CAT-01"],
+        metadata=result["metadata"],
+        limitation=result["limitation"],
+    )
+
+    serialized = str(payload)
+
+    assert "raw_dataset" not in serialized
+    assert "secret_note" not in serialized
+    assert "unapproved_field" not in serialized
+    assert "POC12-CAT-01" in serialized
+    assert "phase3-v1.0.0" in serialized
