@@ -165,3 +165,17 @@ def test_grounding_payload_excludes_unapproved_dataset_fields():
     assert "unapproved_field" not in serialized
     assert "POC12-CAT-01" in serialized
     assert "phase3-v1.0.0" in serialized
+
+def test_missing_gemini_api_key_preserves_deterministic_answer():
+    with patch.dict(os.environ, {}, clear=True):
+        response = answer_question(
+            "Which lost-deal category has the highest total deal value?"
+        )
+
+    assert response["status"] == "SUPPORTED"
+    assert response["answer"].startswith("Price ranks 1")
+    assert response["explanation_status"] == "UNAVAILABLE"
+    assert "deterministic result remains authoritative" in response[
+        "gemini_explanation"
+    ]
+    assert "GEMINI_API_KEY" not in response["gemini_explanation"]
