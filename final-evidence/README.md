@@ -4,24 +4,33 @@
 
 `phase3-v1.0.0`
 
-## Certified Scope
+## Validated Scope
 
 Track A — Comparative Intelligence
 
-## Evidence
+## Visual Evidence
 
-This directory contains final visual evidence for:
+- `desktop_operational.png` — operational dashboard
+- `desktop_data_intelligence.png` — Data Intelligence dashboard
+- `desktop_data_intelligence_evidence.png` — Data Intelligence evidence view
+- `mobile_operational.png` — mobile operational view
+- `mobile_data_intelligence.png` — mobile Data Intelligence view
 
-- operational dashboard
-- Data Intelligence dashboard
-- Data Intelligence evidence view
-- mobile operational view
-- mobile Data Intelligence view
+## Supporting Validation Evidence
 
-## Supporting Reports
+- `10-selenium/clean-clone-selenium-result.txt` — recorded Selenium result
+- `11-assistant/security-test-result.txt` — assistant security test result
+- `11-assistant/gemini-live-verification.txt` — recorded live Gemini verification
+- `11-assistant/dependency-audit-result.txt` — current npm audit result
 
-The `docs/` directory contains the analytical, automated-test, UAT, deployment, architecture, completion, and handover reports supporting this evidence pack.
+## Reports
+
+See `docs/` for analytical validation, clean-clone validation, automated tests, UAT, assistant grounding, deployment, architecture, completion, and handover reports.
 
 ## Production
 
 https://poc-12-lost-deal-recovery.vercel.app
+
+## Certification Status
+
+Phase 3 certification remains pending final evidence review and the required security-risk/reviewer decision. The presence of evidence files does not by itself establish certification.

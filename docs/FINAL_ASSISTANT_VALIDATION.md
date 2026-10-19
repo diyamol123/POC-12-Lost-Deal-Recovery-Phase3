@@ -41,13 +41,13 @@ The following checks passed during the final local validation pass:
 
 | Check | Result |
 |---|---|
-| Python test suite (`PYTHONPATH=. python3 -m pytest tests -q`) | 59 passed |
+| Python test suite (`PYTHONPATH=. python3 -m pytest tests -q`) | 61 passed (current clean-clone run) |
 | TypeScript intelligence output contract (`npx tsx tests/intelligence-contract/test_intelligence_validator.test.ts`) | 2 passed, 0 failed |
 | Selenium Data Intelligence journey | 1 passed |
 | ESLint (`npm run lint`) | Passed |
 | Next.js production build | Passed on Next.js 16.4.1 |
 | Production dependency audit (`npm audit --omit=dev`) | 0 vulnerabilities reported |
-| Full dependency audit (`npm audit`) | 5 high-severity development dependency findings remain |
+| Full dependency audit (`npm audit`) | 0 vulnerabilities reported (current clean-clone run) |
 
 The Python, TypeScript, and Selenium results were recorded from separate commands. They are reported separately and are not represented as one combined test-suite count.
 
@@ -55,11 +55,9 @@ The clean-clone validation record also reports successful Python tests, TypeScri
 
 ## Security Audit Notes
 
-The full dependency audit reported five high-severity findings associated with the development dependency chain involving `braces`, `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`.
+An earlier dependency audit reported five high-severity findings associated with a development dependency chain involving `braces`, `micromatch`, `fast-glob`, `@next/eslint-plugin-next`, and `eslint-config-next`. The suggested automatic fix would downgrade `eslint-config-next` to `14.2.35`, which was not appropriate for this Next.js 16 project and was not applied.
 
-The suggested automatic fix would downgrade `eslint-config-next` to version `14.2.35`, which is not an appropriate automatic fix for this Next.js 16 project.
-
-The findings remain unresolved. Do not describe the full dependency tree as vulnerability-free. The production-only audit reported zero vulnerabilities, but that result does not clear the development dependency findings.
+After the dependency update recorded in commit `c4e45b8`, the current clean-clone `npm audit` reports zero vulnerabilities, and `npm explain braces` reports no matching installed dependency. These current results do not erase the historical audit findings; the audit should be rerun if the dependency tree changes.
 
 ## Controls Not Separately Exercised End-to-End
 
@@ -93,7 +91,7 @@ Live production checks performed during this review returned HTTP 200 for `/api/
 
 The recorded assistant validation, fallback checks, intelligence contract, automated tests, linting, browser journey, and Next.js production build passed within their documented scopes.
 
-Five high-severity development dependency findings remain unresolved. Live production checks returned HTTP 200 for the four reviewed intelligence endpoints, with health reported as `ok` and status as `validated`. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age; this difference alone does not establish staleness. The safety controls listed as `IMPLEMENTED` have not all been individually exercised end-to-end.
+The current clean-clone dependency audit reports zero vulnerabilities; the five high-severity findings described above belong to the earlier dependency state. Live production checks returned HTTP 200 for the four reviewed intelligence endpoints, with health reported as `ok` and status as `validated`. The production snapshot timestamp predates local regeneration, and the reviewed contract defines no maximum snapshot age; this difference alone does not establish staleness. The safety controls listed as `IMPLEMENTED` have not all been individually exercised end-to-end.
 
 Final Phase 3 certification remains pending the security-risk decision, release evidence review, and final repository and Repomix checks.
 
@@ -102,10 +100,15 @@ Final Phase 3 certification remains pending the security-risk decision, release 
 The dependency-scope verification recorded the following results:
 
 - `npm audit --omit=dev`: zero vulnerabilities reported.
-- `npm audit`: five high-severity findings remain in the full dependency tree.
+- `npm audit`: the current clean-clone audit reported zero vulnerabilities; an earlier audit reported five high-severity findings before the dependency update.
 - `npm ls braces micromatch fast-glob --omit=dev`: the production dependency tree was empty for these packages.
-- `npm explain braces`: `braces@3.0.3` is present through the development-only chain `eslint-config-next` → `@next/eslint-plugin-next` → `fast-glob` → `micromatch` → `braces`.
+- Historical `npm explain braces` output identified `braces@3.0.3` in the earlier development dependency chain. In the current clean clone, `npm explain braces` reports no matching installed dependency.
 
-The production-only audit result does not resolve or dismiss the full-audit findings. No patched `braces` version has been established by this verification. The suggested downgrade of `eslint-config-next` to `14.2.35` was not applied because the project uses Next.js 16.4.1.
+The earlier audit results describe the historical dependency state. The current clean-clone full audit reports zero vulnerabilities. The suggested downgrade of `eslint-config-next` to `14.2.35` was not applied because the project uses Next.js 16.4.1.
 
-**Status:** Development dependency findings remain unresolved. Final release certification requires an appropriate remediation or documented risk acceptance by the responsible release authority.
+**Status:** Current dependency audit is clean in this clone. Final release certification still requires completion of the release evidence review and an authorized reviewer decision; this report does not independently grant certification.
+
+
+## Current Clean-Clone Test Count Note
+
+The current Python suite result is 61 passed. The 30 assistant security tests are a subset of that suite and must not be added again. The standalone Selenium journey passed separately and is not included in the Python test count. Earlier reports showing 59 Python tests reflect an earlier run.

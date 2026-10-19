@@ -2,7 +2,7 @@
 
 ## Status
 
-Recorded endpoint checks: PASS. Deployment commit matched to local main using Vercel dashboard evidence. Final certification: PENDING.
+**Recorded endpoint checks: PASS for the documented validation run.** The Vercel screenshot captured on 2026-10-18 documents the Production deployment at that time. It does not establish that the current feature branch is deployed or that the current deployment was rechecked today. Final Phase 3 certification: **PENDING**.
 
 ## Production URL
 
@@ -10,7 +10,7 @@ https://poc-12-lost-deal-recovery.vercel.app
 
 ## Deployment Commit
 
-Latest Production deployment shown in the Vercel dashboard screenshot captured on 2026-10-18: `96c9730` (Ready, Production). This matches local `main` commit `96c97305e20b174b33e59009b7551a0cf44a312b`. The screenshot also lists the earlier deployment `9c795a6`. The previous report's `34b063a` reference is superseded by this newer deployment evidence.
+The Vercel dashboard screenshot captured on 2026-10-18 shows `96c9730` (Ready, Production), matching local `main` commit `96c97305e20b174b33e59009b7551a0cf44a312b` at the time of review. The screenshot also lists the earlier deployment `9c795a6`. The previous report's `34b063a` reference is superseded by this newer historical deployment evidence. This screenshot does not establish that the current feature branch is deployed.
 
 ## Live Validation
 
@@ -45,4 +45,4 @@ Latest Production deployment shown in the Vercel dashboard screenshot captured o
 
 ## Conclusion
 
-The final Phase 3 production deployment is operational and consistent with the approved analytical and response contracts.
+The recorded production endpoint checks passed for the documented validation run, and the deployment screenshot records the Production state observed on 2026-10-18. These records do not independently establish current deployment availability, deployment of the current feature branch, or final Phase 3 certification. Recheck the production URL and deployment commit during final release review if current status is required.

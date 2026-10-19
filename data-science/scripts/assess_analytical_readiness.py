@@ -72,7 +72,8 @@ readiness = {
         "Geographic coordinates are not available.",
         "Text coverage is limited.",
         "Predictive modeling is not justified by the current evidence."
-    ]
+    ],
+    "final_result": "DATA READY FOR ANALYTICAL TRACK DEVELOPMENT"
 }
 
 OUT.parent.mkdir(parents=True, exist_ok=True)
