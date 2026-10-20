@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type {
   IntelligencePackage,
   IntelligenceResult,
@@ -36,7 +36,7 @@ export default function DataIntelligencePage() {
   const [quality, setQuality] = useState("ALL");
   const [selected, setSelected] = useState<IntelligenceResult | null>(null);
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
     setState("loading");
     setError("");
@@ -80,13 +80,11 @@ export default function DataIntelligencePage() {
         setState("error");
       })
       .finally(() => setLoading(false));
-  };
+  }, []);
 
   useEffect(() => {
-    // The loader intentionally initializes page state on mount.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
-  }, []);
+  }, [load]);
 
   const groups = useMemo(
     () =>
@@ -208,6 +206,7 @@ export default function DataIntelligencePage() {
               No approved intelligence result matches the active filters.
             </p>
             <button
+              type="button"
               onClick={clearFilters}
               className="mt-4 rounded-lg border border-[#38BDF8]/30 px-4 py-2 text-xs text-[#38BDF8]"
             >

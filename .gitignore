@@ -44,3 +44,6 @@ __pycache__/
 
 # Safe example configuration can be committed
 !.env.example
+
+# Generated pre-certification artifact
+repomix-phase3-pre-certification.md

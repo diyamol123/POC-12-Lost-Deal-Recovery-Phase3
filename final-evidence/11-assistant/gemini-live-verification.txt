@@ -1,0 +1,26 @@
+Phase 3 Grounded Assistant — Live Gemini Verification
+
+Environment: Phase3-Clean-Clone-Current
+Endpoint: POST http://127.0.0.1:8002/api/assistant/query
+Question: What are the top lost-deal categories by total deal value?
+
+Observed result:
+- status: SUPPORTED
+- intent: top_categories
+- explanation_status: AVAILABLE
+- data_version: phase3-v1.0.0
+- method_version: 1.0.0
+- quality_status: validated
+- approved_track: Track A — Comparative Intelligence
+- evidence references: POC12-CAT-01 through POC12-CAT-05
+- limitation: Results are descriptive and do not establish causality.
+
+Deterministic values consistent with the Gemini explanation:
+- Price: 4,660,000.0
+- Competitor: 3,435,000.0
+- Product Fit: 1,440,000.0
+- Timing: 1,040,000.0
+- Budget: 1,030,000.0
+
+Status: PASS — live response observed with explanation_status AVAILABLE.
+Note: Final release certification and reviewer approval remain pending.

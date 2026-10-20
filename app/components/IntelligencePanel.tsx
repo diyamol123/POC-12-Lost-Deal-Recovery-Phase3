@@ -29,39 +29,45 @@ export default function IntelligencePanel({
   if (!selected) return null;
 
   const formatValue = (
-  value?: number,
-  type?: "reason" | "competitor" | "deal"
-) => {
-  if (value === undefined) return "—";
+    value?: number,
+    type?: "reason" | "competitor" | "deal"
+  ) => {
+    if (value === undefined) return "—";
 
-  if (type === "deal") {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(value);
-  }
+    if (type === "deal") {
+      return new Intl.NumberFormat("en-IN", {
+        maximumFractionDigits: 0,
+      }).format(value);
+    }
 
-  if (type === "reason") {
-    return `${value} lost deals`;
-  }
+    if (type === "reason") {
+      return `${value} lost deals`;
+    }
 
-  if (type === "competitor") {
-    return `${value} deals`;
-  }
+    if (type === "competitor") {
+      return `${value} deals`;
+    }
 
-  return String(value);
-};
+    return String(value);
+  };
+
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[1px]"
+      {/* Accessible backdrop */}
+      <button
+        type="button"
+        aria-label="Close intelligence panel"
+        className="fixed inset-0 z-40 cursor-default border-0 bg-black/45 p-0 backdrop-blur-[1px]"
         onClick={onClose}
       />
 
       {/* Intelligence Sidebar */}
-      <aside className="fixed right-0 top-0 z-50 flex h-screen w-full flex-col border-l border-[#1F2937] bg-[#030712] shadow-[-20px_0_60px_rgba(0,0,0,0.45)] sm:w-[30vw] sm:min-w-[360px]">
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="intelligence-panel-title"
+        className="fixed right-0 top-0 z-50 flex h-screen w-full flex-col border-l border-[#1F2937] bg-[#030712] shadow-[-20px_0_60px_rgba(0,0,0,0.45)] sm:w-[30vw] sm:min-w-[360px]"
+      >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[#1F2937] px-5 py-5">
           <div>
@@ -69,12 +75,16 @@ export default function IntelligencePanel({
               DEAL INTELLIGENCE
             </div>
 
-            <h2 className="mt-1 text-xl font-semibold text-slate-100">
+            <h2
+              id="intelligence-panel-title"
+              className="mt-1 text-xl font-semibold text-slate-100"
+            >
               {selected.title}
             </h2>
           </div>
 
           <button
+            type="button"
             onClick={onClose}
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#1F2937] text-slate-400 transition hover:border-[#38BDF8]/40 hover:text-[#38BDF8]"
             aria-label="Close intelligence panel"
@@ -104,10 +114,10 @@ export default function IntelligencePanel({
 
                 <div className="mt-2 text-sm font-semibold uppercase text-[#38BDF8]">
                   {selected.type === "reason"
-  ? "LOSS REASON"
-  : selected.type === "competitor"
-  ? "COMPETITOR"
-  : "DEAL"}
+                    ? "LOSS REASON"
+                    : selected.type === "competitor"
+                      ? "COMPETITOR"
+                      : "DEAL"}
                 </div>
               </div>
 
@@ -166,7 +176,7 @@ export default function IntelligencePanel({
             </p>
           </section>
 
-          {/* Competitive signal */}
+          {/* Intelligence signal */}
           <section className="rounded-xl border border-[#1F2937] bg-[#0B1117] p-4">
             <div className="flex items-center gap-2 text-[9px] font-semibold tracking-[0.2em] text-[#818CF8]">
               <AlertTriangle className="h-3.5 w-3.5" />

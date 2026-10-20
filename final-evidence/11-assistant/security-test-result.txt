@@ -1,0 +1,79 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.0, pytest-9.1.1, pluggy-1.7.0 -- /Users/dainjose/Desktop/Phase3-Clean-Clone-Current/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/dainjose/Desktop/Phase3-Clean-Clone-Current
+configfile: pytest.ini
+plugins: anyio-4.15.1
+collecting ... collected 30 items
+
+tests/assistant/test_scope.py::test_supported_question PASSED            [  3%]
+tests/assistant/test_scope.py::test_empty_question PASSED                [  6%]
+tests/assistant/test_scope.py::test_question_length_limit PASSED         [ 10%]
+tests/assistant/test_scope.py::test_system_prompt_request_is_unsafe PASSED [ 13%]
+tests/assistant/test_scope.py::test_secret_request_is_unsafe PASSED      [ 16%]
+tests/assistant/test_scope.py::test_ignore_instruction_injection_is_unsafe PASSED [ 20%]
+tests/assistant/test_scope.py::test_sql_is_unsafe PASSED                 [ 23%]
+tests/assistant/test_scope.py::test_code_is_unsafe PASSED                [ 26%]
+tests/assistant/test_scope.py::test_all_records_is_unsafe PASSED         [ 30%]
+tests/assistant/test_scope.py::test_prediction_is_unsafe PASSED          [ 33%]
+tests/assistant/test_scope.py::test_causal_question_is_unsafe PASSED     [ 36%]
+tests/assistant/test_scope.py::test_result_manipulation_is_unsafe PASSED [ 40%]
+tests/assistant/test_scope.py::test_source_text_injection_is_unsafe PASSED [ 43%]
+tests/assistant/test_gemini_explanation.py::test_gemini_explanation_uses_mocked_client PASSED [ 46%]
+tests/assistant/test_gemini_explanation.py::test_gemini_api_failure_raises_grounded_error PASSED [ 50%]
+tests/assistant/test_gemini_explanation.py::test_numeric_fidelity_accepts_grounded_numbers PASSED [ 53%]
+tests/assistant/test_gemini_explanation.py::test_numeric_fidelity_rejects_new_number PASSED [ 56%]
+tests/assistant/test_gemini_explanation.py::test_assistant_keeps_deterministic_answer_when_gemini_fails PASSED [ 60%]
+tests/assistant/test_gemini_explanation.py::test_unsafe_question_does_not_reach_gemini PASSED [ 63%]
+tests/assistant/test_gemini_explanation.py::test_grounding_payload_excludes_unapproved_dataset_fields PASSED [ 66%]
+tests/assistant/test_gemini_explanation.py::test_missing_gemini_api_key_preserves_deterministic_answer PASSED [ 70%]
+tests/assistant/test_router.py::test_top_category PASSED                 [ 73%]
+tests/assistant/test_router.py::test_top_categories PASSED               [ 76%]
+tests/assistant/test_router.py::test_rank PASSED                         [ 80%]
+tests/assistant/test_router.py::test_evidence PASSED                     [ 83%]
+tests/assistant/test_router.py::test_compare PASSED                      [ 86%]
+tests/assistant/test_router.py::test_limitations PASSED                  [ 90%]
+tests/assistant/test_router.py::test_versions PASSED                     [ 93%]
+tests/assistant/test_router.py::test_validation PASSED                   [ 96%]
+tests/assistant/test_router.py::test_unsupported_is_rejected PASSED      [100%]
+
+============================== 30 passed in 0.28s ==============================
+
+Phase 3 Security Review — Additional Verification
+Date: 2026-10-20
+Environment: POC-12-Lost-Deal-Recovery-Phase3
+
+Latest focused test results:
+- Command: python -m pytest tests/assistant/test_gemini_explanation.py -q
+- Result: PASS — 8 passed, 0 failed.
+- Command: python -m pytest tests/assistant -q
+- Result: PASS — 42 passed, 0 failed.
+
+Environment-file checks:
+- .env.local is not tracked by Git at its current path.
+- Git history query for the exact .env.local path returned no results.
+- .env.local is ignored by the .gitignore rule .env*.
+- .env.example declares GEMINI_API_KEY with an empty value.
+- Backend Gemini client reads GEMINI_API_KEY using os.getenv().
+- Search for NEXT_PUBLIC_GEMINI_API_KEY and
+  NEXT_PUBLIC_GOOGLE_API_KEY returned no matches in tracked files,
+  excluding the generated Repomix file.
+
+Code-path review:
+- Missing Gemini configuration raises a controlled explanation error.
+- Gemini API failures are converted to a generic unavailable message.
+- Deterministic results remain authoritative when Gemini is unavailable.
+- Numeric-fidelity validation runs before explanation_status is set to AVAILABLE.
+- The assistant response includes evidence references and analytical limitations.
+
+Dependency audit:
+- Latest npm audit output: found 0 vulnerabilities.
+
+Scope and limitations:
+- These checks do not constitute a comprehensive security audit.
+- The public-variable search covers only the two named patterns.
+- A clean current environment-file status does not prove that no secret
+  was ever committed under another path or name.
+- Production secret configuration and complete Git-history secret scanning
+  have not been independently verified by this evidence.
+- Final certification and authorized release approval remain separate decisions.

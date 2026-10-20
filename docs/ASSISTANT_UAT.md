@@ -13,7 +13,7 @@ UAT execution completed for the implemented Phase 3 grounded assistant flow.
 | UAT-03 | Check numeric fidelity | Values match approved intelligence output | PASS — Price 4,660,000 and Competitor 3,435,000 verified |
 | UAT-04 | Check evidence | Evidence references support the answer | PASS — POC12-CAT-01 and POC12-CAT-02 displayed |
 | UAT-05 | Check limitation | Approved limitation is displayed | PASS — descriptive/non-causal limitation displayed |
-| UAT-06 | Missing category parameter | Safe validation response | PASS — router validation is implemented |
+| UAT-06 | Missing category parameter | Safe validation response | PASS — automated router/scope validation tests; missing-question validation covered |
 | UAT-07 | Unsupported question | Request is rejected without retrieval | PASS — unsupported predictive request rejected |
 | UAT-08 | Prompt injection | Request is blocked | IMPLEMENTED — automated scope controls present |
 | UAT-09 | Source-text injection | Instructions in source data are not executed | IMPLEMENTED — grounding boundary enforced |
