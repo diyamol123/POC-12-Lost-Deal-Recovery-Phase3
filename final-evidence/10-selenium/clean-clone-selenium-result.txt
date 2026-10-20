@@ -1,0 +1,9 @@
+Phase 3 clean-clone Selenium validation
+
+Clone: Phase3-Clean-Clone-Current
+Frontend: http://localhost:3003
+Test: tests/selenium/test_data_intelligence_journey.py
+Command: APP_BASE_URL=http://localhost:3003 PYTHONPATH=. python -m pytest tests/selenium/test_data_intelligence_journey.py -q
+
+Result: 1 passed in 8.44s
+Status: PASS

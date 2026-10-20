@@ -4,7 +4,7 @@
 
 `phase3-v1.0.0`
 
-## Certified Scope
+## Release Scope (Certification Pending)
 
 Track A — Comparative Intelligence
 

@@ -31,7 +31,7 @@ The deterministic analytical layer is authoritative. Gemini is an explanation la
 
 ## Validation
 
-The recorded automated checks include 59 passing Python tests and 2 passing TypeScript contract tests; a separately rerun Selenium journey may overlap and is not added to the unique test count. Production endpoints were validated after deployment.
+The recorded automated checks include 61 passing Python tests and 2 passing TypeScript contract tests; a separately rerun Selenium journey may overlap and is not added to the unique test count. Production endpoints were validated after deployment.
 
 ## Maintenance
 
