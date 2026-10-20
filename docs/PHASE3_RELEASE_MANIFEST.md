@@ -1,10 +1,14 @@
 # Phase 3 Release Manifest
 
-## Release
+## Release Identity
 
-- Release: `phase3-v1.0.0`
+- PoC ID: `POC-12`
+- PoC title: `Lost Deal Recovery`
+- Repository: https://github.com/diyamol123/POC-12-Lost-Deal-Recovery-Phase3
+- Production URL: https://poc-12-lost-deal-recovery.vercel.app/
+- Release status: Candidate; final certification approval pending
 - Track: `Track A — Comparative Intelligence`
-- Release purpose: Final Phase 3 certification and handover
+- Release purpose: Phase 3 certification review and technical handover
 
 ## Version Matrix
 
@@ -14,6 +18,28 @@
 | Method version | `1.0.0` |
 | Architecture version | `1.1.0` |
 | Response contract version | `1.1.0` |
+
+## Commit and Tag Integrity
+
+- Baseline evidence/documentation commit before this manifest update: `2f91541f83783918e8f861f00ff7868149f07ff6`
+- Production revision: `2f91541` (operator-confirmed)
+- Existing annotated tag: `phase3-v1.0.0`
+- Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
+- Tag disposition: Preserve the existing tag and its target. Do not move it.
+- Final release tag/identity: To be proposed and approved by the authorized maintainer after all required validation.
+
+The current evidence commit, production revision, and existing tag target are distinct release-integrity facts. The existing tag is not certification of the newer candidate. The production revision confirmation does not, by itself, establish that every validation suite was rerun on that revision.
+
+## Production Validation Evidence
+
+The deployment report records a production recheck in which:
+
+- The dashboard returned HTTP 200.
+- `/api/deals` returned HTTP 200.
+- A supported top-categories assistant query returned `SUPPORTED`.
+- The assistant explanation status was `AVAILABLE`.
+
+These observations establish endpoint responsiveness at the time of the recorded check. Consult `DEPLOYMENT_VALIDATION_REPORT.md` for the recorded revision and test context. Re-run the required production checks after the final candidate deployment and update the report with the exact revision and date.
 
 ## Analytical Scope
 
@@ -27,13 +53,13 @@
 
 The deterministic analytical layer is authoritative for numerical results.
 
-The Gemini layer is limited to explaining validated deterministic findings and evidence. It does not calculate independent analytical results or receive the full canonical dataset.
+The Gemini layer is limited to explaining validated deterministic findings and evidence. It must not independently calculate analytical results or receive the full canonical dataset.
 
-Unsupported predictive, causal, forecasting, arbitrary SQL/code, unrestricted-record, secret/system-prompt, and other out-of-scope requests remain rejected by the assistant scope guard.
+Unsupported predictive, causal, forecasting, arbitrary SQL/code, unrestricted-record, secret/system-prompt, and other out-of-scope requests must remain rejected by the assistant scope guard.
 
 ## Certification Baseline
 
-The final release must be validated through:
+The final release candidate must be validated through:
 
 1. Clean-clone validation
 2. Canonical data validation
@@ -50,6 +76,31 @@ The final release must be validated through:
 13. Evidence review
 14. Architecture, completion, and handover review
 15. Final Repomix generation
+16. Dependency security audit on the selected candidate
+17. Focused assistant tests for incorrect numbers and contradictory explanations
+18. Desktop and mobile demonstration review
+
+Historical test results must be identified as historical unless rerun against the selected candidate. Do not report unexecuted tests as passing.
+
+## Evidence Index
+
+- `CLEAN_CLONE_VALIDATION_REPORT.md`
+- `CANONICAL_DATA_PACKAGE_VALIDATION.md`
+- `ANALYTICAL_VALIDATION_REPORT.md`
+- `FINAL_ANALYTICAL_REVALIDATION.md`
+- `FINAL_AUTOMATED_TEST_REPORT.md`
+- `FINAL_OPERATIONAL_REGRESSION_REPORT.md`
+- `FINAL_DATA_INTELLIGENCE_VALIDATION.md`
+- `FINAL_ASSISTANT_VALIDATION.md`
+- `ASSISTANT_UAT.md`
+- `ASSISTANT_GROUNDING_VALIDATION.md`
+- `PHASE3_FINAL_UAT.md`
+- `DEPLOYMENT_VALIDATION_REPORT.md`
+- `PHASE3_COMPLETION_REPORT.md`
+- `PHASE3_HANDOVER_GUIDE.md`
+- `repomix-phase3-pre-certification.xml` (existing pre-certification snapshot; regenerate before final submission)
+
+Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
 
 ## Known Dataset Limitations
 
@@ -57,6 +108,10 @@ The canonical dataset is synthetic and contains 20 records. Results must not be 
 
 Currency is intentionally unspecified unless explicitly established by the dataset or validated release evidence.
 
+Sensitivity analysis indicates that removing record `CRM-012` changes the leading category from Price to Competitor. This is a ranking-sensitivity finding, not proof of causality or guaranteed recoverable revenue.
+
 ## Release Rule
 
-`phase3-v1.0.0` must point to the final certified commit after all required validation, documentation, evidence, and Repomix corrections are complete.
+The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
+
+Final certification remains pending until that review and approval are recorded.
