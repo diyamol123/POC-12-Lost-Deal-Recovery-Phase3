@@ -179,7 +179,6 @@ export default function DataIntelligencePage() {
 
         <IntelligenceHeader metadata={pkg.metadata} />
         <DataFreshnessBadge metadata={pkg.metadata} stale={false} />
-        <GroundedAssistant />
         <IntelligenceSummaryCards summary={pkg.summary} />
 
         <IntelligenceFilters
@@ -232,6 +231,8 @@ export default function DataIntelligencePage() {
           result={selected}
           onClose={() => setSelected(null)}
         />
+
+        <GroundedAssistant selectedGroup={selected?.group_key} />
       </div>
     </main>
   );

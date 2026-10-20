@@ -98,7 +98,11 @@ function getAnswer(response: AssistantResponse): string {
   return "A grounded result was returned from the approved intelligence package.";
 }
 
-export default function GroundedAssistant() {
+export default function GroundedAssistant({
+  selectedGroup,
+}: {
+  selectedGroup?: string;
+}) {
   const [question, setQuestion] = useState("");
   const [response, setResponse] = useState<AssistantResponse | null>(null);
   const [error, setError] = useState("");
@@ -154,6 +158,17 @@ export default function GroundedAssistant() {
           Deterministic Retrieval · Gemini Explanation
         </span>
       </div>
+
+      {selectedGroup && (
+        <button
+          type="button"
+          onClick={() => void submit(`What evidence supports ${selectedGroup}?`)}
+          disabled={loading}
+          className="mb-3 rounded-lg border border-[#818CF8]/30 px-4 py-2.5 text-sm font-medium text-[#A5B4FC] hover:bg-[#818CF8]/10 disabled:opacity-50"
+        >
+          Ask about {selectedGroup}
+        </button>
+      )}
 
       <form
         className="mt-4 flex flex-col gap-2 sm:flex-row"
