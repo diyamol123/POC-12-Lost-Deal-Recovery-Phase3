@@ -8,7 +8,6 @@ import {
   Filter,
   Database,
   TrendingDown,
-  IndianRupee,
   Target,
   AlertTriangle,
   X,
@@ -56,9 +55,7 @@ const competitorOrder = [
 ];
 
 function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
+  return new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 0,
   }).format(value);
 }
@@ -439,7 +436,7 @@ export default function Home() {
 
           <div className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5">
             <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
-              <IndianRupee className="h-4 w-4 text-[#38BDF8]" />
+              <Database className="h-4 w-4 text-[#38BDF8]" />
               PIPELINE VALUE LOST
             </div>
 
