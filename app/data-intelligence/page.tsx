@@ -23,6 +23,7 @@ import LimitationsPanel from "@/app/components/data-intelligence/LimitationsPane
 import DataFreshnessBadge from "@/app/components/data-intelligence/DataFreshnessBadge";
 import IntelligenceStatePanel from "@/app/components/data-intelligence/IntelligenceStatePanel";
 import GroundedAssistant from "@/app/components/grounded-assistant/GroundedAssistant";
+import SensitivityPanel from "@/app/components/data-intelligence/SensitivityPanel";
 
 export default function DataIntelligencePage() {
   const [pkg, setPkg] = useState<IntelligencePackage | null>(null);
@@ -227,6 +228,7 @@ export default function DataIntelligencePage() {
           <LimitationsPanel summary={pkg.summary} />
         </div>
 
+        <SensitivityPanel />
         <EvidencePanel
           result={selected}
           onClose={() => setSelected(null)}
