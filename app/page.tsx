@@ -437,7 +437,7 @@ export default function Home() {
           <div className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5">
             <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
               <Database className="h-4 w-4 text-[#38BDF8]" />
-              PIPELINE VALUE LOST
+              OBSERVED LOST-DEAL VALUE
             </div>
 
             <div className="mt-3 text-2xl font-bold">
@@ -552,7 +552,7 @@ export default function Home() {
 
               <p>
                 <strong className="text-slate-200">
-                  Pipeline Value Lost:
+                  Observed lost-deal value:
                 </strong>{" "}
                 Sum of opportunity values associated with filtered lost
                 deals.
