@@ -21,14 +21,16 @@
 
 ## Commit and Tag Integrity
 
-- Baseline evidence/documentation commit before this manifest update: `2f91541f83783918e8f861f00ff7868149f07ff6`
-- Production revision: `2f91541` (operator-confirmed)
+- Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
+- Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- Production deployment commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6` (operator-confirmed from the Vercel deployment listing)
+- Latest deployment status: `Ready`; operator reports no build or runtime errors.
 - Existing annotated tag: `phase3-v1.0.0`
 - Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
 - Tag disposition: Preserve the existing tag and its target. Do not move it.
 - Final release tag/identity: To be proposed and approved by the authorized maintainer after all required validation.
 
-The current evidence commit, production revision, and existing tag target are distinct release-integrity facts. The existing tag is not certification of the newer candidate. The production revision confirmation does not, by itself, establish that every validation suite was rerun on that revision.
+The baseline evidence commit, selected merged candidate, production revision, and existing tag target are distinct release-integrity facts. The existing tag does not certify the newer candidate. Deployment readiness does not establish that every validation suite was rerun against the selected candidate.
 
 ## Production Validation Evidence
 
