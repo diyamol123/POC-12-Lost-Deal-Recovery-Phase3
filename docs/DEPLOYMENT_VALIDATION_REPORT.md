@@ -75,3 +75,8 @@ Live endpoint checks performed on 2026-10-29:
 - The analytical output reports `generated_at: 2026-10-11T12:34:47Z`. This is the output's generation timestamp, not the endpoint recheck time.
 
 These checks confirm endpoint responsiveness and the observed assistant response for this request. They do not replace candidate-specific regression tests, a full grounding review, or authorized final certification approval.
+### Production UI Recheck — 2026-10-29
+
+The deployed Vercel dashboard was rechecked after the production environment configuration and redeployment. The supported top-categories query returned a grounded answer, and the Gemini explanation was displayed with supporting evidence references and the descriptive, non-causal limitation. The dashboard also displayed data version `phase3-v1.0.0` and analytical method version `1.0.0`.
+
+This UI observation supplements the endpoint checks above. It does not replace the complete regression suite or authorized maintainer certification approval.
