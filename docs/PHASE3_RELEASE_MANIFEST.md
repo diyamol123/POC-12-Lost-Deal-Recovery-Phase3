@@ -23,7 +23,7 @@
 
 - Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
 - Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- Production deployment commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6` (operator-confirmed from the Vercel deployment listing)
+- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
 - Latest deployment status: `Ready`; operator reports no build or runtime errors.
 - Existing annotated tag: `phase3-v1.0.0`
 - Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`

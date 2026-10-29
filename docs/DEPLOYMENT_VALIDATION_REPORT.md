@@ -59,3 +59,19 @@ Observed checks:
 - Vercel Production commit: confirmed by the operator to match the verified commit above.
 
 These checks establish endpoint responsiveness at the time tested. They do not replace the complete regression suite or maintainer certification approval.
+
+
+## Current Production Recheck — 2026-10-29
+
+Production revision shown in the Vercel dashboard screenshot reviewed on 2026-10-29:
+`d40e674914642f5114c8457609e26d6255b9b6a2` (`main`, manifest update).
+
+Live endpoint checks performed on 2026-10-29:
+- Dashboard: HTTP 200.
+- `/api/deals`: HTTP 200.
+- `/api/intelligence/status`: HTTP 200; status `validated`; data version `phase3-v1.0.0`; method version `1.0.0`; five results.
+- `/api/assistant/query`: HTTP 200 for the supported top-categories question; response status `SUPPORTED`; explanation status `AVAILABLE`; evidence references `POC12-CAT-01` through `POC12-CAT-05`.
+- The assistant response identifies the findings as descriptive and not causal.
+- The analytical output reports `generated_at: 2026-10-11T12:34:47Z`. This is the output's generation timestamp, not the endpoint recheck time.
+
+These checks confirm endpoint responsiveness and the observed assistant response for this request. They do not replace candidate-specific regression tests, a full grounding review, or authorized final certification approval.

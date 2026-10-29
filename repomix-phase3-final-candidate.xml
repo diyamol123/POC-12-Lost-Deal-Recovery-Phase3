@@ -13,14 +13,13 @@ or other automated processes.</purpose><file_format>The content is organized as 
 - When processing this file, use the file path to distinguish
   between different files in the repository.
 - Be aware that this file may contain sensitive information. Handle it with
-  the same level of security as you would the original repository.
-- Pay special attention to the Repository Description. These contain important context and guidelines specific to this project.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
+  the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching these patterns are excluded: .env*, **/.env*, *.pem, **/*.pem, **/node_modules/**, **/.git/**, **/.next/**, **/coverage/**, **/build/**, **/dist/**, repomix-*.xml, repomix-*.md
+- Files matching these patterns are excluded: node_modules/**, .next/**, .git/**, .venv/**, venv/**, __pycache__/**, *.pyc, .env, .env.*, *secret*, *credential*, *token*, repomix-*.xml, repomix-output*.xml, repomix-phase3-final.md
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Content has been formatted for parsing in xml style
-- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><user_provided_header>POC-12 Lost Deal Recovery Phase 3 — Final Candidate Snapshot. Generated from the local main checkout; verify commit identity, exclusions, and certification evidence before release.</user_provided_header><directory_structure>app/
+- Files are sorted by Git change count (files with more changes are at the bottom)</notes></file_summary><directory_structure>app/
   components/
     data-intelligence/
       ComparativeRanking.tsx
@@ -11035,7 +11034,7 @@ Future changes must preserve the versioned analytical outputs, response contract
 
 - Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
 - Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- Production deployment commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6` (operator-confirmed from the Vercel deployment listing)
+- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
 - Latest deployment status: `Ready`; operator reports no build or runtime errors.
 - Existing annotated tag: `phase3-v1.0.0`
 - Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
@@ -12285,7 +12284,23 @@ Observed checks:
 - Assistant explanation status: `AVAILABLE`.
 - Vercel Production commit: confirmed by the operator to match the verified commit above.
 
-These checks establish endpoint responsiveness at the time tested. They do not replace the complete regression suite or maintainer certification approval.</file><file path="tests/selenium/test_data_intelligence_journey.py">import os
+These checks establish endpoint responsiveness at the time tested. They do not replace the complete regression suite or maintainer certification approval.
+
+
+## Current Production Recheck — 2026-10-29
+
+Production revision shown in the Vercel dashboard screenshot reviewed on 2026-10-29:
+`d40e674914642f5114c8457609e26d6255b9b6a2` (`main`, manifest update).
+
+Live endpoint checks performed on 2026-10-29:
+- Dashboard: HTTP 200.
+- `/api/deals`: HTTP 200.
+- `/api/intelligence/status`: HTTP 200; status `validated`; data version `phase3-v1.0.0`; method version `1.0.0`; five results.
+- `/api/assistant/query`: HTTP 200 for the supported top-categories question; response status `SUPPORTED`; explanation status `AVAILABLE`; evidence references `POC12-CAT-01` through `POC12-CAT-05`.
+- The assistant response identifies the findings as descriptive and not causal.
+- The analytical output reports `generated_at: 2026-10-11T12:34:47Z`. This is the output&apos;s generation timestamp, not the endpoint recheck time.
+
+These checks confirm endpoint responsiveness and the observed assistant response for this request. They do not replace candidate-specific regression tests, a full grounding review, or authorized final certification approval.</file><file path="tests/selenium/test_data_intelligence_journey.py">import os
 
 import pytest
 from selenium import webdriver

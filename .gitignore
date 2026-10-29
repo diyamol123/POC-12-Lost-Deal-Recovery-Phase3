@@ -50,3 +50,7 @@ repomix-phase3-pre-certification.md
 
 # Keep local review Repomix out of feature PRs
 /repomix-phase3-review.xml
+
+# Local Python virtual environment
+.venv/
+venv/
