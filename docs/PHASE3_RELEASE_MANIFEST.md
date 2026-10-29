@@ -118,3 +118,13 @@ Sensitivity analysis indicates that removing record `CRM-012` changes the leadin
 The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
 
 Final certification remains pending until that review and approval are recorded.
+### Latest Automated Test Run
+
+- **Tested checkout:** `32e2c858f57ef8c9a550888de487c003d822b2cc`
+- **Selected merged candidate:** `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- **Test command:** `APP_BASE_URL=http://localhost:3002 PYTHONPATH=. python3 -m pytest tests -q`
+- **Result:** 61 passed, 0 failed
+- **Reported execution time:** 1.86 seconds
+- **Selenium Data Intelligence journey:** Passed (1 test, 2.05 seconds)
+- **Scope note:** The diff between the tested checkout and selected candidate contains only `.gitignore`, deployment documentation, release-manifest documentation, and the generated Repomix snapshot. No application or test source files differ.
+- **Certification status:** Candidate-specific evidence review and final authorized approval remain pending.
