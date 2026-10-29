@@ -118,13 +118,32 @@ Sensitivity analysis indicates that removing record `CRM-012` changes the leadin
 The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
 
 Final certification remains pending until that review and approval are recorded.
-### Latest Automated Test Run
+## Latest Validation Evidence
+
+### Automated Test Run
 
 - **Tested checkout:** `32e2c858f57ef8c9a550888de487c003d822b2cc`
 - **Selected merged candidate:** `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- **Test command:** `APP_BASE_URL=http://localhost:3002 PYTHONPATH=. python3 -m pytest tests -q`
+- **Command:** `APP_BASE_URL=http://localhost:3002 PYTHONPATH=. python3 -m pytest tests -q`
 - **Result:** 61 passed, 0 failed
-- **Reported execution time:** 1.86 seconds
-- **Selenium Data Intelligence journey:** Passed (1 test, 2.05 seconds)
-- **Scope note:** The diff between the tested checkout and selected candidate contains only `.gitignore`, deployment documentation, release-manifest documentation, and the generated Repomix snapshot. No application or test source files differ.
-- **Certification status:** Candidate-specific evidence review and final authorized approval remain pending.
+- **Execution time:** 1.86 seconds
+- **Selenium Data Intelligence journey:** 1 passed in 2.05 seconds
+- **Scope:** The diff between the tested checkout and selected candidate contains only `.gitignore`, deployment documentation, release-manifest documentation, and the generated Repomix snapshot. No application or test source files differ.
+
+### Dependency Audit
+
+- **Audited checkout:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62`
+- **Command:** `npm audit`
+- **Reported result:** 0 vulnerabilities
+- **Scope note:** This result applies to the dependencies and lockfile in the audited checkout. It does not replace the required review of historical security findings or other release risks.
+
+### Production Deployment Verification
+
+- **Production URL:** https://poc-12-lost-deal-recovery.vercel.app/
+- **Production commit:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62` — reported by the operator as matching the current GitHub commit.
+- **Operator smoke check:** Dashboard, deals data, Data Intelligence, and assistant features reported working.
+- **Evidence limitation:** The commit alignment and smoke-check results are operator-confirmed; retain the corresponding Vercel deployment details and dated endpoint checks as supporting evidence.
+
+### Certification Status
+
+Release status remains **Candidate — final certification approval pending**. Final certification requires completion and review of all required validation evidence, confirmation that referenced artifacts correspond to the intended release, and recorded approval from the authorized maintainer.
