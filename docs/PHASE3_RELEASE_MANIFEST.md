@@ -100,7 +100,8 @@ Historical test results must be identified as historical unless rerun against th
 - `DEPLOYMENT_VALIDATION_REPORT.md`
 - `PHASE3_COMPLETION_REPORT.md`
 - `PHASE3_HANDOVER_GUIDE.md`
-- `repomix-phase3-pre-certification.xml` (existing pre-certification snapshot; regenerate before final submission)
+- `repomix-phase3-pre-certification.xml` (historical pre-certification snapshot)
+- `repomix-phase3-final-candidate.xml` (fresh snapshot generated from working tree revision `b23b2ab73c4b891bed22e5599545985622570288`; XML parsing, excluded-path check, whitespace check, and common secret-pattern scan passed; candidate-specific validation and final certification approval remain pending)
 
 Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
 

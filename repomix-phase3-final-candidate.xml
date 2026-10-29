@@ -15,7 +15,7 @@ or other automated processes.</purpose><file_format>The content is organized as 
 - Be aware that this file may contain sensitive information. Handle it with
   the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching these patterns are excluded: node_modules/**, .next/**, .git/**, .venv/**, venv/**, __pycache__/**, *.pyc, .env, .env.*, *secret*, *credential*, *token*, repomix-*.xml, repomix-output*.xml, repomix-phase3-final.md
+- Files matching these patterns are excluded: .env, .env.*, **/.env, **/.env.*, .venv312/**, .venv/**, **/node_modules/**, **/.next/**, **/__pycache__/**, **/*.pyc, repomix-*.xml, repomix-*.md, repomix-output*.xml
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Content has been formatted for parsing in xml style
@@ -11009,125 +11009,7 @@ The recorded automated checks include 61 passing Python tests and 2 passing Type
 
 ## Maintenance
 
-Future changes must preserve the versioned analytical outputs, response contract, assistant grounding boundary, and operational regression boundary. Any material analytical or architectural change requires a new validation cycle rather than modifying the certified release in place.</file><file path="docs/PHASE3_RELEASE_MANIFEST.md"># Phase 3 Release Manifest
-
-## Release Identity
-
-- PoC ID: `POC-12`
-- PoC title: `Lost Deal Recovery`
-- Repository: https://github.com/diyamol123/POC-12-Lost-Deal-Recovery-Phase3
-- Production URL: https://poc-12-lost-deal-recovery.vercel.app/
-- Release status: Candidate; final certification approval pending
-- Track: `Track A — Comparative Intelligence`
-- Release purpose: Phase 3 certification review and technical handover
-
-## Version Matrix
-
-| Component | Version |
-|---|---|
-| Data version | `phase3-v1.0.0` |
-| Method version | `1.0.0` |
-| Architecture version | `1.1.0` |
-| Response contract version | `1.1.0` |
-
-## Commit and Tag Integrity
-
-- Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
-- Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
-- Latest deployment status: `Ready`; operator reports no build or runtime errors.
-- Existing annotated tag: `phase3-v1.0.0`
-- Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
-- Tag disposition: Preserve the existing tag and its target. Do not move it.
-- Final release tag/identity: To be proposed and approved by the authorized maintainer after all required validation.
-
-The baseline evidence commit, selected merged candidate, production revision, and existing tag target are distinct release-integrity facts. The existing tag does not certify the newer candidate. Deployment readiness does not establish that every validation suite was rerun against the selected candidate.
-
-## Production Validation Evidence
-
-The deployment report records a production recheck in which:
-
-- The dashboard returned HTTP 200.
-- `/api/deals` returned HTTP 200.
-- A supported top-categories assistant query returned `SUPPORTED`.
-- The assistant explanation status was `AVAILABLE`.
-
-These observations establish endpoint responsiveness at the time of the recorded check. Consult `DEPLOYMENT_VALIDATION_REPORT.md` for the recorded revision and test context. Re-run the required production checks after the final candidate deployment and update the report with the exact revision and date.
-
-## Analytical Scope
-
-- Primary metric: `deal_value`
-- Minimum group size: `3`
-- Canonical dataset: `20` synthetic records
-- Standardized columns: `20`
-- Approved categories: `Price`, `Competitor`, `Product Fit`, `Timing`, `Budget`
-
-## Grounding Boundary
-
-The deterministic analytical layer is authoritative for numerical results.
-
-The Gemini layer is limited to explaining validated deterministic findings and evidence. It must not independently calculate analytical results or receive the full canonical dataset.
-
-Unsupported predictive, causal, forecasting, arbitrary SQL/code, unrestricted-record, secret/system-prompt, and other out-of-scope requests must remain rejected by the assistant scope guard.
-
-## Certification Baseline
-
-The final release candidate must be validated through:
-
-1. Clean-clone validation
-2. Canonical data validation
-3. Analytical output regeneration
-4. Output-contract validation
-5. Production build and environment validation
-6. Operational regression
-7. Data Intelligence validation
-8. Assistant validation
-9. Automated test suite
-10. Selenium validation
-11. Final UAT
-12. Deployment validation
-13. Evidence review
-14. Architecture, completion, and handover review
-15. Final Repomix generation
-16. Dependency security audit on the selected candidate
-17. Focused assistant tests for incorrect numbers and contradictory explanations
-18. Desktop and mobile demonstration review
-
-Historical test results must be identified as historical unless rerun against the selected candidate. Do not report unexecuted tests as passing.
-
-## Evidence Index
-
-- `CLEAN_CLONE_VALIDATION_REPORT.md`
-- `CANONICAL_DATA_PACKAGE_VALIDATION.md`
-- `ANALYTICAL_VALIDATION_REPORT.md`
-- `FINAL_ANALYTICAL_REVALIDATION.md`
-- `FINAL_AUTOMATED_TEST_REPORT.md`
-- `FINAL_OPERATIONAL_REGRESSION_REPORT.md`
-- `FINAL_DATA_INTELLIGENCE_VALIDATION.md`
-- `FINAL_ASSISTANT_VALIDATION.md`
-- `ASSISTANT_UAT.md`
-- `ASSISTANT_GROUNDING_VALIDATION.md`
-- `PHASE3_FINAL_UAT.md`
-- `DEPLOYMENT_VALIDATION_REPORT.md`
-- `PHASE3_COMPLETION_REPORT.md`
-- `PHASE3_HANDOVER_GUIDE.md`
-- `repomix-phase3-pre-certification.xml` (existing pre-certification snapshot; regenerate before final submission)
-
-Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
-
-## Known Dataset Limitations
-
-The canonical dataset is synthetic and contains 20 records. Results must not be interpreted as causal, predictive, geographically representative, or generalizable beyond the approved Phase 3 analytical scope.
-
-Currency is intentionally unspecified unless explicitly established by the dataset or validated release evidence.
-
-Sensitivity analysis indicates that removing record `CRM-012` changes the leading category from Price to Competitor. This is a ranking-sensitivity finding, not proof of causality or guaranteed recoverable revenue.
-
-## Release Rule
-
-The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
-
-Final certification remains pending until that review and approval are recorded.</file><file path="final-evidence/README.md"># Phase 3 Final Evidence Pack
+Future changes must preserve the versioned analytical outputs, response contract, assistant grounding boundary, and operational regression boundary. Any material analytical or architectural change requires a new validation cycle rather than modifying the certified release in place.</file><file path="final-evidence/README.md"># Phase 3 Final Evidence Pack
 
 ## Release
 
@@ -12224,83 +12106,125 @@ The UAT records completed validation as PASS. Owner/reviewer validation is compl
 - Container Image: `poc-12-lost-deal-recovery-phase3`
 - Container Runtime: PASS
 - Data Intelligence Route: `http://localhost:3003/data-intelligence`
-- Runtime HTTP Result: `HTTP/1.1 200 OK`</file><file path="docs/DEPLOYMENT_VALIDATION_REPORT.md"># Deployment Validation Report
+- Runtime HTTP Result: `HTTP/1.1 200 OK`</file><file path="docs/PHASE3_RELEASE_MANIFEST.md"># Phase 3 Release Manifest
 
-## Status
+## Release Identity
 
-**Recorded endpoint checks: PASS for the documented validation run.** The Vercel screenshot captured on 2026-10-18 documents the Production deployment at that time. It does not establish that the current feature branch is deployed or that the current deployment was rechecked today. Final Phase 3 certification: **PENDING**.
+- PoC ID: `POC-12`
+- PoC title: `Lost Deal Recovery`
+- Repository: https://github.com/diyamol123/POC-12-Lost-Deal-Recovery-Phase3
+- Production URL: https://poc-12-lost-deal-recovery.vercel.app/
+- Release status: Candidate; final certification approval pending
+- Track: `Track A — Comparative Intelligence`
+- Release purpose: Phase 3 certification review and technical handover
 
-## Production URL
+## Version Matrix
 
-https://poc-12-lost-deal-recovery.vercel.app
+| Component | Version |
+|---|---|
+| Data version | `phase3-v1.0.0` |
+| Method version | `1.0.0` |
+| Architecture version | `1.1.0` |
+| Response contract version | `1.1.0` |
 
-## Deployment Commit
+## Commit and Tag Integrity
 
-The Vercel dashboard screenshot captured on 2026-10-18 shows `96c9730` (Ready, Production), matching local `main` commit `96c97305e20b174b33e59009b7551a0cf44a312b` at the time of review. The screenshot also lists the earlier deployment `9c795a6`. The previous report&apos;s `34b063a` reference is superseded by this newer historical deployment evidence. This screenshot does not establish that the current feature branch is deployed.
+- Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
+- Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
+- Latest deployment status: `Ready`; operator reports no build or runtime errors.
+- Existing annotated tag: `phase3-v1.0.0`
+- Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
+- Tag disposition: Preserve the existing tag and its target. Do not move it.
+- Final release tag/identity: To be proposed and approved by the authorized maintainer after all required validation.
 
-## Live Validation
+The baseline evidence commit, selected merged candidate, production revision, and existing tag target are distinct release-integrity facts. The existing tag does not certify the newer candidate. Deployment readiness does not establish that every validation suite was rerun against the selected candidate.
 
-### `/api/intelligence/status`
+## Production Validation Evidence
 
-- HTTP request successful
-- status: `validated`
-- data_version: `phase3-v1.0.0`
-- method_version: `1.0.0`
-- result_count: 5
+The deployment report records a production recheck in which:
 
-### `/api/intelligence/metadata`
+- The dashboard returned HTTP 200.
+- `/api/deals` returned HTTP 200.
+- A supported top-categories assistant query returned `SUPPORTED`.
+- The assistant explanation status was `AVAILABLE`.
 
-- validation result: PASS
-- passed: true
-- record_count: 20
-- primary_group_count: 5
-- contribution_total_percent: 100.0
+These observations establish endpoint responsiveness at the time of the recorded check. Consult `DEPLOYMENT_VALIDATION_REPORT.md` for the recorded revision and test context. Re-run the required production checks after the final candidate deployment and update the report with the exact revision and date.
 
-### `/api/intelligence/summary`
+## Analytical Scope
 
-- five approved rankings returned
-- limitations preserved
-- weak-case review preserved
+- Primary metric: `deal_value`
+- Minimum group size: `3`
+- Canonical dataset: `20` synthetic records
+- Standardized columns: `20`
+- Approved categories: `Price`, `Competitor`, `Product Fit`, `Timing`, `Budget`
 
-### `/api/intelligence/results`
+## Grounding Boundary
 
-- HTTP request successful
-- five validated results returned
-- pagination contract valid
-- ranking order valid
+The deterministic analytical layer is authoritative for numerical results.
 
-## Conclusion
+The Gemini layer is limited to explaining validated deterministic findings and evidence. It must not independently calculate analytical results or receive the full canonical dataset.
 
-The recorded production endpoint checks passed for the documented validation run, and the deployment screenshot records the Production state observed on 2026-10-18. These records do not independently establish current deployment availability, deployment of the current feature branch, or final Phase 3 certification. Recheck the production URL and deployment commit during final release review if current status is required.
+Unsupported predictive, causal, forecasting, arbitrary SQL/code, unrestricted-record, secret/system-prompt, and other out-of-scope requests must remain rejected by the assistant scope guard.
 
-## Current Production Recheck — 2026-10-20
+## Certification Baseline
 
-Verified production commit: `18659b08a637ba97a055bf0bf904f54952a6d00e`.
+The final release candidate must be validated through:
 
-Observed checks:
-- Dashboard URL: HTTP 200.
-- `/api/deals`: HTTP 200; returned deal records.
-- `/api/assistant/query`: returned `SUPPORTED` for the top lost-deal categories question.
-- Assistant explanation status: `AVAILABLE`.
-- Vercel Production commit: confirmed by the operator to match the verified commit above.
+1. Clean-clone validation
+2. Canonical data validation
+3. Analytical output regeneration
+4. Output-contract validation
+5. Production build and environment validation
+6. Operational regression
+7. Data Intelligence validation
+8. Assistant validation
+9. Automated test suite
+10. Selenium validation
+11. Final UAT
+12. Deployment validation
+13. Evidence review
+14. Architecture, completion, and handover review
+15. Final Repomix generation
+16. Dependency security audit on the selected candidate
+17. Focused assistant tests for incorrect numbers and contradictory explanations
+18. Desktop and mobile demonstration review
 
-These checks establish endpoint responsiveness at the time tested. They do not replace the complete regression suite or maintainer certification approval.
+Historical test results must be identified as historical unless rerun against the selected candidate. Do not report unexecuted tests as passing.
 
+## Evidence Index
 
-## Current Production Recheck — 2026-10-29
+- `CLEAN_CLONE_VALIDATION_REPORT.md`
+- `CANONICAL_DATA_PACKAGE_VALIDATION.md`
+- `ANALYTICAL_VALIDATION_REPORT.md`
+- `FINAL_ANALYTICAL_REVALIDATION.md`
+- `FINAL_AUTOMATED_TEST_REPORT.md`
+- `FINAL_OPERATIONAL_REGRESSION_REPORT.md`
+- `FINAL_DATA_INTELLIGENCE_VALIDATION.md`
+- `FINAL_ASSISTANT_VALIDATION.md`
+- `ASSISTANT_UAT.md`
+- `ASSISTANT_GROUNDING_VALIDATION.md`
+- `PHASE3_FINAL_UAT.md`
+- `DEPLOYMENT_VALIDATION_REPORT.md`
+- `PHASE3_COMPLETION_REPORT.md`
+- `PHASE3_HANDOVER_GUIDE.md`
+- `repomix-phase3-pre-certification.xml` (existing pre-certification snapshot; regenerate before final submission)
 
-Production revision shown in the Vercel dashboard screenshot reviewed on 2026-10-29:
-`d40e674914642f5114c8457609e26d6255b9b6a2` (`main`, manifest update).
+Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
 
-Live endpoint checks performed on 2026-10-29:
-- Dashboard: HTTP 200.
-- `/api/deals`: HTTP 200.
-- `/api/intelligence/status`: HTTP 200; status `validated`; data version `phase3-v1.0.0`; method version `1.0.0`; five results.
-- `/api/assistant/query`: HTTP 200 for the supported top-categories question; response status `SUPPORTED`; explanation status `AVAILABLE`; evidence references `POC12-CAT-01` through `POC12-CAT-05`.
-- The assistant response identifies the findings as descriptive and not causal.
-- The analytical output reports `generated_at: 2026-10-11T12:34:47Z`. This is the output&apos;s generation timestamp, not the endpoint recheck time.
+## Known Dataset Limitations
 
-These checks confirm endpoint responsiveness and the observed assistant response for this request. They do not replace candidate-specific regression tests, a full grounding review, or authorized final certification approval.</file><file path="tests/selenium/test_data_intelligence_journey.py">import os
+The canonical dataset is synthetic and contains 20 records. Results must not be interpreted as causal, predictive, geographically representative, or generalizable beyond the approved Phase 3 analytical scope.
+
+Currency is intentionally unspecified unless explicitly established by the dataset or validated release evidence.
+
+Sensitivity analysis indicates that removing record `CRM-012` changes the leading category from Price to Competitor. This is a ranking-sensitivity finding, not proof of causality or guaranteed recoverable revenue.
+
+## Release Rule
+
+The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
+
+Final certification remains pending until that review and approval are recorded.</file><file path="tests/selenium/test_data_intelligence_journey.py">import os
 
 import pytest
 from selenium import webdriver
@@ -14260,7 +14184,88 @@ def intelligence_result(result_id: str):
     raise HTTPException(
         status_code=404,
         detail=&quot;Intelligence result not found&quot;,
-    )</file><file path="docs/FINAL_AUTOMATED_TEST_REPORT.md"># Final Automated Test Report
+    )</file><file path="docs/DEPLOYMENT_VALIDATION_REPORT.md"># Deployment Validation Report
+
+## Status
+
+**Recorded endpoint checks: PASS for the documented validation run.** The Vercel screenshot captured on 2026-10-18 documents the Production deployment at that time. It does not establish that the current feature branch is deployed or that the current deployment was rechecked today. Final Phase 3 certification: **PENDING**.
+
+## Production URL
+
+https://poc-12-lost-deal-recovery.vercel.app
+
+## Deployment Commit
+
+The Vercel dashboard screenshot captured on 2026-10-18 shows `96c9730` (Ready, Production), matching local `main` commit `96c97305e20b174b33e59009b7551a0cf44a312b` at the time of review. The screenshot also lists the earlier deployment `9c795a6`. The previous report&apos;s `34b063a` reference is superseded by this newer historical deployment evidence. This screenshot does not establish that the current feature branch is deployed.
+
+## Live Validation
+
+### `/api/intelligence/status`
+
+- HTTP request successful
+- status: `validated`
+- data_version: `phase3-v1.0.0`
+- method_version: `1.0.0`
+- result_count: 5
+
+### `/api/intelligence/metadata`
+
+- validation result: PASS
+- passed: true
+- record_count: 20
+- primary_group_count: 5
+- contribution_total_percent: 100.0
+
+### `/api/intelligence/summary`
+
+- five approved rankings returned
+- limitations preserved
+- weak-case review preserved
+
+### `/api/intelligence/results`
+
+- HTTP request successful
+- five validated results returned
+- pagination contract valid
+- ranking order valid
+
+## Conclusion
+
+The recorded production endpoint checks passed for the documented validation run, and the deployment screenshot records the Production state observed on 2026-10-18. These records do not independently establish current deployment availability, deployment of the current feature branch, or final Phase 3 certification. Recheck the production URL and deployment commit during final release review if current status is required.
+
+## Current Production Recheck — 2026-10-20
+
+Verified production commit: `18659b08a637ba97a055bf0bf904f54952a6d00e`.
+
+Observed checks:
+- Dashboard URL: HTTP 200.
+- `/api/deals`: HTTP 200; returned deal records.
+- `/api/assistant/query`: returned `SUPPORTED` for the top lost-deal categories question.
+- Assistant explanation status: `AVAILABLE`.
+- Vercel Production commit: confirmed by the operator to match the verified commit above.
+
+These checks establish endpoint responsiveness at the time tested. They do not replace the complete regression suite or maintainer certification approval.
+
+
+## Current Production Recheck — 2026-10-29
+
+Production revision shown in the Vercel dashboard screenshot reviewed on 2026-10-29:
+`d40e674914642f5114c8457609e26d6255b9b6a2` (`main`, manifest update).
+
+Live endpoint checks performed on 2026-10-29:
+- Dashboard: HTTP 200.
+- `/api/deals`: HTTP 200.
+- `/api/intelligence/status`: HTTP 200; status `validated`; data version `phase3-v1.0.0`; method version `1.0.0`; five results.
+- `/api/assistant/query`: HTTP 200 for the supported top-categories question; response status `SUPPORTED`; explanation status `AVAILABLE`; evidence references `POC12-CAT-01` through `POC12-CAT-05`.
+- The assistant response identifies the findings as descriptive and not causal.
+- The analytical output reports `generated_at: 2026-10-11T12:34:47Z`. This is the output&apos;s generation timestamp, not the endpoint recheck time.
+
+These checks confirm endpoint responsiveness and the observed assistant response for this request. They do not replace candidate-specific regression tests, a full grounding review, or authorized final certification approval.
+### Production UI Recheck — 2026-10-29
+
+The deployed Vercel dashboard was rechecked after the production environment configuration and redeployment. The supported top-categories query returned a grounded answer, and the Gemini explanation was displayed with supporting evidence references and the descriptive, non-causal limitation. The dashboard also displayed data version `phase3-v1.0.0` and analytical method version `1.0.0`.
+
+This UI observation supplements the endpoint checks above. It does not replace the complete regression suite or authorized maintainer certification approval.</file><file path="docs/FINAL_AUTOMATED_TEST_REPORT.md"># Final Automated Test Report
 
 ## Status
 
@@ -14408,58 +14413,7 @@ The earlier audit findings describe the historical dependency state. The suggest
 
 ## Current Clean-Clone Test Count Note
 
-The recorded Python suite result is 61 passed. The 30 assistant security tests are included within that suite and must not be added again. The standalone Selenium journey passed separately and is not included in the Python test count. Earlier reports showing 59 Python tests reflect an earlier run.</file><file path=".gitignore"># See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-__pycache__/
-.env
-
-# Safe example configuration can be committed
-!.env.example
-
-# Generated pre-certification artifact
-repomix-phase3-pre-certification.md
-
-# Keep local review Repomix out of feature PRs
-/repomix-phase3-review.xml</file><file path="app/page.tsx">&quot;use client&quot;;
+The recorded Python suite result is 61 passed. The 30 assistant security tests are included within that suite and must not be added again. The standalone Selenium journey passed separately and is not included in the Python test count. Earlier reports showing 59 Python tests reflect an earlier run.</file><file path="app/page.tsx">&quot;use client&quot;;
 
 import { useEffect, useMemo, useState } from &quot;react&quot;;
 import {
@@ -15129,4 +15083,59 @@ export default function Home() {
       )}
     &lt;/main&gt;
   );
-}</file></files></repomix>
+}</file><file path=".gitignore"># See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+__pycache__/
+.env
+
+# Safe example configuration can be committed
+!.env.example
+
+# Generated pre-certification artifact
+repomix-phase3-pre-certification.md
+
+# Keep local review Repomix out of feature PRs
+/repomix-phase3-review.xml
+
+# Local Python virtual environment
+.venv/
+venv/</file></files></repomix>
