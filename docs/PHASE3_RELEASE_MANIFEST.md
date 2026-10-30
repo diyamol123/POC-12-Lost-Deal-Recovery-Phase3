@@ -22,9 +22,12 @@
 ## Commit and Tag Integrity
 
 - Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
-- Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- Selected merged candidate commit (historical): `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- Latest submitted candidate commit: `46735cd659ae4385558adadbc099f50d8390389a`
 - Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
-- Latest deployment status: `Ready`; operator reports no build or runtime errors.
+- Latest deployment commit: `46735cd659ae4385558adadbc099f50d8390389a`
+- Latest Vercel Production status: `Ready`; deployment is marked Current on branch `main`.
+- Operator smoke check: the live operational dashboard, Data Intelligence features, CRM evidence details, and Gemini explanations were reported working.
 - Existing annotated tag: `phase3-v1.0.0`
 - Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
 - Tag disposition: Preserve the existing tag and its target. Do not move it.
@@ -41,7 +44,7 @@ The deployment report records a production recheck in which:
 - A supported top-categories assistant query returned `SUPPORTED`.
 - The assistant explanation status was `AVAILABLE`.
 
-These observations establish endpoint responsiveness at the time of the recorded check. Consult `DEPLOYMENT_VALIDATION_REPORT.md` for the recorded revision and test context. Re-run the required production checks after the final candidate deployment and update the report with the exact revision and date.
+These endpoint observations belong to the historical check documented in `DEPLOYMENT_VALIDATION_REPORT.md`. The latest deployment and operator smoke check are recorded separately below. The operator-confirmed feature check does not replace independently recorded HTTP endpoint checks.
 
 ## Analytical Scope
 
@@ -101,7 +104,8 @@ Historical test results must be identified as historical unless rerun against th
 - `PHASE3_COMPLETION_REPORT.md`
 - `PHASE3_HANDOVER_GUIDE.md`
 - `repomix-phase3-pre-certification.xml` (historical pre-certification snapshot)
-- `repomix-phase3-final-candidate.xml` (fresh snapshot generated from working tree revision `b23b2ab73c4b891bed22e5599545985622570288`; XML parsing, excluded-path check, whitespace check, and common secret-pattern scan passed; candidate-specific validation and final certification approval remain pending)
+- `repomix-phase3-final-candidate.xml` (historical candidate snapshot generated from working tree revision `b23b2ab73c4b891bed22e5599545985622570288`)
+- `repomix-post6-final.xml` (latest submitted candidate snapshot, included in commit `46735cd659ae4385558adadbc099f50d8390389a`)
 
 Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
 
@@ -128,7 +132,15 @@ Final certification remains pending until that review and approval are recorded.
 - **Result:** 61 passed, 0 failed
 - **Execution time:** 1.86 seconds
 - **Selenium Data Intelligence journey:** 1 passed in 2.05 seconds
-- **Scope:** The diff between the tested checkout and selected candidate contains only `.gitignore`, deployment documentation, release-manifest documentation, and the generated Repomix snapshot. No application or test source files differ.
+- **Scope:** Historical test results for the earlier tested checkout and selected candidate; they are not represented as a fresh test run on the latest candidate.
+
+### Latest Candidate Local Validation
+
+- **Submitted candidate source commit:** `46735cd659ae4385558adadbc099f50d8390389a`
+- **Python tests:** 63 passed, 0 failed (`tests/assistant`, `tests/intelligence-api`, `tests/intelligence-ui`, and `tests/regression`).
+- **Frontend lint:** `npm run lint` completed successfully.
+- **Production build:** `npm run build` completed successfully using Next.js 16.4.1.
+- **Execution note:** These checks were run against the working-tree source subsequently committed as the submitted candidate. They were not rerun after the commit was created.
 
 ### Dependency Audit
 
@@ -143,6 +155,15 @@ Final certification remains pending until that review and approval are recorded.
 - **Production commit:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62` — reported by the operator as matching the current GitHub commit.
 - **Operator smoke check:** Dashboard, deals data, Data Intelligence, and assistant features reported working.
 - **Evidence limitation:** The commit alignment and smoke-check results are operator-confirmed; retain the corresponding Vercel deployment details and dated endpoint checks as supporting evidence.
+
+### Latest Production Deployment Verification
+
+- **Production URL:** https://poc-12-lost-deal-recovery.vercel.app/
+- **Vercel deployment:** Ready; marked Current in the Production environment.
+- **Deployed branch:** `main`
+- **Deployed commit:** `46735cd659ae4385558adadbc099f50d8390389a`
+- **Operator smoke check:** The operator confirmed that the live website and the tested CRM evidence and Gemini explanation features are working.
+- **Evidence note:** This is an operator-confirmed live feature check. It is not a claim that every certification gate or independent endpoint test has been completed.
 
 ### Certification Status
 
