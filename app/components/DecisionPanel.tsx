@@ -36,7 +36,7 @@ export default function DecisionPanel({
         </div>
 
         <div>
-          <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+          <div className="text-xs font-semibold tracking-[0.25em] text-[#38BDF8]">
             MANAGEMENT DECISION SUPPORT
           </div>
 
@@ -48,7 +48,7 @@ export default function DecisionPanel({
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-          <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
+          <div className="flex items-center gap-2 text-xs tracking-widest text-slate-500">
             <Target className="h-3.5 w-3.5" />
             LOST DEALS
           </div>
@@ -59,8 +59,8 @@ export default function DecisionPanel({
         </div>
 
         <div className="rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-          <div className="text-[9px] tracking-widest text-slate-500">
-            PIPELINE VALUE LOST
+          <div className="text-xs tracking-widest text-slate-500">
+            OBSERVED LOST-DEAL VALUE
           </div>
 
           <div className="mt-2 text-xl font-bold text-slate-100">
@@ -69,7 +69,7 @@ export default function DecisionPanel({
         </div>
 
         <div className="rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-          <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
+          <div className="flex items-center gap-2 text-xs tracking-widest text-slate-500">
             <AlertTriangle className="h-3.5 w-3.5" />
             HIGH PRIORITY
           </div>
@@ -80,8 +80,8 @@ export default function DecisionPanel({
         </div>
 
         <div className="rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-          <div className="text-[9px] tracking-widest text-slate-500">
-            TOP LOSS REASON
+          <div className="text-xs tracking-widest text-slate-500">
+            TOP REASON BY VALUE
           </div>
 
           <div className="mt-2 truncate text-sm font-semibold text-[#38BDF8]">
@@ -92,21 +92,21 @@ export default function DecisionPanel({
 
       <div className="mt-5 grid gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-          <div className="flex items-center gap-2 text-[9px] font-semibold tracking-widest text-[#38BDF8]">
+          <div className="flex items-center gap-2 text-xs font-semibold tracking-widest text-[#38BDF8]">
             <ArrowUpRight className="h-3.5 w-3.5" />
             INVESTIGATE
           </div>
 
           <p className="mt-3 text-sm leading-6 text-slate-300">
-            Investigate why <strong>{topReason}</strong> is
-            the leading loss reason. Review pricing,
-            product fit, buyer objections and follow-up
-            timing before changing the sales strategy.
+            <strong>{topReason}</strong> has the highest observed
+            lost-deal value in the current filter selection. Review
+            the supporting records and documented buyer objections
+            before changing the sales strategy.
           </p>
         </div>
 
         <div className="rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-          <div className="text-[9px] font-semibold tracking-widest text-[#818CF8]">
+          <div className="text-xs font-semibold tracking-widest text-[#818CF8]">
             COMPETITIVE SIGNAL
           </div>
 
@@ -121,15 +121,15 @@ export default function DecisionPanel({
       </div>
 
       <div className="mt-4 rounded-xl border border-[#38BDF8]/10 bg-[#38BDF8]/5 p-4">
-        <div className="text-[9px] font-semibold tracking-widest text-slate-500">
-          RECOVERY STRATEGY
+        <div className="text-xs font-semibold tracking-widest text-slate-500">
+          HUMAN REVIEW GUIDANCE
         </div>
 
-        <p className="mt-2 text-xs leading-5 text-slate-400">
-          Prioritize high-value opportunities where the
-          loss reason is addressable and the buyer has not
-          permanently closed the opportunity. Use the
-          recovery queue to guide targeted re-engagement.
+        <p className="mt-2 text-sm leading-6 text-slate-400">
+          Use observed value, source records and documented
+          limitations to decide which records merit human review.
+          These descriptive signals do not estimate recovery
+          probability or guarantee recovered revenue.
         </p>
       </div>
     </section>

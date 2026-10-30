@@ -162,11 +162,14 @@ export default function GroundedAssistant({
       {selectedGroup && (
         <button
           type="button"
-          onClick={() => void submit(`What evidence supports ${selectedGroup}?`)}
+          onClick={() =>
+            void submit(`Why is ${selectedGroup} ranked at its current position?`)
+          }
           disabled={loading}
-          className="mb-3 rounded-lg border border-[#818CF8]/30 px-4 py-2.5 text-sm font-medium text-[#A5B4FC] hover:bg-[#818CF8]/10 disabled:opacity-50"
+          aria-label={`Explain the selected ${selectedGroup} finding`}
+          className="mb-3 w-full rounded-lg border border-[#818CF8]/30 px-4 py-3 text-sm font-semibold text-[#A5B4FC] hover:bg-[#818CF8]/10 disabled:opacity-50"
         >
-          Ask about {selectedGroup}
+          Explain this finding with Gemini
         </button>
       )}
 

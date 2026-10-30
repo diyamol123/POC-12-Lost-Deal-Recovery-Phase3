@@ -54,3 +54,6 @@ repomix-phase3-pre-certification.md
 # Local Python virtual environment
 .venv/
 venv/
+
+# Local Python virtual environments
+.venv312/

@@ -249,6 +249,114 @@ def _has_numeric_fidelity(
     )
 
 
+
+def _has_ranking_fidelity(
+    explanation: str,
+    approved_results: dict[str, Any],
+) -> bool:
+    """Reject explicit category ranks that contradict approved Track A results."""
+    import re
+
+    approved_ranks: dict[str, int] = {}
+
+    def collect(value: Any) -> None:
+        if isinstance(value, dict):
+            group = value.get("group_key")
+            rank = value.get("priority_rank")
+            if (
+                isinstance(group, str)
+                and isinstance(rank, int)
+                and not isinstance(rank, bool)
+            ):
+                approved_ranks[group] = rank
+            for child in value.values():
+                collect(child)
+        elif isinstance(value, (list, tuple)):
+            for child in value:
+                collect(child)
+
+    collect(approved_results)
+
+    if not approved_ranks:
+        return False
+
+    ordinal_ranks = {
+        "first": 1,
+        "second": 2,
+        "third": 3,
+        "fourth": 4,
+        "fifth": 5,
+    }
+    rank_token = r"(?P<rank>\d{1,2}|first|second|third|fourth|fifth)\b"
+
+    def parse_rank(match: re.Match[str]) -> int:
+        value = match.group("rank").casefold()
+        return int(value) if value.isdigit() else ordinal_ranks[value]
+
+    for category, expected_rank in approved_ranks.items():
+        category_pattern = re.compile(
+            rf"(?<!\w){re.escape(category)}(?!\w)",
+            re.IGNORECASE,
+        )
+
+        for occurrence in category_pattern.finditer(explanation):
+            start, end = occurrence.span()
+
+            previous_boundaries = [
+                explanation.rfind(mark, 0, start)
+                for mark in ".!?\n"
+            ]
+            sentence_start = max(previous_boundaries) + 1
+
+            next_boundaries = [
+                position
+                for mark in ".!?\n"
+                if (position := explanation.find(mark, end)) >= 0
+            ]
+            sentence_end = min(next_boundaries, default=len(explanation))
+
+            before = explanation[max(sentence_start, start - 80):start]
+            after = explanation[end:min(sentence_end, end + 80)]
+
+            claims = [
+                rf"\b(?:rank(?:s|ed)?|position(?:s|ed)?|placed)\b"
+                rf"(?:\s+(?:at|as|number))?\s*{rank_token}",
+                rf"\b(?:is|was|remains|sits)\s+"
+                rf"(?:ranked\s+)?(?:at\s+)?{rank_token}",
+            ]
+
+            claimed_rank = None
+
+            if re.search(
+                r"\b(?:is|was)\s+the\s+(?:top|highest)-ranked\b"
+                r"|\b(?:is|was)\s+(?:the\s+)?(?:top|highest)\s+category\b",
+                after,
+                re.IGNORECASE,
+            ):
+                claimed_rank = 1
+            else:
+                for pattern in claims:
+                    match = re.search(pattern, after, re.IGNORECASE)
+                    if match:
+                        claimed_rank = parse_rank(match)
+                        break
+
+            if claimed_rank is None:
+                inverse = re.search(
+                    rf"\b(?:rank(?:s|ed)?|position(?:s|ed)?)\b"
+                    rf"(?:\s+(?:at|as))?\s*{rank_token}"
+                    rf"\s*(?:for|of|:|[-–])?\s*$",
+                    before,
+                    re.IGNORECASE,
+                )
+                if inverse:
+                    claimed_rank = parse_rank(inverse)
+
+            if claimed_rank is not None and claimed_rank != expected_rank:
+                return False
+
+    return True
+
 def answer_question(question: str) -> dict[str, Any]:
     """Return a grounded response following the approved response contract."""
 
@@ -299,6 +407,14 @@ def answer_question(question: str) -> dict[str, Any]:
         ):
             raise GeminiExplanationError(
                 "Gemini explanation failed numeric grounding validation."
+            )
+        approved_rankings = get_top_categories()
+        if not _has_ranking_fidelity(
+            gemini_explanation,
+            approved_rankings,
+        ):
+            raise GeminiExplanationError(
+                "Gemini explanation contradicted the approved category ranking."
             )
 
         explanation_status = "AVAILABLE"

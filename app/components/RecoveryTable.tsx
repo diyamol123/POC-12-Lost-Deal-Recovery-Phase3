@@ -27,27 +27,27 @@ export default function RecoveryTable({
   return (
     <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
       <div className="mb-4">
-        <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
-          RECOVERY PRIORITY QUEUE
+        <div className="text-xs font-semibold tracking-[0.25em] text-[#38BDF8]">
+          RECORDS FOR HUMAN REVIEW
         </div>
 
-        <p className="mt-1 text-xs text-slate-500">
-          High-value lost opportunities ranked for potential
-          re-engagement.
+        <p className="mt-1 text-sm leading-6 text-slate-500">
+          Records matching the current filters. Review source
+          details before deciding whether follow-up is appropriate.
         </p>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[850px] text-left">
           <thead>
-            <tr className="border-b border-[#1F2937] text-[9px] uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-[#1F2937] text-xs uppercase tracking-widest text-slate-500">
               <th className="px-3 py-3">Company</th>
               <th className="px-3 py-3">Loss Reason</th>
               <th className="px-3 py-3">Competitor</th>
               <th className="px-3 py-3">Stage</th>
               <th className="px-3 py-3">Value</th>
               <th className="px-3 py-3">Priority</th>
-              <th className="px-3 py-3">Recommended Action</th>
+              <th className="px-3 py-3">Suggested Review Action</th>
             </tr>
           </thead>
 
@@ -62,24 +62,24 @@ export default function RecoveryTable({
                     {item.company}
                   </div>
 
-                  <div className="mt-1 text-[9px] text-slate-600">
+                  <div className="mt-1 text-xs text-slate-600">
                     {item.id}
                   </div>
                 </td>
 
-                <td className="px-3 py-4 text-xs text-slate-400">
+                <td className="px-3 py-4 text-sm text-slate-400">
                   {item.reason}
                 </td>
 
-                <td className="px-3 py-4 text-xs text-slate-400">
+                <td className="px-3 py-4 text-sm text-slate-400">
                   {item.competitor}
                 </td>
 
-                <td className="px-3 py-4 text-xs text-slate-400">
+                <td className="px-3 py-4 text-sm text-slate-400">
                   {item.stage}
                 </td>
 
-                <td className="px-3 py-4 text-xs font-semibold text-slate-200">
+                <td className="px-3 py-4 text-sm font-semibold text-slate-200">
                   {formatValue(item.value)}
                 </td>
 
@@ -91,7 +91,7 @@ export default function RecoveryTable({
                       border
                       px-2.5
                       py-1
-                      text-[9px]
+                      text-xs
                       font-bold
                       tracking-wider
                       ${
@@ -107,7 +107,7 @@ export default function RecoveryTable({
                   </span>
                 </td>
 
-                <td className="max-w-[240px] px-3 py-4 text-xs leading-5 text-slate-400">
+                <td className="max-w-[240px] px-3 py-4 text-sm leading-6 text-slate-400">
                   {item.action}
                 </td>
               </tr>
@@ -118,7 +118,7 @@ export default function RecoveryTable({
 
       {items.length === 0 && (
         <div className="rounded-xl border border-[#1F2937] p-6 text-center text-xs text-slate-500">
-          No recovery opportunities match the current filters.
+          No records match the current filters.
         </div>
       )}
     </section>

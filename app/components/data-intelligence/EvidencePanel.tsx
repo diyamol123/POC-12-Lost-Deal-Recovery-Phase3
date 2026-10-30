@@ -1,13 +1,40 @@
+import { useState } from "react";
 import type { IntelligenceResult } from "@/app/types/intelligence";
+
+type CRMDeal = {
+  id: string;
+  date: string;
+  location: string;
+  team: string;
+  product: string;
+  company: string;
+  segment: string;
+  reason: string;
+  competitor: string;
+  stage: string;
+  value: number;
+  priority: string;
+  action: string;
+};
 
 export default function EvidencePanel({
   result,
   onClose,
+  deals,
+  dealsLoading,
+  dealsError,
 }: {
   result: IntelligenceResult | null;
   onClose: () => void;
+  deals: CRMDeal[];
+  dealsLoading: boolean;
+  dealsError: string;
 }) {
+  const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+
   if (!result) return null;
+
+  const selectedRecord = deals.find((deal) => deal.id === selectedRecordId);
 
   return (
     <>
@@ -95,15 +122,90 @@ export default function EvidencePanel({
 
               <div className="mt-2 flex flex-wrap gap-2">
                 {result.evidence.record_ids.map((id) => (
-                  <span
+                  <button
                     key={id}
-                    className="rounded-full border border-[#1F2937] px-2 py-1 text-[10px] text-slate-400"
+                    type="button"
+                    aria-pressed={selectedRecordId === id}
+                    onClick={() =>
+                      setSelectedRecordId((current) => current === id ? null : id)
+                    }
+                    className={`rounded-full border px-3 py-1.5 text-xs transition focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/60 ${
+                      selectedRecordId === id
+                        ? "border-[#38BDF8] bg-[#38BDF8]/15 text-[#7DD3FC]"
+                        : "border-[#1F2937] text-slate-400 hover:border-[#38BDF8]/50 hover:text-slate-200"
+                    }`}
                   >
                     {id}
-                  </span>
+                  </button>
                 ))}
               </div>
+              <p className="mt-2 text-xs text-slate-500">
+                Select a record ID to inspect its CRM details.
+              </p>
             </div>
+
+            {selectedRecordId && (
+              <section
+                aria-live="polite"
+                aria-label={`CRM record ${selectedRecordId} details`}
+                className="mt-4 rounded-xl border border-[#38BDF8]/30 bg-[#38BDF8]/5 p-4"
+              >
+                <div className="text-xs font-semibold uppercase tracking-wide text-[#38BDF8]">
+                  CRM RECORD INSPECTION
+                </div>
+                {dealsLoading ? (
+                  <p className="mt-3 text-sm text-slate-400">
+                    Loading CRM record details...
+                  </p>
+                ) : dealsError ? (
+                  <p role="alert" className="mt-3 text-sm text-amber-300">
+                    {dealsError}
+                  </p>
+                ) : !selectedRecord ? (
+                  <p className="mt-3 text-sm text-amber-300">
+                    Record {selectedRecordId} was not found in the operational CRM response.
+                  </p>
+                ) : (
+                  <>
+                    <h3 className="mt-3 text-base font-semibold text-slate-100">
+                      {selectedRecord.company}
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {selectedRecord.id} · {selectedRecord.date}
+                    </p>
+                    <dl className="mt-4 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                      {[
+                        ["Loss reason", selectedRecord.reason],
+                        ["Competitor", selectedRecord.competitor],
+                        ["Stage", selectedRecord.stage],
+                        ["Segment", selectedRecord.segment],
+                        ["Location", selectedRecord.location],
+                        ["Team", selectedRecord.team],
+                        ["Product", selectedRecord.product],
+                        ["Priority label", selectedRecord.priority],
+                        [
+                          "Observed value (currency unspecified)",
+                          selectedRecord.value.toLocaleString("en-IN", {
+                            maximumFractionDigits: 0,
+                          }),
+                        ],
+                      ].map(([label, value]) => (
+                        <div key={label} className="rounded-lg border border-[#1F2937] bg-[#030712]/70 p-3">
+                          <dt className="text-xs text-slate-500">{label}</dt>
+                          <dd className="mt-1 break-words font-medium text-slate-200">{value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <div className="mt-3 rounded-lg border border-[#1F2937] bg-[#030712]/70 p-3">
+                      <div className="text-xs text-slate-500">Recorded action</div>
+                      <p className="mt-1 text-sm leading-6 text-slate-300">
+                        {selectedRecord.action}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </section>
+            )}
           </section>
 
           <section className="rounded-xl border border-amber-400/20 bg-amber-400/5 p-4">

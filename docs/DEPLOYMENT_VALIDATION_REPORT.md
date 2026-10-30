@@ -80,3 +80,36 @@ These checks confirm endpoint responsiveness and the observed assistant response
 The deployed Vercel dashboard was rechecked after the production environment configuration and redeployment. The supported top-categories query returned a grounded answer, and the Gemini explanation was displayed with supporting evidence references and the descriptive, non-causal limitation. The dashboard also displayed data version `phase3-v1.0.0` and analytical method version `1.0.0`.
 
 This UI observation supplements the endpoint checks above. It does not replace the complete regression suite or authorized maintainer certification approval.
+
+## Current Production Recheck — 2026-10-30
+
+Production commit: `b0d6185226ad8810815b289f5ad1a094347fa994`.
+
+The operator confirmed that Vercel Production is deployed from the same
+commit as GitHub `main`.
+
+Live checks performed on 2026-10-30:
+
+- Dashboard: HTTP 200.
+- `/api/deals`: HTTP 200.
+- `/api/intelligence/status`: HTTP 200.
+- Intelligence status: `validated`.
+- Data version: `phase3-v1.0.0`.
+- Method version: `1.0.0`.
+- Quality status: `validated`.
+- Approved track: Track A — Comparative Intelligence.
+- Result count: 5.
+- Supported assistant query: `SUPPORTED`.
+- Assistant explanation status: `AVAILABLE`.
+- Evidence references: `POC12-CAT-01` through `POC12-CAT-05`.
+- Confidence: `deterministic`.
+- Approved descriptive, non-causal limitation preserved.
+
+The analytical output generation timestamp is
+`2026-10-11T12:34:47Z`; this is not the production recheck time.
+
+These checks establish current endpoint responsiveness and the observed
+assistant response. They do not independently establish completion of
+every release certification requirement or authorized maintainer approval.
+
+Final Phase 3 certification remains pending.

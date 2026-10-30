@@ -54,8 +54,8 @@ const competitorOrder = [
   "Azure",
 ];
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", {
+function formatObservedValue(value: number) {
+  return new Intl.NumberFormat("en-IN", {
     maximumFractionDigits: 0,
   }).format(value);
 }
@@ -145,17 +145,17 @@ export default function Home() {
     }))
     .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count);
-    const lossReasonValues = reasonOrder
-  .map((reason) => ({
-    reason,
-    value: filteredDeals
-      .filter((deal) => deal.reason === reason)
-      .reduce((sum, deal) => sum + deal.value, 0),
-  }))
-  .filter((item) => item.value > 0)
-  .sort((a, b) => b.value - a.value);
+  const lossReasonValues = reasonOrder
+    .map((reason) => ({
+      reason,
+      value: filteredDeals
+        .filter((deal) => deal.reason === reason)
+        .reduce((sum, deal) => sum + deal.value, 0),
+    }))
+    .filter((item) => item.value > 0)
+    .sort((a, b) => b.value - a.value);
 
-  const topReason = lossReasons[0]?.reason ?? "No data";
+  const topReason = lossReasonValues[0]?.reason ?? "No data";
 
   const competitorCounts = competitorOrder
     .map((competitor) => {
@@ -301,7 +301,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 border-b border-[#1F2937] bg-[#030712]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 lg:px-8">
           <div>
-            <div className="text-[9px] font-semibold tracking-[0.35em] text-[#38BDF8]">
+            <div className="text-xs font-semibold tracking-wider text-[#38BDF8]">
               INFOCREON INTERNSHIP • BUSINESS INTELLIGENCE
             </div>
 
@@ -309,7 +309,7 @@ export default function Home() {
               LOST DEAL REASON & RECOVERY INTELLIGENCE
             </h1>
 
-            <p className="mt-1 text-[9px] tracking-[0.25em] text-slate-500">
+            <p className="mt-1 text-xs tracking-wide text-slate-500">
               LEADS & CONVERSION • MANAGEMENT INTELLIGENCE
             </p>
           </div>
@@ -331,11 +331,11 @@ export default function Home() {
           <Database className="mt-0.5 h-4 w-4 shrink-0 text-[#38BDF8]" />
 
           <div>
-            <div className="text-[9px] font-semibold tracking-widest text-[#38BDF8]">
+            <div className="text-xs font-semibold tracking-wide text-[#38BDF8]">
               DATA SOURCE
             </div>
 
-            <p className="mt-1 text-xs leading-5 text-slate-400">
+            <p className="mt-1 text-sm leading-6 text-slate-400">
               Synthetic CRM loss and follow-up dataset served through the
               FastAPI backend for demonstration and decision-support
               purposes. Company names and records shown here are synthetic
@@ -408,14 +408,14 @@ export default function Home() {
               },
             ].map((filter) => (
               <label key={filter.label}>
-                <div className="mb-1.5 text-[8px] tracking-widest text-slate-500">
+                <div className="mb-1.5 text-xs font-medium tracking-wide text-slate-500">
                   {filter.label}
                 </div>
 
                 <select
                   value={filter.value}
                   onChange={(event) => filter.setValue(event.target.value)}
-                  className="w-full rounded-lg border border-[#1F2937] bg-[#030712] px-3 py-2.5 text-xs text-slate-200 outline-none transition focus:border-[#38BDF8]/50"
+                  className="w-full rounded-lg border border-[#1F2937] bg-[#030712] px-3 py-2.5 text-sm text-slate-200 outline-none transition focus:border-[#38BDF8]/50"
                 >
                   {filter.options.map((option) => (
                     <option key={option} value={option}>
@@ -431,59 +431,59 @@ export default function Home() {
         {/* KPI GRID */}
         <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5">
-            <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
+            <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-slate-500">
               <TrendingDown className="h-4 w-4 text-[#38BDF8]" />
               LOST DEALS
             </div>
 
             <div className="mt-3 text-3xl font-bold">{totalLost}</div>
 
-            <div className="mt-1 text-[10px] text-slate-500">
+            <div className="mt-1 text-xs text-slate-500">
               Filtered opportunities
             </div>
           </div>
 
           <div className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5">
-            <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
+            <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-slate-500">
               <Database className="h-4 w-4 text-[#38BDF8]" />
               OBSERVED LOST-DEAL VALUE
             </div>
 
             <div className="mt-3 text-2xl font-bold">
-              {formatCurrency(totalValue)}
+              {formatObservedValue(totalValue)}
             </div>
 
-            <div className="mt-1 text-[10px] text-slate-500">
+            <div className="mt-1 text-xs text-slate-500">
               Total value of lost opportunities
             </div>
           </div>
 
           <div className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5">
-            <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
+            <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-slate-500">
               <AlertTriangle className="h-4 w-4 text-red-300" />
-              HIGH PRIORITY
+              HIGH-PRIORITY RECORDS
             </div>
 
             <div className="mt-3 text-3xl font-bold text-red-300">
               {highPriority}
             </div>
 
-            <div className="mt-1 text-[10px] text-slate-500">
-              Opportunities requiring action
+            <div className="mt-1 text-xs text-slate-500">
+              Records carrying the HIGH priority label in the source data
             </div>
           </div>
 
           <div className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5">
-            <div className="flex items-center gap-2 text-[9px] tracking-widest text-slate-500">
+            <div className="flex items-center gap-2 text-xs font-medium tracking-wide text-slate-500">
               <Target className="h-4 w-4 text-[#818CF8]" />
-              AVG DEAL VALUE
+              AVERAGE LOST-DEAL VALUE
             </div>
 
             <div className="mt-3 text-2xl font-bold">
-              {formatCurrency(averageDealValue)}
+              {formatObservedValue(averageDealValue)}
             </div>
 
-            <div className="mt-1 text-[10px] text-slate-500">
+            <div className="mt-1 text-xs text-slate-500">
               Average lost opportunity value
             </div>
           </div>
@@ -553,7 +553,7 @@ export default function Home() {
               SOURCE QUALITY & KPI DEFINITIONS
             </div>
 
-            <div className="mt-4 space-y-3 text-xs leading-5 text-slate-400">
+            <div className="mt-4 space-y-3 text-sm leading-6 text-slate-400">
               <p>
                 <strong className="text-slate-200">Lost Deals:</strong>{" "}
                 Count of opportunities classified as closed-lost in the
@@ -570,8 +570,7 @@ export default function Home() {
 
               <p>
                 <strong className="text-slate-200">High Priority:</strong>{" "}
-                Lost opportunities marked HIGH based on value, buyer stage
-                and recoverability.
+                Lost opportunities labelled HIGH in the synthetic CRM sample. This label is not a validated recovery-probability estimate.
               </p>
 
               <p>
@@ -640,7 +639,7 @@ export default function Home() {
             </p>
 
             <div className="mt-5 rounded-xl border border-[#1F2937] bg-[#030712] p-4">
-              <div className="text-[9px] tracking-widest text-slate-500">
+              <div className="text-xs font-medium tracking-wide text-slate-500">
                 DEVELOPER SIGNATURE
               </div>
 
@@ -652,7 +651,7 @@ export default function Home() {
                 Batch: Batch 8 / MA College
               </div>
 
-              <div className="mt-2 text-xs leading-5 text-slate-400">
+              <div className="mt-2 text-sm leading-6 text-slate-400">
                 Stack: Next.js, FastAPI, Tailwind CSS, Apache ECharts
               </div>
 

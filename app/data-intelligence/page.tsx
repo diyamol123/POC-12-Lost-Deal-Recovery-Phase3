@@ -25,6 +25,22 @@ import IntelligenceStatePanel from "@/app/components/data-intelligence/Intellige
 import GroundedAssistant from "@/app/components/grounded-assistant/GroundedAssistant";
 import SensitivityPanel from "@/app/components/data-intelligence/SensitivityPanel";
 
+type CRMDeal = {
+  id: string;
+  date: string;
+  location: string;
+  team: string;
+  product: string;
+  company: string;
+  segment: string;
+  reason: string;
+  competitor: string;
+  stage: string;
+  value: number;
+  priority: string;
+  action: string;
+};
+
 export default function DataIntelligencePage() {
   const [pkg, setPkg] = useState<IntelligencePackage | null>(null);
   const [error, setError] = useState("");
@@ -36,6 +52,10 @@ export default function DataIntelligencePage() {
   const [category, setCategory] = useState("ALL");
   const [quality, setQuality] = useState("ALL");
   const [selected, setSelected] = useState<IntelligenceResult | null>(null);
+  const [evidenceOpen, setEvidenceOpen] = useState(false);
+  const [deals, setDeals] = useState<CRMDeal[]>([]);
+  const [dealsLoading, setDealsLoading] = useState(true);
+  const [dealsError, setDealsError] = useState("");
 
   const load = useCallback(() => {
     setLoading(true);
@@ -87,6 +107,45 @@ export default function DataIntelligencePage() {
     void load();
   }, [load]);
 
+  // Reuse the existing operational CRM endpoint for evidence inspection.
+  useEffect(() => {
+    let active = true;
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "";
+
+    fetch(`${apiBaseUrl}/api/deals`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`CRM request failed: HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data: unknown) => {
+        if (!Array.isArray(data)) {
+          throw new Error("The CRM endpoint returned an invalid record list.");
+        }
+        if (active) {
+          setDeals(data as CRMDeal[]);
+          setDealsError("");
+        }
+      })
+      .catch((err) => {
+        if (active) {
+          setDealsError(
+            err instanceof Error
+              ? err.message
+              : "Unable to load CRM record details."
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setDealsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const groups = useMemo(
     () =>
       pkg
@@ -126,6 +185,8 @@ export default function DataIntelligencePage() {
     setGroup("ALL");
     setCategory("ALL");
     setQuality("ALL");
+    setSelected(null);
+    setEvidenceOpen(false);
   };
 
   if (loading || state === "loading") {
@@ -217,9 +278,16 @@ export default function DataIntelligencePage() {
           <div className="grid gap-5 lg:grid-cols-[1.3fr_0.7fr]">
             <ComparativeRanking
               results={filteredResults}
-              onSelect={setSelected}
+              onSelect={(result) => {
+                setSelected(result);
+                setEvidenceOpen(true);
+              }}
+              selectedResultId={selected?.result_id ?? null}
             />
-            <KeyFindingsPanel summary={pkg.summary} />
+            <div className="space-y-5">
+              <KeyFindingsPanel summary={pkg.summary} />
+              <GroundedAssistant selectedGroup={selected?.group_key} />
+            </div>
           </div>
         )}
 
@@ -228,13 +296,17 @@ export default function DataIntelligencePage() {
           <LimitationsPanel summary={pkg.summary} />
         </div>
 
-        <SensitivityPanel />
+        <SensitivityPanel selectedCategory={selected?.group_key} />
         <EvidencePanel
-          result={selected}
-          onClose={() => setSelected(null)}
+          key={selected?.result_id ?? "no-selection"}
+          result={evidenceOpen ? selected : null}
+          onClose={() => setEvidenceOpen(false)}
+          deals={deals}
+          dealsLoading={dealsLoading}
+          dealsError={dealsError}
         />
 
-        <GroundedAssistant selectedGroup={selected?.group_key} />
+
       </div>
     </main>
   );

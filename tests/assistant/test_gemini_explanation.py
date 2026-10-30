@@ -5,7 +5,7 @@ from backend.assistant.gemini_explanation import (
     GeminiExplanationError,
     explain_deterministic_result,
 )
-from backend.assistant.service import _has_numeric_fidelity, answer_question
+from backend.assistant.service import _has_numeric_fidelity, _has_ranking_fidelity, answer_question
 
 
 def _grounded_result():
@@ -108,6 +108,55 @@ def test_numeric_fidelity_rejects_new_number():
         limitation=_grounded_result()["limitation"],
     )
 
+
+
+def _approved_ranking_result():
+    return {
+        "results": [
+            {"group_key": "Price", "priority_rank": 1},
+            {"group_key": "Competitor", "priority_rank": 2},
+            {"group_key": "Product Fit", "priority_rank": 3},
+            {"group_key": "Timing", "priority_rank": 4},
+            {"group_key": "Budget", "priority_rank": 5},
+        ]
+    }
+
+
+def test_ranking_fidelity_accepts_approved_category_order():
+    explanation = "Price ranks first. Competitor ranks second."
+    assert _has_ranking_fidelity(
+        explanation,
+        _approved_ranking_result(),
+    )
+
+
+def test_ranking_fidelity_rejects_contradictory_category_order():
+    explanation = "Competitor ranks first. Price ranks second."
+    assert not _has_ranking_fidelity(
+        explanation,
+        _approved_ranking_result(),
+    )
+
+
+def test_assistant_falls_back_when_gemini_reverses_category_ranking():
+    contradictory_explanation = (
+        "Competitor ranks first, while Price ranks second."
+    )
+
+    with patch(
+        "backend.assistant.service.explain_deterministic_result",
+        return_value=contradictory_explanation,
+    ):
+        response = answer_question(
+            "Why is Price ranked at its current position?"
+        )
+
+    assert response["status"] == "SUPPORTED"
+    assert response["answer"].startswith("Price ranks 1")
+    assert response["explanation_status"] == "UNAVAILABLE"
+    assert "deterministic result remains authoritative" in (
+        response["gemini_explanation"]
+    )
 
 def test_assistant_keeps_deterministic_answer_when_gemini_fails():
     with patch(

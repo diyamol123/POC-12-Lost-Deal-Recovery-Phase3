@@ -22,7 +22,11 @@ type SensitivityReport = {
 
 const sensitivityReport = report as SensitivityReport;
 
-export default function SensitivityPanel() {
+export default function SensitivityPanel({
+  selectedCategory,
+}: {
+  selectedCategory?: string;
+}) {
   return (
     <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4 sm:p-5">
       <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
@@ -42,12 +46,24 @@ export default function SensitivityPanel() {
         {sensitivityReport.leave_one_out_sensitivity.map((item) => (
           <article
             key={item.category}
-            className="rounded-xl border border-[#1F2937] bg-[#030712] p-3 sm:p-4"
+            aria-current={selectedCategory === item.category ? "true" : undefined}
+            className={`rounded-xl border p-3 sm:p-4 ${
+              selectedCategory === item.category
+                ? "border-[#38BDF8]/60 bg-[#38BDF8]/5"
+                : "border-[#1F2937] bg-[#030712]"
+            }`}
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-sm font-semibold text-slate-100">
-                {item.category}
-              </h3>
+              <div>
+                <h3 className="text-sm font-semibold text-slate-100">
+                  {item.category}
+                </h3>
+                {selectedCategory === item.category && (
+                  <span className="mt-1 inline-block text-xs font-medium text-[#7DD3FC]">
+                    Selected finding
+                  </span>
+                )}
+              </div>
               <span className="text-[10px] text-slate-500">
                 {item.rank_changes.length} ranking change
                 {item.rank_changes.length === 1 ? "" : "s"}
@@ -83,7 +99,15 @@ export default function SensitivityPanel() {
                   })}{" "}
                   (currency unspecified)
                 </p>
-                <p className="mt-3 text-[10px] font-semibold tracking-wider text-slate-500">
+                {item.category === "Price" && (
+                  <p className="mt-2 text-sm leading-6 text-amber-200">
+                    Removing {change.removed_record_id} changes the leading
+                    category from {item.baseline_ranking[0]} to{" "}
+                    {change.ranking_after_removal[0]}. The record remains in
+                    the approved baseline dataset.
+                  </p>
+                )}
+                <p className="mt-3 text-xs font-semibold tracking-wider text-slate-400">
                   RANKING AFTER REMOVAL
                 </p>
                 <ol className="mt-2 list-inside list-decimal space-y-1 text-xs text-slate-300">

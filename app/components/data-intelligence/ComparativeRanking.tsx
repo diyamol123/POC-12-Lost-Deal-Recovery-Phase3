@@ -7,9 +7,11 @@ function formatValue(value: number) {
 export default function ComparativeRanking({
   results,
   onSelect,
+  selectedResultId,
 }: {
   results: IntelligenceResult[];
   onSelect: (result: IntelligenceResult) => void;
+  selectedResultId?: string | null;
 }) {
   return (
     <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
@@ -27,8 +29,13 @@ export default function ComparativeRanking({
             key={result.result_id}
             type="button"
             aria-label={`View evidence for ${result.group_key}`}
+            aria-pressed={selectedResultId === result.result_id}
             onClick={() => onSelect(result)}
-            className="w-full rounded-xl border border-[#1F2937] bg-[#030712] p-4 text-left transition hover:border-[#38BDF8]/30"
+            className={`w-full rounded-xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/50 ${
+              selectedResultId === result.result_id
+                ? "border-[#38BDF8] bg-[#38BDF8]/10"
+                : "border-[#1F2937] bg-[#030712] hover:border-[#38BDF8]/40"
+            }`}
           >
             <div className="flex items-start gap-3">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#38BDF8]/20 bg-[#38BDF8]/5 text-sm font-bold text-[#38BDF8]">

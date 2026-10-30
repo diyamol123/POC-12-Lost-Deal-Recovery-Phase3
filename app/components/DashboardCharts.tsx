@@ -80,14 +80,22 @@ export default function DashboardCharts({
   const paretoOption = {
     backgroundColor: "transparent",
 
+    legend: {
+      top: 4,
+      textStyle: { color: "#94a3b8", fontSize: 12 },
+      data: ["Lost deals", "Cumulative percentage"],
+    },
     tooltip: {
+      backgroundColor: "#0f172a",
+      borderColor: "#334155",
+      textStyle: { color: "#e2e8f0", fontSize: 12 },
       trigger: "axis",
     },
 
     grid: {
       left: 45,
       right: 45,
-      top: 35,
+      top: 55,
       bottom: 70,
     },
 
@@ -97,7 +105,7 @@ export default function DashboardCharts({
       axisLabel: {
         color: "#94a3b8",
         rotate: 25,
-        fontSize: 10,
+        fontSize: 12,
       },
       axisLine: {
         lineStyle: {
@@ -112,9 +120,11 @@ export default function DashboardCharts({
         name: "Deals",
         nameTextStyle: {
           color: "#64748b",
+          fontSize: 12,
         },
         axisLabel: {
           color: "#64748b",
+          fontSize: 12,
         },
         splitLine: {
           lineStyle: {
@@ -129,6 +139,7 @@ export default function DashboardCharts({
         max: 100,
         axisLabel: {
           color: "#64748b",
+          fontSize: 12,
         },
         splitLine: {
           show: false,
@@ -168,6 +179,7 @@ export default function DashboardCharts({
 
   /* ---------------- OBSERVED LOST-DEAL VALUE BY REASON ---------------- */
 
+
   const valueLabels = lossReasonValues.map(
     (item) => item.reason
   );
@@ -180,6 +192,9 @@ export default function DashboardCharts({
     backgroundColor: "transparent",
 
     tooltip: {
+      backgroundColor: "#0f172a",
+      borderColor: "#334155",
+      textStyle: { color: "#e2e8f0", fontSize: 12 },
       trigger: "axis",
       valueFormatter: (value: number) =>
         numberFormat.format(value),
@@ -199,7 +214,7 @@ export default function DashboardCharts({
       axisLabel: {
         color: "#94a3b8",
         rotate: 25,
-        fontSize: 10,
+        fontSize: 12,
       },
       axisLine: {
         lineStyle: {
@@ -213,9 +228,11 @@ export default function DashboardCharts({
       name: "Observed value",
       nameTextStyle: {
         color: "#64748b",
+        fontSize: 12,
       },
       axisLabel: {
         color: "#64748b",
+        fontSize: 12,
         formatter: (value: number) =>
           numberFormat.format(value),
       },
@@ -271,6 +288,9 @@ export default function DashboardCharts({
     backgroundColor: "transparent",
 
     tooltip: {
+      backgroundColor: "#0f172a",
+      borderColor: "#334155",
+      textStyle: { color: "#e2e8f0", fontSize: 12 },
       position: "top",
       formatter: (params: {
         data: [number, number, number];
@@ -297,7 +317,7 @@ export default function DashboardCharts({
       data: segmentLabels,
       axisLabel: {
         color: "#94a3b8",
-        fontSize: 10,
+        fontSize: 12,
       },
       axisLine: {
         lineStyle: {
@@ -311,7 +331,7 @@ export default function DashboardCharts({
       data: reasonLabels,
       axisLabel: {
         color: "#94a3b8",
-        fontSize: 9,
+        fontSize: 12,
       },
       axisLine: {
         lineStyle: {
@@ -329,6 +349,7 @@ export default function DashboardCharts({
       bottom: 0,
       textStyle: {
         color: "#64748b",
+        fontSize: 12,
       },
     },
 
@@ -339,7 +360,7 @@ export default function DashboardCharts({
         label: {
           show: true,
           color: "#e2e8f0",
-          fontSize: 10,
+          fontSize: 12,
         },
         emphasis: {
           itemStyle: {
@@ -357,6 +378,9 @@ export default function DashboardCharts({
     backgroundColor: "transparent",
 
     tooltip: {
+      backgroundColor: "#0f172a",
+      borderColor: "#334155",
+      textStyle: { color: "#e2e8f0", fontSize: 12 },
       trigger: "axis",
     },
 
@@ -372,7 +396,7 @@ export default function DashboardCharts({
       data: competitors.map((item) => item.competitor),
       axisLabel: {
         color: "#94a3b8",
-        fontSize: 10,
+        fontSize: 12,
         rotate: 20,
       },
       axisLine: {
@@ -387,9 +411,11 @@ export default function DashboardCharts({
       name: "Recorded losses",
       nameTextStyle: {
         color: "#64748b",
+        fontSize: 12,
       },
       axisLabel: {
         color: "#64748b",
+        fontSize: 12,
       },
       splitLine: {
         lineStyle: {
@@ -420,11 +446,11 @@ export default function DashboardCharts({
 
         <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
           <div className="mb-3">
-            <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+            <div className="text-xs font-semibold tracking-wide text-[#38BDF8]">
               OBSERVED LOST-DEAL VALUE BY REASON
             </div>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-sm leading-6 text-slate-500">
               Compares the total observed value of lost opportunities
               across loss reasons in the current filtered dataset.
               Values are presented without a currency designation.
@@ -434,7 +460,7 @@ export default function DashboardCharts({
 
           <ReactECharts
             option={valueOption}
-            style={{ height: 300, width: "100%" }}
+            style={{ height: "clamp(280px, 34vw, 340px)", width: "100%" }}
             opts={{ renderer: "canvas" }}
             onEvents={{
               click: (params: {
@@ -484,11 +510,11 @@ export default function DashboardCharts({
 
         <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
           <div className="mb-3">
-            <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+            <div className="text-xs font-semibold tracking-wide text-[#38BDF8]">
               LOSS-REASON COUNT PARETO
             </div>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-sm leading-6 text-slate-500">
               Ranks loss reasons by deal count, not by total observed
               lost-deal value. Click a bar to inspect the count-based
               signal.
@@ -497,7 +523,7 @@ export default function DashboardCharts({
 
           <ReactECharts
             option={paretoOption}
-            style={{ height: 300, width: "100%" }}
+            style={{ height: "clamp(280px, 34vw, 340px)", width: "100%" }}
             opts={{ renderer: "canvas" }}
             onEvents={{
               click: (params: {
@@ -539,11 +565,11 @@ export default function DashboardCharts({
 
         <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
           <div className="mb-3">
-            <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+            <div className="text-xs font-semibold tracking-wide text-[#38BDF8]">
               SEGMENT HEATMAP
             </div>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-sm leading-6 text-slate-500">
               Shows the distribution of recorded lost-deal counts
               across customer segments and loss reasons.
             </p>
@@ -551,7 +577,7 @@ export default function DashboardCharts({
 
           <ReactECharts
             option={heatmapOption}
-            style={{ height: 300, width: "100%" }}
+            style={{ height: "clamp(280px, 34vw, 340px)", width: "100%" }}
             opts={{ renderer: "canvas" }}
           />
         </section>
@@ -560,11 +586,11 @@ export default function DashboardCharts({
 
         <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
           <div className="mb-3">
-            <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+            <div className="text-xs font-semibold tracking-wide text-[#38BDF8]">
               COMPETITOR LOSS COUNTS
             </div>
 
-            <p className="mt-1 text-xs leading-5 text-slate-500">
+            <p className="mt-1 text-sm leading-6 text-slate-500">
               Shows recorded competitive-loss counts only. Win counts
               are not available in this dataset. Click a bar to inspect
               the selected competitor.
@@ -573,7 +599,7 @@ export default function DashboardCharts({
 
           <ReactECharts
             option={competitorOption}
-            style={{ height: 300, width: "100%" }}
+            style={{ height: "clamp(280px, 34vw, 340px)", width: "100%" }}
             opts={{ renderer: "canvas" }}
             onEvents={{
               click: (params: {
