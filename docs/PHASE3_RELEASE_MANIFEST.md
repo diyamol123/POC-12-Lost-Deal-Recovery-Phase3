@@ -23,9 +23,10 @@
 
 - Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
 - Selected merged candidate commit (historical): `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- Latest submitted candidate commit: `46735cd659ae4385558adadbc099f50d8390389a`
-- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
-- Latest deployment commit: `46735cd659ae4385558adadbc099f50d8390389a`
+- Latest submitted application candidate commit: `46735cd659ae4385558adadbc099f50d8390389a`
+- Production deployment commit: `0ce4c1572f80bd4fccf41efb962f6b2db0fc51cd` (operator-confirmed Vercel Production revision).
+- Latest deployment commit: `0ce4c1572f80bd4fccf41efb962f6b2db0fc51cd`
+- Deployment note: The application candidate and documentation/deployment commit are distinct. The documentation-only update does not change the application candidate identity.
 - Latest Vercel Production status: `Ready`; deployment is marked Current on branch `main`.
 - Operator smoke check: the live operational dashboard, Data Intelligence features, CRM evidence details, and Gemini explanations were reported working.
 - Existing annotated tag: `phase3-v1.0.0`
@@ -136,15 +137,18 @@ Final certification remains pending until that review and approval are recorded.
 
 ### Latest Candidate Local Validation
 
-- **Submitted candidate source commit:** `46735cd659ae4385558adadbc099f50d8390389a`
-- **Python tests:** 63 passed, 0 failed (`tests/assistant`, `tests/intelligence-api`, `tests/intelligence-ui`, and `tests/regression`).
+- **Application candidate:** `46735cd659ae4385558adadbc099f50d8390389a`
+- **Documentation/deployment revision tested:** `0ce4c1572f80bd4fccf41efb962f6b2db0fc51cd`
+- **Python tests:** 64 passed, 0 failed (`PYTHONPATH=. python3 -m pytest -q`).
+- **Backend compilation:** `python3 -m compileall -q backend` completed successfully.
 - **Frontend lint:** `npm run lint` completed successfully.
 - **Production build:** `npm run build` completed successfully using Next.js 16.4.1.
-- **Execution note:** These checks were run against the working-tree source subsequently committed as the submitted candidate. They were not rerun after the commit was created.
+- **Dependency audit:** `npm audit` reported 0 vulnerabilities.
+- **Execution note:** These checks were freshly run on the clean checkout at `0ce4c15`. The application code is unchanged from the application candidate; the difference is documentation-only.
 
 ### Dependency Audit
 
-- **Audited checkout:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62`
+- **Audited checkout:** `0ce4c1572f80bd4fccf41efb962f6b2db0fc51cd`
 - **Command:** `npm audit`
 - **Reported result:** 0 vulnerabilities
 - **Scope note:** This result applies to the dependencies and lockfile in the audited checkout. It does not replace the required review of historical security findings or other release risks.
@@ -161,7 +165,7 @@ Final certification remains pending until that review and approval are recorded.
 - **Production URL:** https://poc-12-lost-deal-recovery.vercel.app/
 - **Vercel deployment:** Ready; marked Current in the Production environment.
 - **Deployed branch:** `main`
-- **Deployed commit:** `46735cd659ae4385558adadbc099f50d8390389a`
+- **Deployed commit:** `0ce4c1572f80bd4fccf41efb962f6b2db0fc51cd` (operator-confirmed Vercel Production revision).
 - **Operator smoke check:** The operator confirmed that the live website and the tested CRM evidence and Gemini explanation features are working.
 - **Evidence note:** This is an operator-confirmed live feature check. It is not a claim that every certification gate or independent endpoint test has been completed.
 

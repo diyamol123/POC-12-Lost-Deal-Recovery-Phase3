@@ -113,3 +113,15 @@ assistant response. They do not independently establish completion of
 every release certification requirement or authorized maintainer approval.
 
 Final Phase 3 certification remains pending.
+## Latest Production Revision Confirmation — 2026-10-30
+
+The operator confirmed that the Vercel Production deployment currently
+shows commit `0ce4c1572f80bd4fccf41efb962f6b2db0fc51cd`
+on branch `main`, marked Ready and Current.
+
+This is a deployment revision confirmation. The endpoint checks in the
+earlier October 30 section refer to commit
+`b0d6185226ad8810815b289f5ad1a094347fa994` and must not be
+misrepresented as fresh endpoint checks against `0ce4c15`.
+
+Final Phase 3 certification remains pending authorized maintainer review.
