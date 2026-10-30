@@ -15,7 +15,7 @@ or other automated processes.</purpose><file_format>The content is organized as 
 - Be aware that this file may contain sensitive information. Handle it with
   the same level of security as you would the original repository.</usage_guidelines><notes>- Some files may have been excluded based on .gitignore rules and Repomix&apos;s configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Files matching these patterns are excluded: .venv312/**, node_modules/**, .env, .env.*, **/.env, **/.env.*, repomix*.xml, repomix*.md
+- Files matching these patterns are excluded: .venv312/**, repomix-*.xml, repomix-*.md
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Content has been formatted for parsing in xml style
@@ -219,6 +219,7 @@ tests/
   selenium/
     test_data_intelligence_journey.py
   README.md
+.env.example
 .gitignore
 AGENTS.md
 biome.json
@@ -7118,7 +7119,8 @@ def test_post4_adds_a_separate_route():
 ## Selenium
 `tests/selenium/test_data_intelligence_journey.py`
 
-Runtime tests require the repository&apos;s normal Node/Python dependencies and a running application for Selenium.</file><file path="AGENTS.md">&lt;!-- BEGIN:nextjs-agent-rules --&gt;
+Runtime tests require the repository&apos;s normal Node/Python dependencies and a running application for Selenium.</file><file path=".env.example"># Backend-only Gemini configuration
+GEMINI_API_KEY=</file><file path="AGENTS.md">&lt;!-- BEGIN:nextjs-agent-rules --&gt;
 
 # This is NOT the Next.js you know
 
@@ -9981,687 +9983,6 @@ Open Dashboard
       }
     }
   ]
-}</file><file path="app/components/DashboardCharts.tsx">&quot;use client&quot;;
-
-import { useState } from &quot;react&quot;;
-import ReactECharts from &quot;echarts-for-react&quot;;
-import IntelligencePanel from &quot;./IntelligencePanel&quot;;
-
-type ChartProps = {
-  lossReasons: {
-    reason: string;
-    count: number;
-  }[];
-
-  segments: {
-    segment: string;
-    reason: string;
-    value: number;
-  }[];
-
-  competitors: {
-    competitor: string;
-    wins: number;
-    losses: number;
-  }[];
-};
-
-type SelectedSignal = {
-  type: &quot;reason&quot; | &quot;competitor&quot;;
-  title: string;
-  value?: number;
-  secondary?: string;
-  tertiary?: string;
-  description?: string;
-  action?: string;
-};
-
-export default function DashboardCharts({
-  lossReasons,
-  segments,
-  competitors,
-}: ChartProps) {
-  const [selected, setSelected] =
-    useState&lt;SelectedSignal | null&gt;(null);
-
-  /* ---------------- LOSS REASON COUNT PARETO ---------------- */
-
-  const paretoLabels = lossReasons.map(
-    (item) =&gt; item.reason
-  );
-
-  const paretoValues = lossReasons.map(
-    (item) =&gt; item.count
-  );
-
-  const total = paretoValues.reduce(
-    (sum, value) =&gt; sum + value,
-    0
-  );
-
-  const cumulative = paretoValues
-    .reduce&lt;number[]&gt;((values, value) =&gt; {
-      const running = (values.at(-1) ?? 0) + value;
-      values.push(running);
-      return values;
-    }, [])
-    .map((running) =&gt;
-      total &gt; 0 ? Math.round((running / total) * 100) : 0
-    );
-
-  const paretoOption = {
-    backgroundColor: &quot;transparent&quot;,
-
-    tooltip: {
-      trigger: &quot;axis&quot;,
-    },
-
-    grid: {
-      left: 45,
-      right: 45,
-      top: 35,
-      bottom: 70,
-    },
-
-    xAxis: {
-      type: &quot;category&quot;,
-      data: paretoLabels,
-      axisLabel: {
-        color: &quot;#94a3b8&quot;,
-        rotate: 25,
-        fontSize: 10,
-      },
-      axisLine: {
-        lineStyle: {
-          color: &quot;#1f2937&quot;,
-        },
-      },
-    },
-
-    yAxis: [
-      {
-        type: &quot;value&quot;,
-        name: &quot;Deals&quot;,
-        nameTextStyle: {
-          color: &quot;#64748b&quot;,
-        },
-        axisLabel: {
-          color: &quot;#64748b&quot;,
-        },
-        splitLine: {
-          lineStyle: {
-            color: &quot;#1f2937&quot;,
-          },
-        },
-      },
-      {
-        type: &quot;value&quot;,
-        name: &quot;%&quot;,
-        min: 0,
-        max: 100,
-        axisLabel: {
-          color: &quot;#64748b&quot;,
-        },
-        splitLine: {
-          show: false,
-        },
-      },
-    ],
-
-    series: [
-      {
-        name: &quot;Lost deals&quot;,
-        type: &quot;bar&quot;,
-        data: paretoValues,
-        barMaxWidth: 36,
-        itemStyle: {
-          color: &quot;#38bdf8&quot;,
-          borderRadius: [5, 5, 0, 0],
-        },
-      },
-      {
-        name: &quot;Cumulative percentage&quot;,
-        type: &quot;line&quot;,
-        yAxisIndex: 1,
-        data: cumulative,
-        smooth: true,
-        symbol: &quot;circle&quot;,
-        symbolSize: 6,
-        itemStyle: {
-          color: &quot;#818cf8&quot;,
-        },
-        lineStyle: {
-          width: 2,
-          color: &quot;#818cf8&quot;,
-        },
-      },
-    ],
-  };
-
-  /* ---------------- SEGMENT HEATMAP ---------------- */
-
-  const segmentLabels = [
-    ...new Set(segments.map((item) =&gt; item.segment)),
-  ];
-
-  const reasonLabels = [
-    ...new Set(segments.map((item) =&gt; item.reason)),
-  ];
-
-  const heatmapData = segments.map((item) =&gt; {
-    const x = segmentLabels.indexOf(item.segment);
-    const y = reasonLabels.indexOf(item.reason);
-
-    return [x, y, item.value];
-  });
-
-  const heatmapMax =
-    segments.length &gt; 0
-      ? Math.max(1, ...segments.map((item) =&gt; item.value))
-      : 1;
-
-  const heatmapOption = {
-    backgroundColor: &quot;transparent&quot;,
-
-    tooltip: {
-      position: &quot;top&quot;,
-      formatter: (params: {
-        data: [number, number, number];
-      }) =&gt; {
-        const [x, y, value] = params.data;
-
-        return [
-          `&lt;strong&gt;${segmentLabels[x]}&lt;/strong&gt;`,
-          reasonLabels[y],
-          `Lost deals: ${value}`,
-        ].join(&quot;&lt;br/&gt;&quot;);
-      },
-    },
-
-    grid: {
-      left: 95,
-      right: 20,
-      top: 20,
-      bottom: 55,
-    },
-
-    xAxis: {
-      type: &quot;category&quot;,
-      data: segmentLabels,
-      axisLabel: {
-        color: &quot;#94a3b8&quot;,
-        fontSize: 10,
-      },
-      axisLine: {
-        lineStyle: {
-          color: &quot;#1f2937&quot;,
-        },
-      },
-    },
-
-    yAxis: {
-      type: &quot;category&quot;,
-      data: reasonLabels,
-      axisLabel: {
-        color: &quot;#94a3b8&quot;,
-        fontSize: 9,
-      },
-      axisLine: {
-        lineStyle: {
-          color: &quot;#1f2937&quot;,
-        },
-      },
-    },
-
-    visualMap: {
-      min: 0,
-      max: heatmapMax,
-      calculable: true,
-      orient: &quot;horizontal&quot;,
-      left: &quot;center&quot;,
-      bottom: 0,
-      textStyle: {
-        color: &quot;#64748b&quot;,
-      },
-    },
-
-    series: [
-      {
-        type: &quot;heatmap&quot;,
-        data: heatmapData,
-        label: {
-          show: true,
-          color: &quot;#e2e8f0&quot;,
-          fontSize: 10,
-        },
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowColor: &quot;rgba(56,189,248,.5)&quot;,
-          },
-        },
-      },
-    ],
-  };
-
-  /* ---------------- COMPETITOR LOSS COUNTS ---------------- */
-
-  const competitorOption = {
-    backgroundColor: &quot;transparent&quot;,
-
-    tooltip: {
-      trigger: &quot;axis&quot;,
-    },
-
-    grid: {
-      left: 45,
-      right: 20,
-      top: 30,
-      bottom: 65,
-    },
-
-    xAxis: {
-      type: &quot;category&quot;,
-      data: competitors.map((item) =&gt; item.competitor),
-      axisLabel: {
-        color: &quot;#94a3b8&quot;,
-        fontSize: 10,
-        rotate: 20,
-      },
-      axisLine: {
-        lineStyle: {
-          color: &quot;#1f2937&quot;,
-        },
-      },
-    },
-
-    yAxis: {
-      type: &quot;value&quot;,
-      name: &quot;Recorded losses&quot;,
-      nameTextStyle: {
-        color: &quot;#64748b&quot;,
-      },
-      axisLabel: {
-        color: &quot;#64748b&quot;,
-      },
-      splitLine: {
-        lineStyle: {
-          color: &quot;#1f2937&quot;,
-        },
-      },
-    },
-
-    series: [
-      {
-        name: &quot;Recorded competitive losses&quot;,
-        type: &quot;bar&quot;,
-        data: competitors.map((item) =&gt; item.losses),
-        barMaxWidth: 36,
-        itemStyle: {
-          color: &quot;#818cf8&quot;,
-          borderRadius: [4, 4, 0, 0],
-        },
-      },
-    ],
-  };
-
-  return (
-    &lt;&gt;
-      &lt;div className=&quot;space-y-5&quot;&gt;
-        {/* LOSS REASON PARETO */}
-
-        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
-          &lt;div className=&quot;mb-3&quot;&gt;
-            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
-              LOSS-REASON COUNT PARETO
-            &lt;/div&gt;
-
-            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
-              Ranks loss reasons by deal count, not by total observed
-              lost-deal value. Click a bar to inspect the count-based
-              signal.
-            &lt;/p&gt;
-          &lt;/div&gt;
-
-          &lt;ReactECharts
-            option={paretoOption}
-            style={{ height: 300, width: &quot;100%&quot; }}
-            opts={{ renderer: &quot;canvas&quot; }}
-            onEvents={{
-              click: (params: {
-                seriesType?: string;
-                dataIndex?: number;
-              }) =&gt; {
-                if (
-                  params.seriesType !== &quot;bar&quot; ||
-                  params.dataIndex === undefined
-                ) {
-                  return;
-                }
-
-                const item = lossReasons[params.dataIndex];
-                if (!item) return;
-
-                setSelected({
-                  type: &quot;reason&quot;,
-                  title: item.reason,
-                  value: item.count,
-                  secondary: `${item.count} lost deals`,
-                  tertiary: &quot;Loss reason&quot;,
-                  description:
-                    `The loss reason &quot;${item.reason}&quot; accounts for ` +
-                    `${item.count} lost deals in the current filtered dataset. ` +
-                    &quot;This is a count-based observation and does not indicate &quot; +
-                    &quot;the total value associated with this category or prove causality.&quot;,
-                  action:
-                    &quot;Review the affected deal records, documented buyer objections &quot; +
-                    &quot;and deal values before deciding whether targeted follow-up is appropriate.&quot;,
-                });
-              },
-            }}
-          /&gt;
-        &lt;/section&gt;
-
-        {/* SEGMENT HEATMAP */}
-
-        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
-          &lt;div className=&quot;mb-3&quot;&gt;
-            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
-              SEGMENT HEATMAP
-            &lt;/div&gt;
-
-            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
-              Shows the distribution of recorded lost-deal counts
-              across customer segments and loss reasons.
-            &lt;/p&gt;
-          &lt;/div&gt;
-
-          &lt;ReactECharts
-            option={heatmapOption}
-            style={{ height: 300, width: &quot;100%&quot; }}
-            opts={{ renderer: &quot;canvas&quot; }}
-          /&gt;
-        &lt;/section&gt;
-
-        {/* COMPETITOR LOSS COUNTS */}
-
-        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
-          &lt;div className=&quot;mb-3&quot;&gt;
-            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
-              COMPETITOR LOSS COUNTS
-            &lt;/div&gt;
-
-            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
-              Shows recorded competitive-loss counts only. Win counts
-              are not available in this dataset. Click a bar to inspect
-              the selected competitor.
-            &lt;/p&gt;
-          &lt;/div&gt;
-
-          &lt;ReactECharts
-            option={competitorOption}
-            style={{ height: 300, width: &quot;100%&quot; }}
-            opts={{ renderer: &quot;canvas&quot; }}
-            onEvents={{
-              click: (params: {
-                seriesType?: string;
-                dataIndex?: number;
-              }) =&gt; {
-                if (
-                  params.seriesType !== &quot;bar&quot; ||
-                  params.dataIndex === undefined
-                ) {
-                  return;
-                }
-
-                const item = competitors[params.dataIndex];
-                if (!item) return;
-
-                setSelected({
-                  type: &quot;competitor&quot;,
-                  title: item.competitor,
-                  value: item.losses,
-                  secondary: `${item.losses} recorded competitive losses`,
-                  tertiary: &quot;Recorded competitive losses&quot;,
-                  description:
-                    `${item.competitor} appears in ${item.losses} ` +
-                    &quot;competitive losses in the current filtered dataset. &quot; +
-                    &quot;This is a descriptive count, not a win/loss rate or proof &quot; +
-                    &quot;of why the deals were lost.&quot;,
-                  action:
-                    &quot;Review the associated deal records and documented buyer &quot; +
-                    &quot;objections, pricing and product requirements before deciding &quot; +
-                    &quot;on follow-up.&quot;,
-                });
-              },
-            }}
-          /&gt;
-        &lt;/section&gt;
-      &lt;/div&gt;
-
-      &lt;IntelligencePanel
-        selected={selected}
-        onClose={() =&gt; setSelected(null)}
-      /&gt;
-    &lt;/&gt;
-  );
-}</file><file path="app/components/IntelligencePanel.tsx">&quot;use client&quot;;
-
-import {
-  AlertTriangle,
-  ArrowUpRight,
-  Building2,
-  CircleDollarSign,
-  Target,
-  X,
-} from &quot;lucide-react&quot;;
-
-type IntelligencePanelProps = {
-  selected: {
-    type: &quot;reason&quot; | &quot;competitor&quot; | &quot;deal&quot;;
-    title: string;
-    value?: number;
-    secondary?: string;
-    tertiary?: string;
-    description?: string;
-    action?: string;
-  } | null;
-  onClose: () =&gt; void;
-};
-
-export default function IntelligencePanel({
-  selected,
-  onClose,
-}: IntelligencePanelProps) {
-  if (!selected) return null;
-
-  const formatValue = (
-    value?: number,
-    type?: &quot;reason&quot; | &quot;competitor&quot; | &quot;deal&quot;
-  ) =&gt; {
-    if (value === undefined) return &quot;—&quot;;
-
-    if (type === &quot;deal&quot;) {
-      return new Intl.NumberFormat(&quot;en-IN&quot;, {
-        maximumFractionDigits: 0,
-      }).format(value);
-    }
-
-    if (type === &quot;reason&quot;) {
-      return `${value} lost deals`;
-    }
-
-    if (type === &quot;competitor&quot;) {
-      return `${value} deals`;
-    }
-
-    return String(value);
-  };
-
-  return (
-    &lt;&gt;
-      {/* Accessible backdrop */}
-      &lt;button
-        type=&quot;button&quot;
-        aria-label=&quot;Close intelligence panel&quot;
-        className=&quot;fixed inset-0 z-40 cursor-default border-0 bg-black/45 p-0 backdrop-blur-[1px]&quot;
-        onClick={onClose}
-      /&gt;
-
-      {/* Intelligence Sidebar */}
-      &lt;aside
-        role=&quot;dialog&quot;
-        aria-modal=&quot;true&quot;
-        aria-labelledby=&quot;intelligence-panel-title&quot;
-        className=&quot;fixed right-0 top-0 z-50 flex h-screen w-full flex-col border-l border-[#1F2937] bg-[#030712] shadow-[-20px_0_60px_rgba(0,0,0,0.45)] sm:w-[30vw] sm:min-w-[360px]&quot;
-      &gt;
-        {/* Header */}
-        &lt;div className=&quot;flex items-start justify-between border-b border-[#1F2937] px-5 py-5&quot;&gt;
-          &lt;div&gt;
-            &lt;div className=&quot;text-[9px] font-semibold tracking-[0.28em] text-[#38BDF8]&quot;&gt;
-              DEAL INTELLIGENCE
-            &lt;/div&gt;
-
-            &lt;h2
-              id=&quot;intelligence-panel-title&quot;
-              className=&quot;mt-1 text-xl font-semibold text-slate-100&quot;
-            &gt;
-              {selected.title}
-            &lt;/h2&gt;
-          &lt;/div&gt;
-
-          &lt;button
-            type=&quot;button&quot;
-            onClick={onClose}
-            className=&quot;flex h-8 w-8 items-center justify-center rounded-lg border border-[#1F2937] text-slate-400 transition hover:border-[#38BDF8]/40 hover:text-[#38BDF8]&quot;
-            aria-label=&quot;Close intelligence panel&quot;
-          &gt;
-            &lt;X className=&quot;h-4 w-4&quot; /&gt;
-          &lt;/button&gt;
-        &lt;/div&gt;
-
-        {/* Content */}
-        &lt;div className=&quot;flex-1 space-y-4 overflow-y-auto p-5&quot;&gt;
-          {/* Selected item */}
-          &lt;section className=&quot;rounded-xl border border-[#38BDF8]/20 bg-[#0B1117] p-4&quot;&gt;
-            &lt;div className=&quot;text-[9px] tracking-[0.2em] text-slate-500&quot;&gt;
-              SELECTED SIGNAL
-            &lt;/div&gt;
-
-            &lt;div className=&quot;mt-2 text-lg font-semibold text-slate-100&quot;&gt;
-              {selected.title}
-            &lt;/div&gt;
-
-            &lt;div className=&quot;mt-4 grid grid-cols-2 gap-3&quot;&gt;
-              &lt;div className=&quot;rounded-lg border border-[#1F2937] bg-[#030712] p-3&quot;&gt;
-                &lt;div className=&quot;flex items-center gap-2 text-[8px] tracking-widest text-slate-500&quot;&gt;
-                  &lt;Target className=&quot;h-3 w-3&quot; /&gt;
-                  TYPE
-                &lt;/div&gt;
-
-                &lt;div className=&quot;mt-2 text-sm font-semibold uppercase text-[#38BDF8]&quot;&gt;
-                  {selected.type === &quot;reason&quot;
-                    ? &quot;LOSS REASON&quot;
-                    : selected.type === &quot;competitor&quot;
-                      ? &quot;COMPETITOR&quot;
-                      : &quot;DEAL&quot;}
-                &lt;/div&gt;
-              &lt;/div&gt;
-
-              &lt;div className=&quot;rounded-lg border border-[#1F2937] bg-[#030712] p-3&quot;&gt;
-                &lt;div className=&quot;flex items-center gap-2 text-[8px] tracking-widest text-slate-500&quot;&gt;
-                  &lt;CircleDollarSign className=&quot;h-3 w-3&quot; /&gt;
-                  VALUE
-                &lt;/div&gt;
-
-                &lt;div className=&quot;mt-2 text-sm font-semibold text-slate-100&quot;&gt;
-                  {formatValue(selected.value, selected.type)}
-                &lt;/div&gt;
-              &lt;/div&gt;
-            &lt;/div&gt;
-          &lt;/section&gt;
-
-          {/* Context */}
-          &lt;section className=&quot;rounded-xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
-            &lt;div className=&quot;flex items-center gap-2 text-[9px] font-semibold tracking-widest text-[#38BDF8]&quot;&gt;
-              &lt;Building2 className=&quot;h-3.5 w-3.5&quot; /&gt;
-              CONTEXT
-            &lt;/div&gt;
-
-            &lt;div className=&quot;mt-4 space-y-3&quot;&gt;
-              &lt;div className=&quot;flex justify-between gap-4 border-b border-[#1F2937] pb-3&quot;&gt;
-                &lt;span className=&quot;text-[9px] uppercase tracking-wider text-slate-500&quot;&gt;
-                  Secondary Signal
-                &lt;/span&gt;
-
-                &lt;span className=&quot;text-right text-xs text-slate-300&quot;&gt;
-                  {selected.secondary || &quot;Not available&quot;}
-                &lt;/span&gt;
-              &lt;/div&gt;
-
-              &lt;div className=&quot;flex justify-between gap-4&quot;&gt;
-                &lt;span className=&quot;text-[9px] uppercase tracking-wider text-slate-500&quot;&gt;
-                  Segment / Stage
-                &lt;/span&gt;
-
-                &lt;span className=&quot;text-right text-xs text-slate-300&quot;&gt;
-                  {selected.tertiary || &quot;Not available&quot;}
-                &lt;/span&gt;
-              &lt;/div&gt;
-            &lt;/div&gt;
-          &lt;/section&gt;
-
-          {/* Why this matters */}
-          &lt;section className=&quot;rounded-xl border border-[#38BDF8]/20 bg-[#0B1117] p-4&quot;&gt;
-            &lt;div className=&quot;text-[9px] font-semibold tracking-[0.2em] text-[#38BDF8]&quot;&gt;
-              WHY THIS MATTERS
-            &lt;/div&gt;
-
-            &lt;p className=&quot;mt-3 text-xs leading-6 text-slate-300&quot;&gt;
-              {selected.description ||
-                &quot;This signal represents a meaningful pattern in lost opportunities. Management should investigate the underlying cause before changing the sales strategy.&quot;}
-            &lt;/p&gt;
-          &lt;/section&gt;
-
-          {/* Intelligence signal */}
-          &lt;section className=&quot;rounded-xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
-            &lt;div className=&quot;flex items-center gap-2 text-[9px] font-semibold tracking-[0.2em] text-[#818CF8]&quot;&gt;
-              &lt;AlertTriangle className=&quot;h-3.5 w-3.5&quot; /&gt;
-              INTELLIGENCE SIGNAL
-            &lt;/div&gt;
-
-            &lt;p className=&quot;mt-3 text-xs leading-6 text-slate-400&quot;&gt;
-              {selected.secondary
-                ? `${selected.secondary} is associated with this selected signal. Review the related deals, buyer stage and competitive context.`
-                : &quot;Review related deals, buyer stage, pricing and competitive context.&quot;}
-            &lt;/p&gt;
-          &lt;/section&gt;
-
-          {/* Recommended action */}
-          &lt;section className=&quot;rounded-xl border border-[#38BDF8]/10 bg-[#38BDF8]/5 p-4&quot;&gt;
-            &lt;div className=&quot;flex items-center gap-2 text-[9px] font-semibold tracking-[0.2em] text-[#38BDF8]&quot;&gt;
-              &lt;ArrowUpRight className=&quot;h-3.5 w-3.5&quot; /&gt;
-              RECOMMENDED ACTION
-            &lt;/div&gt;
-
-            &lt;p className=&quot;mt-3 text-xs leading-6 text-slate-300&quot;&gt;
-              {selected.action ||
-                &quot;Prioritize high-value opportunities, review the loss reason, and determine whether targeted re-engagement is appropriate.&quot;}
-            &lt;/p&gt;
-          &lt;/section&gt;
-        &lt;/div&gt;
-
-        {/* Footer */}
-        &lt;div className=&quot;border-t border-[#1F2937] p-4&quot;&gt;
-          &lt;div className=&quot;text-[8px] leading-4 text-slate-600&quot;&gt;
-            Intelligence generated from the selected dashboard signal.
-            Synthetic CRM records are used where operational data is
-            unavailable.
-          &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/aside&gt;
-    &lt;/&gt;
-  );
 }</file><file path="app/layout.tsx">import type { Metadata } from &quot;next&quot;;
 import { Geist, Geist_Mono } from &quot;next/font/google&quot;;
 import &quot;./globals.css&quot;;
@@ -11358,6 +10679,857 @@ export default function GroundedAssistant({
         &lt;/div&gt;
       )}
     &lt;/section&gt;
+  );
+}</file><file path="app/components/DashboardCharts.tsx">&quot;use client&quot;;
+
+import { useState } from &quot;react&quot;;
+import ReactECharts from &quot;echarts-for-react&quot;;
+import IntelligencePanel from &quot;./IntelligencePanel&quot;;
+
+type ChartProps = {
+  lossReasons: {
+    reason: string;
+    count: number;
+  }[];
+
+  lossReasonValues: {
+    reason: string;
+    value: number;
+  }[];
+
+  segments: {
+    segment: string;
+    reason: string;
+    value: number;
+  }[];
+
+  competitors: {
+    competitor: string;
+    wins: number;
+    losses: number;
+  }[];
+};
+
+type SelectedSignal = {
+  type: &quot;reason&quot; | &quot;competitor&quot;;
+  title: string;
+  value?: number;
+  valueLabel?: &quot;observed-value&quot; | &quot;deal-count&quot;;
+  secondary?: string;
+  tertiary?: string;
+  description?: string;
+  action?: string;
+};
+const numberFormat = new Intl.NumberFormat(&quot;en-IN&quot;, {
+  maximumFractionDigits: 0,
+});
+
+export default function DashboardCharts({
+  lossReasons,
+  lossReasonValues,
+  segments,
+  competitors,
+}: ChartProps) {
+  const [selected, setSelected] =
+    useState&lt;SelectedSignal | null&gt;(null);
+
+  /* ---------------- LOSS REASON COUNT PARETO ---------------- */
+
+  const paretoLabels = lossReasons.map(
+    (item) =&gt; item.reason
+  );
+
+  const paretoValues = lossReasons.map(
+    (item) =&gt; item.count
+  );
+
+  const total = paretoValues.reduce(
+    (sum, value) =&gt; sum + value,
+    0
+  );
+
+  const cumulative = paretoValues
+    .reduce&lt;number[]&gt;((values, value) =&gt; {
+      const running = (values.at(-1) ?? 0) + value;
+      values.push(running);
+      return values;
+    }, [])
+    .map((running) =&gt;
+      total &gt; 0 ? Math.round((running / total) * 100) : 0
+    );
+
+  const paretoOption = {
+    backgroundColor: &quot;transparent&quot;,
+
+    tooltip: {
+      trigger: &quot;axis&quot;,
+    },
+
+    grid: {
+      left: 45,
+      right: 45,
+      top: 35,
+      bottom: 70,
+    },
+
+    xAxis: {
+      type: &quot;category&quot;,
+      data: paretoLabels,
+      axisLabel: {
+        color: &quot;#94a3b8&quot;,
+        rotate: 25,
+        fontSize: 10,
+      },
+      axisLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    yAxis: [
+      {
+        type: &quot;value&quot;,
+        name: &quot;Deals&quot;,
+        nameTextStyle: {
+          color: &quot;#64748b&quot;,
+        },
+        axisLabel: {
+          color: &quot;#64748b&quot;,
+        },
+        splitLine: {
+          lineStyle: {
+            color: &quot;#1f2937&quot;,
+          },
+        },
+      },
+      {
+        type: &quot;value&quot;,
+        name: &quot;%&quot;,
+        min: 0,
+        max: 100,
+        axisLabel: {
+          color: &quot;#64748b&quot;,
+        },
+        splitLine: {
+          show: false,
+        },
+      },
+    ],
+
+    series: [
+      {
+        name: &quot;Lost deals&quot;,
+        type: &quot;bar&quot;,
+        data: paretoValues,
+        barMaxWidth: 36,
+        itemStyle: {
+          color: &quot;#38bdf8&quot;,
+          borderRadius: [5, 5, 0, 0],
+        },
+      },
+      {
+        name: &quot;Cumulative percentage&quot;,
+        type: &quot;line&quot;,
+        yAxisIndex: 1,
+        data: cumulative,
+        smooth: true,
+        symbol: &quot;circle&quot;,
+        symbolSize: 6,
+        itemStyle: {
+          color: &quot;#818cf8&quot;,
+        },
+        lineStyle: {
+          width: 2,
+          color: &quot;#818cf8&quot;,
+        },
+      },
+    ],
+  };
+
+  /* ---------------- OBSERVED LOST-DEAL VALUE BY REASON ---------------- */
+
+  const valueLabels = lossReasonValues.map(
+    (item) =&gt; item.reason
+  );
+
+  const valueData = lossReasonValues.map(
+    (item) =&gt; item.value
+  );
+
+  const valueOption = {
+    backgroundColor: &quot;transparent&quot;,
+
+    tooltip: {
+      trigger: &quot;axis&quot;,
+      valueFormatter: (value: number) =&gt;
+        numberFormat.format(value),
+    },
+
+    grid: {
+      left: 65,
+      right: 25,
+      top: 35,
+      bottom: 65,
+      containLabel: true,
+    },
+
+    xAxis: {
+      type: &quot;category&quot;,
+      data: valueLabels,
+      axisLabel: {
+        color: &quot;#94a3b8&quot;,
+        rotate: 25,
+        fontSize: 10,
+      },
+      axisLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    yAxis: {
+      type: &quot;value&quot;,
+      name: &quot;Observed value&quot;,
+      nameTextStyle: {
+        color: &quot;#64748b&quot;,
+      },
+      axisLabel: {
+        color: &quot;#64748b&quot;,
+        formatter: (value: number) =&gt;
+          numberFormat.format(value),
+      },
+      splitLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    series: [
+      {
+        name: &quot;Observed lost-deal value&quot;,
+        type: &quot;bar&quot;,
+        data: valueData,
+        barMaxWidth: 42,
+        itemStyle: {
+          color: &quot;#38bdf8&quot;,
+          borderRadius: [5, 5, 0, 0],
+        },
+        emphasis: {
+          itemStyle: {
+            color: &quot;#818cf8&quot;,
+          },
+        },
+      },
+    ],
+  };
+
+  /* ---------------- SEGMENT HEATMAP ---------------- */
+
+  const segmentLabels = [
+    ...new Set(segments.map((item) =&gt; item.segment)),
+  ];
+
+  const reasonLabels = [
+    ...new Set(segments.map((item) =&gt; item.reason)),
+  ];
+
+  const heatmapData = segments.map((item) =&gt; {
+    const x = segmentLabels.indexOf(item.segment);
+    const y = reasonLabels.indexOf(item.reason);
+
+    return [x, y, item.value];
+  });
+
+  const heatmapMax =
+    segments.length &gt; 0
+      ? Math.max(1, ...segments.map((item) =&gt; item.value))
+      : 1;
+
+  const heatmapOption = {
+    backgroundColor: &quot;transparent&quot;,
+
+    tooltip: {
+      position: &quot;top&quot;,
+      formatter: (params: {
+        data: [number, number, number];
+      }) =&gt; {
+        const [x, y, value] = params.data;
+
+        return [
+          `&lt;strong&gt;${segmentLabels[x]}&lt;/strong&gt;`,
+          reasonLabels[y],
+          `Lost deals: ${value}`,
+        ].join(&quot;&lt;br/&gt;&quot;);
+      },
+    },
+
+    grid: {
+      left: 95,
+      right: 20,
+      top: 20,
+      bottom: 55,
+    },
+
+    xAxis: {
+      type: &quot;category&quot;,
+      data: segmentLabels,
+      axisLabel: {
+        color: &quot;#94a3b8&quot;,
+        fontSize: 10,
+      },
+      axisLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    yAxis: {
+      type: &quot;category&quot;,
+      data: reasonLabels,
+      axisLabel: {
+        color: &quot;#94a3b8&quot;,
+        fontSize: 9,
+      },
+      axisLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    visualMap: {
+      min: 0,
+      max: heatmapMax,
+      calculable: true,
+      orient: &quot;horizontal&quot;,
+      left: &quot;center&quot;,
+      bottom: 0,
+      textStyle: {
+        color: &quot;#64748b&quot;,
+      },
+    },
+
+    series: [
+      {
+        type: &quot;heatmap&quot;,
+        data: heatmapData,
+        label: {
+          show: true,
+          color: &quot;#e2e8f0&quot;,
+          fontSize: 10,
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowColor: &quot;rgba(56,189,248,.5)&quot;,
+          },
+        },
+      },
+    ],
+  };
+
+  /* ---------------- COMPETITOR LOSS COUNTS ---------------- */
+
+  const competitorOption = {
+    backgroundColor: &quot;transparent&quot;,
+
+    tooltip: {
+      trigger: &quot;axis&quot;,
+    },
+
+    grid: {
+      left: 45,
+      right: 20,
+      top: 30,
+      bottom: 65,
+    },
+
+    xAxis: {
+      type: &quot;category&quot;,
+      data: competitors.map((item) =&gt; item.competitor),
+      axisLabel: {
+        color: &quot;#94a3b8&quot;,
+        fontSize: 10,
+        rotate: 20,
+      },
+      axisLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    yAxis: {
+      type: &quot;value&quot;,
+      name: &quot;Recorded losses&quot;,
+      nameTextStyle: {
+        color: &quot;#64748b&quot;,
+      },
+      axisLabel: {
+        color: &quot;#64748b&quot;,
+      },
+      splitLine: {
+        lineStyle: {
+          color: &quot;#1f2937&quot;,
+        },
+      },
+    },
+
+    series: [
+      {
+        name: &quot;Recorded competitive losses&quot;,
+        type: &quot;bar&quot;,
+        data: competitors.map((item) =&gt; item.losses),
+        barMaxWidth: 36,
+        itemStyle: {
+          color: &quot;#818cf8&quot;,
+          borderRadius: [4, 4, 0, 0],
+        },
+      },
+    ],
+  };
+
+  return (
+    &lt;&gt;
+      &lt;div className=&quot;space-y-5&quot;&gt;
+
+        {/* OBSERVED LOST-DEAL VALUE BY REASON */}
+
+        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
+          &lt;div className=&quot;mb-3&quot;&gt;
+            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
+              OBSERVED LOST-DEAL VALUE BY REASON
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
+              Compares the total observed value of lost opportunities
+              across loss reasons in the current filtered dataset.
+              Values are presented without a currency designation.
+              Click a bar to inspect its category.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;ReactECharts
+            option={valueOption}
+            style={{ height: 300, width: &quot;100%&quot; }}
+            opts={{ renderer: &quot;canvas&quot; }}
+            onEvents={{
+              click: (params: {
+                seriesType?: string;
+                dataIndex?: number;
+              }) =&gt; {
+                if (
+                  params.seriesType !== &quot;bar&quot; ||
+                  params.dataIndex === undefined
+                ) {
+                  return;
+                }
+
+                const item = lossReasonValues[params.dataIndex];
+                if (!item) return;
+
+                const categoryCount =
+                  lossReasons.find(
+                    (reason) =&gt; reason.reason === item.reason
+                  )?.count ?? 0;
+
+                setSelected({
+                  type: &quot;reason&quot;,
+                  title: item.reason,
+                  value: item.value,
+                  valueLabel: &quot;observed-value&quot;,
+                  secondary:
+                    `${numberFormat.format(item.value)} observed value`,
+                  tertiary:
+                    `${categoryCount} lost deals · Currency unspecified`,
+                  description:
+                    `The loss reason &quot;${item.reason}&quot; is associated with ` +
+                    `${numberFormat.format(item.value)} in observed lost-deal ` +
+                    `value across ${categoryCount} records in the current ` +
+                    &quot;filtered dataset. This is descriptive evidence and &quot; +
+                    &quot;does not establish recoverability or causality.&quot;,
+                  action:
+                    &quot;Review the associated deal records and documented buyer &quot; +
+                    &quot;objections before deciding whether targeted follow-up is appropriate.&quot;,
+                });
+              },
+            }}
+          /&gt;
+        &lt;/section&gt;
+
+        {/* LOSS REASON COUNT PARETO */}
+
+        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
+          &lt;div className=&quot;mb-3&quot;&gt;
+            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
+              LOSS-REASON COUNT PARETO
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
+              Ranks loss reasons by deal count, not by total observed
+              lost-deal value. Click a bar to inspect the count-based
+              signal.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;ReactECharts
+            option={paretoOption}
+            style={{ height: 300, width: &quot;100%&quot; }}
+            opts={{ renderer: &quot;canvas&quot; }}
+            onEvents={{
+              click: (params: {
+                seriesType?: string;
+                dataIndex?: number;
+              }) =&gt; {
+                if (
+                  params.seriesType !== &quot;bar&quot; ||
+                  params.dataIndex === undefined
+                ) {
+                  return;
+                }
+
+                const item = lossReasons[params.dataIndex];
+                if (!item) return;
+
+                setSelected({
+                  type: &quot;reason&quot;,
+                  title: item.reason,
+                  value: item.count,
+                  valueLabel: &quot;deal-count&quot;,
+                  secondary: `${item.count} lost deals`,
+                  tertiary: &quot;Loss reason&quot;,
+                  description:
+                    `The loss reason &quot;${item.reason}&quot; accounts for ` +
+                    `${item.count} lost deals in the current filtered dataset. ` +
+                    &quot;This is a count-based observation and does not indicate &quot; +
+                    &quot;the total value associated with this category or prove causality.&quot;,
+                  action:
+                    &quot;Review the affected deal records, documented buyer objections &quot; +
+                    &quot;and deal values before deciding whether targeted follow-up is appropriate.&quot;,
+                });
+              },
+            }}
+          /&gt;
+        &lt;/section&gt;
+
+        {/* SEGMENT HEATMAP */}
+
+        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
+          &lt;div className=&quot;mb-3&quot;&gt;
+            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
+              SEGMENT HEATMAP
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
+              Shows the distribution of recorded lost-deal counts
+              across customer segments and loss reasons.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;ReactECharts
+            option={heatmapOption}
+            style={{ height: 300, width: &quot;100%&quot; }}
+            opts={{ renderer: &quot;canvas&quot; }}
+          /&gt;
+        &lt;/section&gt;
+
+        {/* COMPETITOR LOSS COUNTS */}
+
+        &lt;section className=&quot;rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
+          &lt;div className=&quot;mb-3&quot;&gt;
+            &lt;div className=&quot;text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]&quot;&gt;
+              COMPETITOR LOSS COUNTS
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-1 text-xs leading-5 text-slate-500&quot;&gt;
+              Shows recorded competitive-loss counts only. Win counts
+              are not available in this dataset. Click a bar to inspect
+              the selected competitor.
+            &lt;/p&gt;
+          &lt;/div&gt;
+
+          &lt;ReactECharts
+            option={competitorOption}
+            style={{ height: 300, width: &quot;100%&quot; }}
+            opts={{ renderer: &quot;canvas&quot; }}
+            onEvents={{
+              click: (params: {
+                seriesType?: string;
+                dataIndex?: number;
+              }) =&gt; {
+                if (
+                  params.seriesType !== &quot;bar&quot; ||
+                  params.dataIndex === undefined
+                ) {
+                  return;
+                }
+
+                const item = competitors[params.dataIndex];
+                if (!item) return;
+
+                setSelected({
+                  type: &quot;competitor&quot;,
+                  title: item.competitor,
+                  value: item.losses,
+                  secondary: `${item.losses} recorded competitive losses`,
+                  tertiary: &quot;Recorded competitive losses&quot;,
+                  description:
+                    `${item.competitor} appears in ${item.losses} ` +
+                    &quot;competitive losses in the current filtered dataset. &quot; +
+                    &quot;This is a descriptive count, not a win/loss rate or proof &quot; +
+                    &quot;of why the deals were lost.&quot;,
+                  action:
+                    &quot;Review the associated deal records and documented buyer &quot; +
+                    &quot;objections, pricing and product requirements before deciding &quot; +
+                    &quot;on follow-up.&quot;,
+                });
+              },
+            }}
+          /&gt;
+        &lt;/section&gt;
+
+      &lt;/div&gt;
+
+      &lt;IntelligencePanel
+        selected={selected}
+        onClose={() =&gt; setSelected(null)}
+      /&gt;
+    &lt;/&gt;
+  );
+}</file><file path="app/components/IntelligencePanel.tsx">&quot;use client&quot;;
+
+import {
+  AlertTriangle,
+  ArrowUpRight,
+  Building2,
+  CircleDollarSign,
+  Target,
+  X,
+} from &quot;lucide-react&quot;;
+
+type IntelligencePanelProps = {
+  selected: {
+    type: &quot;reason&quot; | &quot;competitor&quot; | &quot;deal&quot;;
+    title: string;
+    value?: number;
+    valueLabel?: &quot;observed-value&quot; | &quot;deal-count&quot;;
+    secondary?: string;
+    tertiary?: string;
+    description?: string;
+    action?: string;
+  } | null;
+  onClose: () =&gt; void;
+};
+
+export default function IntelligencePanel({
+  selected,
+  onClose,
+}: IntelligencePanelProps) {
+  if (!selected) return null;
+
+  const numberFormat = new Intl.NumberFormat(&quot;en-IN&quot;, {
+    maximumFractionDigits: 0,
+  });
+
+  const formatValue = () =&gt; {
+    if (selected.value === undefined) return &quot;—&quot;;
+
+    if (selected.valueLabel === &quot;observed-value&quot;) {
+      return numberFormat.format(selected.value);
+    }
+
+    if (
+      selected.valueLabel === &quot;deal-count&quot; ||
+      (selected.type === &quot;reason&quot; &amp;&amp;
+        selected.valueLabel !== &quot;observed-value&quot;)
+    ) {
+      return `${numberFormat.format(selected.value)} lost deals`;
+    }
+
+    if (selected.type === &quot;competitor&quot;) {
+      return `${numberFormat.format(selected.value)} deals`;
+    }
+
+    if (selected.type === &quot;deal&quot;) {
+      return numberFormat.format(selected.value);
+    }
+
+    return numberFormat.format(selected.value);
+  };
+
+  return (
+    &lt;&gt;
+      &lt;button
+        type=&quot;button&quot;
+        aria-label=&quot;Close intelligence panel&quot;
+        className=&quot;fixed inset-0 z-40 cursor-default border-0 bg-black/45 p-0 backdrop-blur-[1px]&quot;
+        onClick={onClose}
+      /&gt;
+
+      &lt;aside
+        role=&quot;dialog&quot;
+        aria-modal=&quot;true&quot;
+        aria-labelledby=&quot;intelligence-panel-title&quot;
+        className=&quot;fixed right-0 top-0 z-50 flex h-screen w-full flex-col border-l border-[#1F2937] bg-[#030712] shadow-[-20px_0_60px_rgba(0,0,0,0.45)] sm:w-[30vw] sm:min-w-[360px]&quot;
+      &gt;
+        {/* Header */}
+        &lt;div className=&quot;flex items-start justify-between border-b border-[#1F2937] px-5 py-5&quot;&gt;
+          &lt;div&gt;
+            &lt;div className=&quot;text-[9px] font-semibold tracking-[0.28em] text-[#38BDF8]&quot;&gt;
+              DEAL INTELLIGENCE
+            &lt;/div&gt;
+
+            &lt;h2
+              id=&quot;intelligence-panel-title&quot;
+              className=&quot;mt-1 text-xl font-semibold text-slate-100&quot;
+            &gt;
+              {selected.title}
+            &lt;/h2&gt;
+          &lt;/div&gt;
+
+          &lt;button
+            type=&quot;button&quot;
+            onClick={onClose}
+            className=&quot;flex h-8 w-8 items-center justify-center rounded-lg border border-[#1F2937] text-slate-400 transition hover:border-[#38BDF8]/40 hover:text-[#38BDF8]&quot;
+            aria-label=&quot;Close intelligence panel&quot;
+          &gt;
+            &lt;X className=&quot;h-4 w-4&quot; /&gt;
+          &lt;/button&gt;
+        &lt;/div&gt;
+
+        {/* Content */}
+        &lt;div className=&quot;flex-1 space-y-4 overflow-y-auto p-5&quot;&gt;
+          {/* Selected item */}
+          &lt;section className=&quot;rounded-xl border border-[#38BDF8]/20 bg-[#0B1117] p-4&quot;&gt;
+            &lt;div className=&quot;text-[9px] tracking-[0.2em] text-slate-500&quot;&gt;
+              SELECTED SIGNAL
+            &lt;/div&gt;
+
+            &lt;div className=&quot;mt-2 text-lg font-semibold text-slate-100&quot;&gt;
+              {selected.title}
+            &lt;/div&gt;
+
+            &lt;div className=&quot;mt-4 grid grid-cols-2 gap-3&quot;&gt;
+              &lt;div className=&quot;rounded-lg border border-[#1F2937] bg-[#030712] p-3&quot;&gt;
+                &lt;div className=&quot;flex items-center gap-2 text-[8px] tracking-widest text-slate-500&quot;&gt;
+                  &lt;Target className=&quot;h-3 w-3&quot; /&gt;
+                  TYPE
+                &lt;/div&gt;
+
+                &lt;div className=&quot;mt-2 text-sm font-semibold uppercase text-[#38BDF8]&quot;&gt;
+                  {selected.type === &quot;reason&quot;
+                    ? &quot;LOSS REASON&quot;
+                    : selected.type === &quot;competitor&quot;
+                      ? &quot;COMPETITOR&quot;
+                      : &quot;DEAL&quot;}
+                &lt;/div&gt;
+              &lt;/div&gt;
+
+              &lt;div className=&quot;rounded-lg border border-[#1F2937] bg-[#030712] p-3&quot;&gt;
+                &lt;div className=&quot;flex items-center gap-2 text-[8px] tracking-widest text-slate-500&quot;&gt;
+                  &lt;CircleDollarSign className=&quot;h-3 w-3&quot; /&gt;
+                  {selected.valueLabel === &quot;observed-value&quot;
+                    ? &quot;OBSERVED VALUE&quot;
+                    : &quot;VALUE&quot;}
+                &lt;/div&gt;
+
+                &lt;div className=&quot;mt-2 text-sm font-semibold text-slate-100&quot;&gt;
+                  {formatValue()}
+                &lt;/div&gt;
+
+                {selected.valueLabel === &quot;observed-value&quot; &amp;&amp; (
+                  &lt;div className=&quot;mt-1 text-[9px] text-slate-500&quot;&gt;
+                    Currency unspecified
+                  &lt;/div&gt;
+                )}
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/section&gt;
+
+          {/* Context */}
+          &lt;section className=&quot;rounded-xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
+            &lt;div className=&quot;flex items-center gap-2 text-[9px] font-semibold tracking-widest text-[#38BDF8]&quot;&gt;
+              &lt;Building2 className=&quot;h-3.5 w-3.5&quot; /&gt;
+              CONTEXT
+            &lt;/div&gt;
+
+            &lt;div className=&quot;mt-4 space-y-3&quot;&gt;
+              &lt;div className=&quot;flex justify-between gap-4 border-b border-[#1F2937] pb-3&quot;&gt;
+                &lt;span className=&quot;text-[9px] uppercase tracking-wider text-slate-500&quot;&gt;
+                  Secondary Signal
+                &lt;/span&gt;
+
+                &lt;span className=&quot;text-right text-xs text-slate-300&quot;&gt;
+                  {selected.secondary || &quot;Not available&quot;}
+                &lt;/span&gt;
+              &lt;/div&gt;
+
+              &lt;div className=&quot;flex justify-between gap-4&quot;&gt;
+                &lt;span className=&quot;text-[9px] uppercase tracking-wider text-slate-500&quot;&gt;
+                  Segment / Stage
+                &lt;/span&gt;
+
+                &lt;span className=&quot;text-right text-xs text-slate-300&quot;&gt;
+                  {selected.tertiary || &quot;Not available&quot;}
+                &lt;/span&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/section&gt;
+
+          {/* Why this matters */}
+          &lt;section className=&quot;rounded-xl border border-[#38BDF8]/20 bg-[#0B1117] p-4&quot;&gt;
+            &lt;div className=&quot;text-[9px] font-semibold tracking-[0.2em] text-[#38BDF8]&quot;&gt;
+              WHY THIS MATTERS
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-3 text-xs leading-6 text-slate-300&quot;&gt;
+              {selected.description ||
+                &quot;This signal represents a meaningful pattern in lost opportunities. Management should investigate the underlying cause before changing the sales strategy.&quot;}
+            &lt;/p&gt;
+          &lt;/section&gt;
+
+          {/* Intelligence signal */}
+          &lt;section className=&quot;rounded-xl border border-[#1F2937] bg-[#0B1117] p-4&quot;&gt;
+            &lt;div className=&quot;flex items-center gap-2 text-[9px] font-semibold tracking-[0.2em] text-[#818CF8]&quot;&gt;
+              &lt;AlertTriangle className=&quot;h-3.5 w-3.5&quot; /&gt;
+              INTELLIGENCE SIGNAL
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-3 text-xs leading-6 text-slate-400&quot;&gt;
+              {selected.secondary
+                ? `${selected.secondary} is associated with this selected signal. Review the related deals, buyer stage and competitive context.`
+                : &quot;Review related deals, buyer stage, pricing and competitive context.&quot;}
+            &lt;/p&gt;
+          &lt;/section&gt;
+
+          {/* Recommended action */}
+          &lt;section className=&quot;rounded-xl border border-[#38BDF8]/10 bg-[#38BDF8]/5 p-4&quot;&gt;
+            &lt;div className=&quot;flex items-center gap-2 text-[9px] font-semibold tracking-[0.2em] text-[#38BDF8]&quot;&gt;
+              &lt;ArrowUpRight className=&quot;h-3.5 w-3.5&quot; /&gt;
+              RECOMMENDED ACTION
+            &lt;/div&gt;
+
+            &lt;p className=&quot;mt-3 text-xs leading-6 text-slate-300&quot;&gt;
+              {selected.action ||
+                &quot;Prioritize high-value opportunities, review the loss reason, and determine whether targeted re-engagement is appropriate.&quot;}
+            &lt;/p&gt;
+          &lt;/section&gt;
+        &lt;/div&gt;
+
+        {/* Footer */}
+        &lt;div className=&quot;border-t border-[#1F2937] p-4&quot;&gt;
+          &lt;div className=&quot;text-[8px] leading-4 text-slate-600&quot;&gt;
+            Intelligence generated from the selected dashboard signal.
+            Synthetic CRM records are used where operational data is
+            unavailable.
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/aside&gt;
+    &lt;/&gt;
   );
 }</file><file path="app/services/assistantService.ts">export interface AssistantEvidence {
   record_count?: number;
@@ -14295,7 +14467,210 @@ The earlier audit findings describe the historical dependency state. The suggest
 
 ## Current Clean-Clone Test Count Note
 
-The recorded Python suite result is 61 passed. The 30 assistant security tests are included within that suite and must not be added again. The standalone Selenium journey passed separately and is not included in the Python test count. Earlier reports showing 59 Python tests reflect an earlier run.</file><file path="app/page.tsx">&quot;use client&quot;;
+The recorded Python suite result is 61 passed. The 30 assistant security tests are included within that suite and must not be added again. The standalone Selenium journey passed separately and is not included in the Python test count. Earlier reports showing 59 Python tests reflect an earlier run.</file><file path="docs/PHASE3_RELEASE_MANIFEST.md"># Phase 3 Release Manifest
+
+## Release Identity
+
+- PoC ID: `POC-12`
+- PoC title: `Lost Deal Recovery`
+- Repository: https://github.com/diyamol123/POC-12-Lost-Deal-Recovery-Phase3
+- Production URL: https://poc-12-lost-deal-recovery.vercel.app/
+- Release status: Candidate; final certification approval pending
+- Track: `Track A — Comparative Intelligence`
+- Release purpose: Phase 3 certification review and technical handover
+
+## Version Matrix
+
+| Component | Version |
+|---|---|
+| Data version | `phase3-v1.0.0` |
+| Method version | `1.0.0` |
+| Architecture version | `1.1.0` |
+| Response contract version | `1.1.0` |
+
+## Commit and Tag Integrity
+
+- Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
+- Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
+- Latest deployment status: `Ready`; operator reports no build or runtime errors.
+- Existing annotated tag: `phase3-v1.0.0`
+- Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
+- Tag disposition: Preserve the existing tag and its target. Do not move it.
+- Final release tag/identity: To be proposed and approved by the authorized maintainer after all required validation.
+
+The baseline evidence commit, selected merged candidate, production revision, and existing tag target are distinct release-integrity facts. The existing tag does not certify the newer candidate. Deployment readiness does not establish that every validation suite was rerun against the selected candidate.
+
+## Production Validation Evidence
+
+The deployment report records a production recheck in which:
+
+- The dashboard returned HTTP 200.
+- `/api/deals` returned HTTP 200.
+- A supported top-categories assistant query returned `SUPPORTED`.
+- The assistant explanation status was `AVAILABLE`.
+
+These observations establish endpoint responsiveness at the time of the recorded check. Consult `DEPLOYMENT_VALIDATION_REPORT.md` for the recorded revision and test context. Re-run the required production checks after the final candidate deployment and update the report with the exact revision and date.
+
+## Analytical Scope
+
+- Primary metric: `deal_value`
+- Minimum group size: `3`
+- Canonical dataset: `20` synthetic records
+- Standardized columns: `20`
+- Approved categories: `Price`, `Competitor`, `Product Fit`, `Timing`, `Budget`
+
+## Grounding Boundary
+
+The deterministic analytical layer is authoritative for numerical results.
+
+The Gemini layer is limited to explaining validated deterministic findings and evidence. It must not independently calculate analytical results or receive the full canonical dataset.
+
+Unsupported predictive, causal, forecasting, arbitrary SQL/code, unrestricted-record, secret/system-prompt, and other out-of-scope requests must remain rejected by the assistant scope guard.
+
+## Certification Baseline
+
+The final release candidate must be validated through:
+
+1. Clean-clone validation
+2. Canonical data validation
+3. Analytical output regeneration
+4. Output-contract validation
+5. Production build and environment validation
+6. Operational regression
+7. Data Intelligence validation
+8. Assistant validation
+9. Automated test suite
+10. Selenium validation
+11. Final UAT
+12. Deployment validation
+13. Evidence review
+14. Architecture, completion, and handover review
+15. Final Repomix generation
+16. Dependency security audit on the selected candidate
+17. Focused assistant tests for incorrect numbers and contradictory explanations
+18. Desktop and mobile demonstration review
+
+Historical test results must be identified as historical unless rerun against the selected candidate. Do not report unexecuted tests as passing.
+
+## Evidence Index
+
+- `CLEAN_CLONE_VALIDATION_REPORT.md`
+- `CANONICAL_DATA_PACKAGE_VALIDATION.md`
+- `ANALYTICAL_VALIDATION_REPORT.md`
+- `FINAL_ANALYTICAL_REVALIDATION.md`
+- `FINAL_AUTOMATED_TEST_REPORT.md`
+- `FINAL_OPERATIONAL_REGRESSION_REPORT.md`
+- `FINAL_DATA_INTELLIGENCE_VALIDATION.md`
+- `FINAL_ASSISTANT_VALIDATION.md`
+- `ASSISTANT_UAT.md`
+- `ASSISTANT_GROUNDING_VALIDATION.md`
+- `PHASE3_FINAL_UAT.md`
+- `DEPLOYMENT_VALIDATION_REPORT.md`
+- `PHASE3_COMPLETION_REPORT.md`
+- `PHASE3_HANDOVER_GUIDE.md`
+- `repomix-phase3-pre-certification.xml` (historical pre-certification snapshot)
+- `repomix-phase3-final-candidate.xml` (fresh snapshot generated from working tree revision `b23b2ab73c4b891bed22e5599545985622570288`; XML parsing, excluded-path check, whitespace check, and common secret-pattern scan passed; candidate-specific validation and final certification approval remain pending)
+
+Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
+
+## Known Dataset Limitations
+
+The canonical dataset is synthetic and contains 20 records. Results must not be interpreted as causal, predictive, geographically representative, or generalizable beyond the approved Phase 3 analytical scope.
+
+Currency is intentionally unspecified unless explicitly established by the dataset or validated release evidence.
+
+Sensitivity analysis indicates that removing record `CRM-012` changes the leading category from Price to Competitor. This is a ranking-sensitivity finding, not proof of causality or guaranteed recoverable revenue.
+
+## Release Rule
+
+The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
+
+Final certification remains pending until that review and approval are recorded.
+## Latest Validation Evidence
+
+### Automated Test Run
+
+- **Tested checkout:** `32e2c858f57ef8c9a550888de487c003d822b2cc`
+- **Selected merged candidate:** `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
+- **Command:** `APP_BASE_URL=http://localhost:3002 PYTHONPATH=. python3 -m pytest tests -q`
+- **Result:** 61 passed, 0 failed
+- **Execution time:** 1.86 seconds
+- **Selenium Data Intelligence journey:** 1 passed in 2.05 seconds
+- **Scope:** The diff between the tested checkout and selected candidate contains only `.gitignore`, deployment documentation, release-manifest documentation, and the generated Repomix snapshot. No application or test source files differ.
+
+### Dependency Audit
+
+- **Audited checkout:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62`
+- **Command:** `npm audit`
+- **Reported result:** 0 vulnerabilities
+- **Scope note:** This result applies to the dependencies and lockfile in the audited checkout. It does not replace the required review of historical security findings or other release risks.
+
+### Production Deployment Verification
+
+- **Production URL:** https://poc-12-lost-deal-recovery.vercel.app/
+- **Production commit:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62` — reported by the operator as matching the current GitHub commit.
+- **Operator smoke check:** Dashboard, deals data, Data Intelligence, and assistant features reported working.
+- **Evidence limitation:** The commit alignment and smoke-check results are operator-confirmed; retain the corresponding Vercel deployment details and dated endpoint checks as supporting evidence.
+
+### Certification Status
+
+Release status remains **Candidate — final certification approval pending**. Final certification requires completion and review of all required validation evidence, confirmation that referenced artifacts correspond to the intended release, and recorded approval from the authorized maintainer.</file><file path=".gitignore"># See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+__pycache__/
+.env
+
+# Safe example configuration can be committed
+!.env.example
+
+# Generated pre-certification artifact
+repomix-phase3-pre-certification.md
+
+# Keep local review Repomix out of feature PRs
+/repomix-phase3-review.xml
+
+# Local Python virtual environment
+.venv/
+venv/</file><file path="app/page.tsx">&quot;use client&quot;;
 
 import { useEffect, useMemo, useState } from &quot;react&quot;;
 import {
@@ -14441,6 +14816,15 @@ export default function Home() {
     }))
     .filter((item) =&gt; item.count &gt; 0)
     .sort((a, b) =&gt; b.count - a.count);
+    const lossReasonValues = reasonOrder
+  .map((reason) =&gt; ({
+    reason,
+    value: filteredDeals
+      .filter((deal) =&gt; deal.reason === reason)
+      .reduce((sum, deal) =&gt; sum + deal.value, 0),
+  }))
+  .filter((item) =&gt; item.value &gt; 0)
+  .sort((a, b) =&gt; b.value - a.value);
 
   const topReason = lossReasons[0]?.reason ?? &quot;No data&quot;;
 
@@ -14779,10 +15163,11 @@ export default function Home() {
         {/* CHARTS */}
         &lt;section className=&quot;mb-6&quot;&gt;
           &lt;DashboardCharts
-            lossReasons={lossReasons}
-            segments={segments}
-            competitors={competitorCounts}
-          /&gt;
+  lossReasons={lossReasons}
+  lossReasonValues={lossReasonValues}
+  segments={segments}
+  competitors={competitorCounts}
+/&gt;
         &lt;/section&gt;
 
         {/* DECISION SUPPORT */}
@@ -14965,207 +15350,4 @@ export default function Home() {
       )}
     &lt;/main&gt;
   );
-}</file><file path="docs/PHASE3_RELEASE_MANIFEST.md"># Phase 3 Release Manifest
-
-## Release Identity
-
-- PoC ID: `POC-12`
-- PoC title: `Lost Deal Recovery`
-- Repository: https://github.com/diyamol123/POC-12-Lost-Deal-Recovery-Phase3
-- Production URL: https://poc-12-lost-deal-recovery.vercel.app/
-- Release status: Candidate; final certification approval pending
-- Track: `Track A — Comparative Intelligence`
-- Release purpose: Phase 3 certification review and technical handover
-
-## Version Matrix
-
-| Component | Version |
-|---|---|
-| Data version | `phase3-v1.0.0` |
-| Method version | `1.0.0` |
-| Architecture version | `1.1.0` |
-| Response contract version | `1.1.0` |
-
-## Commit and Tag Integrity
-
-- Baseline evidence/documentation commit before the latest merge: `2f91541f83783918e8f861f00ff7868149f07ff6`
-- Selected merged candidate commit: `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- Production deployment commit: `d40e674914642f5114c8457609e26d6255b9b6a2` (Vercel Production screenshot reviewed 2026-10-29)
-- Latest deployment status: `Ready`; operator reports no build or runtime errors.
-- Existing annotated tag: `phase3-v1.0.0`
-- Existing tag target: `142b3947a573f3bff2591520f80f61d5728cd9d4`
-- Tag disposition: Preserve the existing tag and its target. Do not move it.
-- Final release tag/identity: To be proposed and approved by the authorized maintainer after all required validation.
-
-The baseline evidence commit, selected merged candidate, production revision, and existing tag target are distinct release-integrity facts. The existing tag does not certify the newer candidate. Deployment readiness does not establish that every validation suite was rerun against the selected candidate.
-
-## Production Validation Evidence
-
-The deployment report records a production recheck in which:
-
-- The dashboard returned HTTP 200.
-- `/api/deals` returned HTTP 200.
-- A supported top-categories assistant query returned `SUPPORTED`.
-- The assistant explanation status was `AVAILABLE`.
-
-These observations establish endpoint responsiveness at the time of the recorded check. Consult `DEPLOYMENT_VALIDATION_REPORT.md` for the recorded revision and test context. Re-run the required production checks after the final candidate deployment and update the report with the exact revision and date.
-
-## Analytical Scope
-
-- Primary metric: `deal_value`
-- Minimum group size: `3`
-- Canonical dataset: `20` synthetic records
-- Standardized columns: `20`
-- Approved categories: `Price`, `Competitor`, `Product Fit`, `Timing`, `Budget`
-
-## Grounding Boundary
-
-The deterministic analytical layer is authoritative for numerical results.
-
-The Gemini layer is limited to explaining validated deterministic findings and evidence. It must not independently calculate analytical results or receive the full canonical dataset.
-
-Unsupported predictive, causal, forecasting, arbitrary SQL/code, unrestricted-record, secret/system-prompt, and other out-of-scope requests must remain rejected by the assistant scope guard.
-
-## Certification Baseline
-
-The final release candidate must be validated through:
-
-1. Clean-clone validation
-2. Canonical data validation
-3. Analytical output regeneration
-4. Output-contract validation
-5. Production build and environment validation
-6. Operational regression
-7. Data Intelligence validation
-8. Assistant validation
-9. Automated test suite
-10. Selenium validation
-11. Final UAT
-12. Deployment validation
-13. Evidence review
-14. Architecture, completion, and handover review
-15. Final Repomix generation
-16. Dependency security audit on the selected candidate
-17. Focused assistant tests for incorrect numbers and contradictory explanations
-18. Desktop and mobile demonstration review
-
-Historical test results must be identified as historical unless rerun against the selected candidate. Do not report unexecuted tests as passing.
-
-## Evidence Index
-
-- `CLEAN_CLONE_VALIDATION_REPORT.md`
-- `CANONICAL_DATA_PACKAGE_VALIDATION.md`
-- `ANALYTICAL_VALIDATION_REPORT.md`
-- `FINAL_ANALYTICAL_REVALIDATION.md`
-- `FINAL_AUTOMATED_TEST_REPORT.md`
-- `FINAL_OPERATIONAL_REGRESSION_REPORT.md`
-- `FINAL_DATA_INTELLIGENCE_VALIDATION.md`
-- `FINAL_ASSISTANT_VALIDATION.md`
-- `ASSISTANT_UAT.md`
-- `ASSISTANT_GROUNDING_VALIDATION.md`
-- `PHASE3_FINAL_UAT.md`
-- `DEPLOYMENT_VALIDATION_REPORT.md`
-- `PHASE3_COMPLETION_REPORT.md`
-- `PHASE3_HANDOVER_GUIDE.md`
-- `repomix-phase3-pre-certification.xml` (historical pre-certification snapshot)
-- `repomix-phase3-final-candidate.xml` (fresh snapshot generated from working tree revision `b23b2ab73c4b891bed22e5599545985622570288`; XML parsing, excluded-path check, whitespace check, and common secret-pattern scan passed; candidate-specific validation and final certification approval remain pending)
-
-Verify that each referenced artifact exists and corresponds to the intended candidate before final submission.
-
-## Known Dataset Limitations
-
-The canonical dataset is synthetic and contains 20 records. Results must not be interpreted as causal, predictive, geographically representative, or generalizable beyond the approved Phase 3 analytical scope.
-
-Currency is intentionally unspecified unless explicitly established by the dataset or validated release evidence.
-
-Sensitivity analysis indicates that removing record `CRM-012` changes the leading category from Price to Competitor. This is a ranking-sensitivity finding, not proof of causality or guaranteed recoverable revenue.
-
-## Release Rule
-
-The existing `phase3-v1.0.0` tag must not be moved silently. The authorized maintainer must approve the final release identity after required validation, documentation, evidence, deployment checks, and Repomix generation are complete.
-
-Final certification remains pending until that review and approval are recorded.
-## Latest Validation Evidence
-
-### Automated Test Run
-
-- **Tested checkout:** `32e2c858f57ef8c9a550888de487c003d822b2cc`
-- **Selected merged candidate:** `c48bf631b1d834e8d3074e28ebd26a1b68967ce6`
-- **Command:** `APP_BASE_URL=http://localhost:3002 PYTHONPATH=. python3 -m pytest tests -q`
-- **Result:** 61 passed, 0 failed
-- **Execution time:** 1.86 seconds
-- **Selenium Data Intelligence journey:** 1 passed in 2.05 seconds
-- **Scope:** The diff between the tested checkout and selected candidate contains only `.gitignore`, deployment documentation, release-manifest documentation, and the generated Repomix snapshot. No application or test source files differ.
-
-### Dependency Audit
-
-- **Audited checkout:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62`
-- **Command:** `npm audit`
-- **Reported result:** 0 vulnerabilities
-- **Scope note:** This result applies to the dependencies and lockfile in the audited checkout. It does not replace the required review of historical security findings or other release risks.
-
-### Production Deployment Verification
-
-- **Production URL:** https://poc-12-lost-deal-recovery.vercel.app/
-- **Production commit:** `86b656f68a3e1cbb6a7a17f4c3c04d4e5752ad62` — reported by the operator as matching the current GitHub commit.
-- **Operator smoke check:** Dashboard, deals data, Data Intelligence, and assistant features reported working.
-- **Evidence limitation:** The commit alignment and smoke-check results are operator-confirmed; retain the corresponding Vercel deployment details and dated endpoint checks as supporting evidence.
-
-### Certification Status
-
-Release status remains **Candidate — final certification approval pending**. Final certification requires completion and review of all required validation evidence, confirmation that referenced artifacts correspond to the intended release, and recorded approval from the authorized maintainer.</file><file path=".gitignore"># See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-__pycache__/
-.env
-
-# Safe example configuration can be committed
-!.env.example
-
-# Generated pre-certification artifact
-repomix-phase3-pre-certification.md
-
-# Keep local review Repomix out of feature PRs
-/repomix-phase3-review.xml
-
-# Local Python virtual environment
-.venv/
-venv/</file></files></repomix>
+}</file></files></repomix>
