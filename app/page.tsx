@@ -145,6 +145,15 @@ export default function Home() {
     }))
     .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count);
+    const lossReasonValues = reasonOrder
+  .map((reason) => ({
+    reason,
+    value: filteredDeals
+      .filter((deal) => deal.reason === reason)
+      .reduce((sum, deal) => sum + deal.value, 0),
+  }))
+  .filter((item) => item.value > 0)
+  .sort((a, b) => b.value - a.value);
 
   const topReason = lossReasons[0]?.reason ?? "No data";
 
@@ -483,10 +492,11 @@ export default function Home() {
         {/* CHARTS */}
         <section className="mb-6">
           <DashboardCharts
-            lossReasons={lossReasons}
-            segments={segments}
-            competitors={competitorCounts}
-          />
+  lossReasons={lossReasons}
+  lossReasonValues={lossReasonValues}
+  segments={segments}
+  competitors={competitorCounts}
+/>
         </section>
 
         {/* DECISION SUPPORT */}

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -8,6 +9,11 @@ type ChartProps = {
   lossReasons: {
     reason: string;
     count: number;
+  }[];
+
+  lossReasonValues: {
+    reason: string;
+    value: number;
   }[];
 
   segments: {
@@ -27,14 +33,19 @@ type SelectedSignal = {
   type: "reason" | "competitor";
   title: string;
   value?: number;
+  valueLabel?: "observed-value" | "deal-count";
   secondary?: string;
   tertiary?: string;
   description?: string;
   action?: string;
 };
+const numberFormat = new Intl.NumberFormat("en-IN", {
+  maximumFractionDigits: 0,
+});
 
 export default function DashboardCharts({
   lossReasons,
+  lossReasonValues,
   segments,
   competitors,
 }: ChartProps) {
@@ -150,6 +161,85 @@ export default function DashboardCharts({
         lineStyle: {
           width: 2,
           color: "#818cf8",
+        },
+      },
+    ],
+  };
+
+  /* ---------------- OBSERVED LOST-DEAL VALUE BY REASON ---------------- */
+
+  const valueLabels = lossReasonValues.map(
+    (item) => item.reason
+  );
+
+  const valueData = lossReasonValues.map(
+    (item) => item.value
+  );
+
+  const valueOption = {
+    backgroundColor: "transparent",
+
+    tooltip: {
+      trigger: "axis",
+      valueFormatter: (value: number) =>
+        numberFormat.format(value),
+    },
+
+    grid: {
+      left: 65,
+      right: 25,
+      top: 35,
+      bottom: 65,
+      containLabel: true,
+    },
+
+    xAxis: {
+      type: "category",
+      data: valueLabels,
+      axisLabel: {
+        color: "#94a3b8",
+        rotate: 25,
+        fontSize: 10,
+      },
+      axisLine: {
+        lineStyle: {
+          color: "#1f2937",
+        },
+      },
+    },
+
+    yAxis: {
+      type: "value",
+      name: "Observed value",
+      nameTextStyle: {
+        color: "#64748b",
+      },
+      axisLabel: {
+        color: "#64748b",
+        formatter: (value: number) =>
+          numberFormat.format(value),
+      },
+      splitLine: {
+        lineStyle: {
+          color: "#1f2937",
+        },
+      },
+    },
+
+    series: [
+      {
+        name: "Observed lost-deal value",
+        type: "bar",
+        data: valueData,
+        barMaxWidth: 42,
+        itemStyle: {
+          color: "#38bdf8",
+          borderRadius: [5, 5, 0, 0],
+        },
+        emphasis: {
+          itemStyle: {
+            color: "#818cf8",
+          },
         },
       },
     ],
@@ -325,7 +415,72 @@ export default function DashboardCharts({
   return (
     <>
       <div className="space-y-5">
-        {/* LOSS REASON PARETO */}
+
+        {/* OBSERVED LOST-DEAL VALUE BY REASON */}
+
+        <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
+          <div className="mb-3">
+            <div className="text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+              OBSERVED LOST-DEAL VALUE BY REASON
+            </div>
+
+            <p className="mt-1 text-xs leading-5 text-slate-500">
+              Compares the total observed value of lost opportunities
+              across loss reasons in the current filtered dataset.
+              Values are presented without a currency designation.
+              Click a bar to inspect its category.
+            </p>
+          </div>
+
+          <ReactECharts
+            option={valueOption}
+            style={{ height: 300, width: "100%" }}
+            opts={{ renderer: "canvas" }}
+            onEvents={{
+              click: (params: {
+                seriesType?: string;
+                dataIndex?: number;
+              }) => {
+                if (
+                  params.seriesType !== "bar" ||
+                  params.dataIndex === undefined
+                ) {
+                  return;
+                }
+
+                const item = lossReasonValues[params.dataIndex];
+                if (!item) return;
+
+                const categoryCount =
+                  lossReasons.find(
+                    (reason) => reason.reason === item.reason
+                  )?.count ?? 0;
+
+                setSelected({
+                  type: "reason",
+                  title: item.reason,
+                  value: item.value,
+                  valueLabel: "observed-value",
+                  secondary:
+                    `${numberFormat.format(item.value)} observed value`,
+                  tertiary:
+                    `${categoryCount} lost deals · Currency unspecified`,
+                  description:
+                    `The loss reason "${item.reason}" is associated with ` +
+                    `${numberFormat.format(item.value)} in observed lost-deal ` +
+                    `value across ${categoryCount} records in the current ` +
+                    "filtered dataset. This is descriptive evidence and " +
+                    "does not establish recoverability or causality.",
+                  action:
+                    "Review the associated deal records and documented buyer " +
+                    "objections before deciding whether targeted follow-up is appropriate.",
+                });
+              },
+            }}
+          />
+        </section>
+
+        {/* LOSS REASON COUNT PARETO */}
 
         <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
           <div className="mb-3">
@@ -363,6 +518,7 @@ export default function DashboardCharts({
                   type: "reason",
                   title: item.reason,
                   value: item.count,
+                  valueLabel: "deal-count",
                   secondary: `${item.count} lost deals`,
                   tertiary: "Loss reason",
                   description:
@@ -454,6 +610,7 @@ export default function DashboardCharts({
             }}
           />
         </section>
+
       </div>
 
       <IntelligencePanel

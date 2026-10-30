@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -14,6 +15,7 @@ type IntelligencePanelProps = {
     type: "reason" | "competitor" | "deal";
     title: string;
     value?: number;
+    valueLabel?: "observed-value" | "deal-count";
     secondary?: string;
     tertiary?: string;
     description?: string;
@@ -28,32 +30,38 @@ export default function IntelligencePanel({
 }: IntelligencePanelProps) {
   if (!selected) return null;
 
-  const formatValue = (
-    value?: number,
-    type?: "reason" | "competitor" | "deal"
-  ) => {
-    if (value === undefined) return "—";
+  const numberFormat = new Intl.NumberFormat("en-IN", {
+    maximumFractionDigits: 0,
+  });
 
-    if (type === "deal") {
-      return new Intl.NumberFormat("en-IN", {
-        maximumFractionDigits: 0,
-      }).format(value);
+  const formatValue = () => {
+    if (selected.value === undefined) return "—";
+
+    if (selected.valueLabel === "observed-value") {
+      return numberFormat.format(selected.value);
     }
 
-    if (type === "reason") {
-      return `${value} lost deals`;
+    if (
+      selected.valueLabel === "deal-count" ||
+      (selected.type === "reason" &&
+        selected.valueLabel !== "observed-value")
+    ) {
+      return `${numberFormat.format(selected.value)} lost deals`;
     }
 
-    if (type === "competitor") {
-      return `${value} deals`;
+    if (selected.type === "competitor") {
+      return `${numberFormat.format(selected.value)} deals`;
     }
 
-    return String(value);
+    if (selected.type === "deal") {
+      return numberFormat.format(selected.value);
+    }
+
+    return numberFormat.format(selected.value);
   };
 
   return (
     <>
-      {/* Accessible backdrop */}
       <button
         type="button"
         aria-label="Close intelligence panel"
@@ -61,7 +69,6 @@ export default function IntelligencePanel({
         onClick={onClose}
       />
 
-      {/* Intelligence Sidebar */}
       <aside
         role="dialog"
         aria-modal="true"
@@ -124,12 +131,20 @@ export default function IntelligencePanel({
               <div className="rounded-lg border border-[#1F2937] bg-[#030712] p-3">
                 <div className="flex items-center gap-2 text-[8px] tracking-widest text-slate-500">
                   <CircleDollarSign className="h-3 w-3" />
-                  VALUE
+                  {selected.valueLabel === "observed-value"
+                    ? "OBSERVED VALUE"
+                    : "VALUE"}
                 </div>
 
                 <div className="mt-2 text-sm font-semibold text-slate-100">
-                  {formatValue(selected.value, selected.type)}
+                  {formatValue()}
                 </div>
+
+                {selected.valueLabel === "observed-value" && (
+                  <div className="mt-1 text-[9px] text-slate-500">
+                    Currency unspecified
+                  </div>
+                )}
               </div>
             </div>
           </section>
