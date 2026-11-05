@@ -1,6 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from pathlib import Path as _Path
+from datetime import datetime as _Datetime
+import json as _json
 
 
 
@@ -40,6 +43,8 @@ app.add_middleware(
         "http" + "://" + "127.0.0.1:3002",
         "http" + "://" + "localhost:3003",
         "http" + "://" + "127.0.0.1:3003",
+        "http" + "://" + "localhost:3004",
+        "http" + "://" + "127.0.0.1:3004",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -369,11 +374,53 @@ def health():
 def get_deals():
     return deals
 
-# ---------------- PHASE 3 POST #4: DATA INTELLIGENCE ----------------
+# ---------------- PORTFOLIO EXPERIMENT DATA ----------------
+# This endpoint serves the separate 500-record portfolio experiment.
+# It does not replace or mutate the certified 20-record /api/deals endpoint.
 
-from pathlib import Path as _Path
-from datetime import datetime as _Datetime
-import json as _json
+_PORTFOLIO_ROOT = _Path(__file__).resolve().parent / "portfolio-experiment"
+_PORTFOLIO_RECORDS_FILE = _PORTFOLIO_ROOT / "intelligence_data_500.csv"
+_PORTFOLIO_RESULTS_FILE = _PORTFOLIO_ROOT / "outputs" / "comparative_intelligence.json"
+_PORTFOLIO_BASELINE_FILE = _PORTFOLIO_ROOT / "outputs" / "baseline_results.json"
+
+
+@app.get("/api/portfolio/records")
+def get_portfolio_records():
+    import csv as _csv
+
+    if not _PORTFOLIO_RECORDS_FILE.is_file():
+        raise HTTPException(status_code=503, detail="Portfolio experiment dataset is unavailable.")
+
+    records = []
+    with _PORTFOLIO_RECORDS_FILE.open("r", encoding="utf-8", newline="") as source:
+        for row in _csv.DictReader(source):
+            try:
+                row["metric_value"] = float(row["metric_value"])
+            except (TypeError, ValueError):
+                row["metric_value"] = None
+            row["is_synthetic"] = row.get("is_synthetic", "").lower() == "true"
+            records.append(row)
+
+    if len(records) != 500:
+        raise HTTPException(status_code=503, detail="Portfolio dataset failed its 500-record integrity check.")
+
+    return records
+
+
+@app.get("/api/portfolio/summary")
+def get_portfolio_summary():
+    try:
+        results = _json.loads(_PORTFOLIO_RESULTS_FILE.read_text(encoding="utf-8"))
+        baseline = _json.loads(_PORTFOLIO_BASELINE_FILE.read_text(encoding="utf-8"))
+    except (FileNotFoundError, _json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=503, detail=f"Portfolio analytical outputs are unavailable: {exc}") from exc
+
+    if results.get("data_version") != "portfolio-synth-v1.0.0" or baseline.get("baseline_record_count") != 500:
+        raise HTTPException(status_code=503, detail="Portfolio analytical outputs failed version or record-count validation.")
+
+    return {"baseline": baseline, "results": results}
+
+# ---------------- PHASE 3 POST #4: DATA INTELLIGENCE ----------------
 
 _INTELLIGENCE_ROOT = _Path(__file__).resolve().parent / "data-science" / "outputs"
 _RESULTS_FILE = _INTELLIGENCE_ROOT / "intelligence_results.json"
@@ -542,6 +589,21 @@ def _intelligence_status():
             "status": status,
             "detail": detail,
         }
+@app.post("/api/portfolio/assistant/query")
+def portfolio_assistant_query(payload: AssistantQuestion):
+    try:
+        from .assistant.portfolio_service import answer_portfolio_question
+        from .assistant.errors import AssistantValidationError
+    except ImportError:
+        from assistant.portfolio_service import answer_portfolio_question
+        from assistant.errors import AssistantValidationError
+
+    try:
+        return answer_portfolio_question(payload.question)
+    except AssistantValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
 @app.post("/api/assistant/query")
 def assistant_query(payload: AssistantQuestion):
     try:

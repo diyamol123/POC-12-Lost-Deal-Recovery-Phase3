@@ -1,0 +1,21 @@
+{
+  "experiment": "PoC-12 Expanded Synthetic Portfolio Dataset",
+  "version": "portfolio-synth-v1.0.0",
+  "random_seed": 120026,
+  "total_records": 500,
+  "original_records_preserved": 20,
+  "new_synthetic_records": 480,
+  "category_counts": {
+    "Price": 101,
+    "Competitor": 101,
+    "Product Fit": 100,
+    "Timing": 99,
+    "Budget": 99
+  },
+  "currency": "unspecified",
+  "all_records_synthetic": true,
+  "original_baseline_unchanged": true,
+  "source_file": "data/canonical/intelligence_data.csv",
+  "output_file": "intelligence_data_500.csv",
+  "sha256": "72138d3c04c0603f8a9008119b91f71bde9207c61de6e95d2aa6f7a4fa226d72"
+}
