@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import PortfolioAssistant from "@/app/components/portfolio/PortfolioAssistant";
+import DashboardCharts from "@/app/components/DashboardCharts";
 import type { PortfolioRecord } from "@/app/lib/portfolio";
 import { formatRawUnits, sumMetric } from "@/app/lib/portfolio";
 
@@ -107,6 +108,30 @@ export default function Home() {
       .map(([category, data]) => ({ category, ...data }))
       .sort((a, b) => b.value - a.value);
   }, [filteredRecords]);
+
+  const chartData = useMemo(() => {
+    const counts = new Map<string, number>();
+    const values = new Map<string, number>();
+    const segmentCounts = new Map<string, Map<string, number>>();
+
+    filteredRecords.forEach((record) => {
+      counts.set(record.category, (counts.get(record.category) ?? 0) + 1);
+      values.set(record.category, (values.get(record.category) ?? 0) + (record.metric_value || 0));
+
+      const reasons = segmentCounts.get(record.subcategory) ?? new Map<string, number>();
+      reasons.set(record.category, (reasons.get(record.category) ?? 0) + 1);
+      segmentCounts.set(record.subcategory, reasons);
+    });
+
+    return {
+      lossReasons: [...counts.entries()].map(([reason, count]) => ({ reason, count })),
+      lossReasonValues: [...values.entries()].map(([reason, value]) => ({ reason, value })),
+      segments: [...segmentCounts.entries()].flatMap(([segment, reasons]) =>
+        [...reasons.entries()].map(([reason, value]) => ({ segment, reason, value }))
+      ),
+    };
+  }, [filteredRecords]);
+
   const maxCategoryValue = Math.max(1, ...categoryRows.map((row) => row.value));
   const topCategory = categoryRows[0];
   const activeFilterCount = Object.values(filters).filter((value) => value !== "ALL").length;
@@ -162,6 +187,19 @@ export default function Home() {
           <Kpi label="Observed value" value={loading ? "—" : formatRawUnits(totalValue)} note="Currency unspecified · units" icon={<Activity size={17} />} />
           <Kpi label="Average observed value" value={loading ? "—" : formatRawUnits(averageValue)} note="Per record in current view" icon={<BarChart3 size={17} />} />
           <Kpi label="Leading category" value={loading ? "—" : topCategory?.category ?? "—"} note={topCategory ? `${topCategory.count} records by observed value` : "No matching records"} icon={<ShieldCheck size={17} />} />
+        </section>
+
+
+        <section aria-label="Portfolio charts" className="mb-5">
+          {loading ? (
+            <div className="h-24 animate-pulse rounded-2xl bg-[#e8edf5]" />
+          ) : (
+            <DashboardCharts
+              lossReasons={chartData.lossReasons}
+              lossReasonValues={chartData.lossReasonValues}
+              segments={chartData.segments}
+            />
+          )}
         </section>
 
         <section className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(300px,0.85fr)]">

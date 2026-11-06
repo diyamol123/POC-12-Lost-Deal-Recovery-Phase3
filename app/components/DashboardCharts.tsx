@@ -21,12 +21,6 @@ type ChartProps = {
     reason: string;
     value: number;
   }[];
-
-  competitors: {
-    competitor: string;
-    wins: number;
-    losses: number;
-  }[];
 };
 
 type SelectedSignal = {
@@ -47,7 +41,6 @@ export default function DashboardCharts({
   lossReasons,
   lossReasonValues,
   segments,
-  competitors,
 }: ChartProps) {
   const [selected, setSelected] =
     useState<SelectedSignal | null>(null);
@@ -372,71 +365,6 @@ export default function DashboardCharts({
     ],
   };
 
-  /* ---------------- COMPETITOR LOSS COUNTS ---------------- */
-
-  const competitorOption = {
-    backgroundColor: "transparent",
-
-    tooltip: {
-      backgroundColor: "#0f172a",
-      borderColor: "#334155",
-      textStyle: { color: "#e2e8f0", fontSize: 12 },
-      trigger: "axis",
-    },
-
-    grid: {
-      left: 45,
-      right: 20,
-      top: 30,
-      bottom: 65,
-    },
-
-    xAxis: {
-      type: "category",
-      data: competitors.map((item) => item.competitor),
-      axisLabel: {
-        color: "#94a3b8",
-        fontSize: 12,
-        rotate: 20,
-      },
-      axisLine: {
-        lineStyle: {
-          color: "#1f2937",
-        },
-      },
-    },
-
-    yAxis: {
-      type: "value",
-      name: "Recorded losses",
-      nameTextStyle: {
-        color: "#64748b",
-        fontSize: 12,
-      },
-      axisLabel: {
-        color: "#64748b",
-        fontSize: 12,
-      },
-      splitLine: {
-        lineStyle: {
-          color: "#1f2937",
-        },
-      },
-    },
-
-    series: [
-      {
-        name: "Recorded competitive losses",
-        type: "bar",
-        data: competitors.map((item) => item.losses),
-        barMaxWidth: 36,
-        itemStyle: {
-          color: "#818cf8",
-          borderRadius: [4, 4, 0, 0],
-        },
-      },
-    ],
-  };
 
   return (
     <>
@@ -579,61 +507,6 @@ export default function DashboardCharts({
             option={heatmapOption}
             style={{ height: "clamp(280px, 34vw, 340px)", width: "100%" }}
             opts={{ renderer: "canvas" }}
-          />
-        </section>
-
-        {/* COMPETITOR LOSS COUNTS */}
-
-        <section className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
-          <div className="mb-3">
-            <div className="text-xs font-semibold tracking-wide text-[#38BDF8]">
-              COMPETITOR LOSS COUNTS
-            </div>
-
-            <p className="mt-1 text-sm leading-6 text-slate-500">
-              Shows recorded competitive-loss counts only. Win counts
-              are not available in this dataset. Click a bar to inspect
-              the selected competitor.
-            </p>
-          </div>
-
-          <ReactECharts
-            option={competitorOption}
-            style={{ height: "clamp(280px, 34vw, 340px)", width: "100%" }}
-            opts={{ renderer: "canvas" }}
-            onEvents={{
-              click: (params: {
-                seriesType?: string;
-                dataIndex?: number;
-              }) => {
-                if (
-                  params.seriesType !== "bar" ||
-                  params.dataIndex === undefined
-                ) {
-                  return;
-                }
-
-                const item = competitors[params.dataIndex];
-                if (!item) return;
-
-                setSelected({
-                  type: "competitor",
-                  title: item.competitor,
-                  value: item.losses,
-                  secondary: `${item.losses} recorded competitive losses`,
-                  tertiary: "Recorded competitive losses",
-                  description:
-                    `${item.competitor} appears in ${item.losses} ` +
-                    "competitive losses in the current filtered dataset. " +
-                    "This is a descriptive count, not a win/loss rate or proof " +
-                    "of why the deals were lost.",
-                  action:
-                    "Review the associated deal records and documented buyer " +
-                    "objections, pricing and product requirements before deciding " +
-                    "on follow-up.",
-                });
-              },
-            }}
           />
         </section>
 
