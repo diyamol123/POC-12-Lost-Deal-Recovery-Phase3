@@ -21,7 +21,7 @@ const SUGGESTED_QUESTIONS = [
 
 function formatValue(value: unknown): string {
   if (typeof value === "number") {
-    return value.toLocaleString("en-IN", {
+    return value.toLocaleString("en-US", {
       maximumFractionDigits: 2,
     });
   }
@@ -138,13 +138,13 @@ export default function GroundedAssistant({
   return (
     <section
       aria-labelledby="grounded-assistant-title"
-      className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-5"
+      className="rounded-2xl border border-slate-200 bg-white p-5"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2
             id="grounded-assistant-title"
-            className="text-sm font-semibold tracking-wide text-slate-100"
+            className="text-sm font-semibold tracking-wide text-slate-900"
           >
             GROUNDED DATA ASSISTANT
           </h2>
@@ -154,7 +154,7 @@ export default function GroundedAssistant({
           </p>
         </div>
 
-        <span className="rounded-full border border-[#38BDF8]/20 px-2.5 py-1 text-[9px] uppercase tracking-wider text-[#38BDF8]">
+        <span className="rounded-full border border-sky-600/20 px-2.5 py-1 text-[9px] uppercase tracking-wider text-sky-700">
           Deterministic Retrieval · Gemini Explanation
         </span>
       </div>
@@ -167,7 +167,7 @@ export default function GroundedAssistant({
           }
           disabled={loading}
           aria-label={`Explain the selected ${selectedGroup} finding`}
-          className="mb-3 w-full rounded-lg border border-[#818CF8]/30 px-4 py-3 text-sm font-semibold text-[#A5B4FC] hover:bg-[#818CF8]/10 disabled:opacity-50"
+          className="mb-3 w-full rounded-lg border border-indigo-200 px-4 py-3 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 disabled:opacity-50"
         >
           Explain this finding with Gemini
         </button>
@@ -190,20 +190,20 @@ export default function GroundedAssistant({
           maxLength={500}
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="Ask about lost-deal categories, rankings, evidence, or limitations..."
-          className="min-w-0 flex-1 rounded-lg border border-[#1F2937] bg-[#030712] px-3 py-2.5 text-xs text-slate-200 outline-none placeholder:text-slate-600 focus:border-[#38BDF8]/40"
+          className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-xs text-slate-800 outline-none placeholder:text-slate-500 focus:border-sky-600/40"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg border border-[#38BDF8]/30 px-4 py-2.5 text-xs font-medium text-[#38BDF8] hover:bg-[#38BDF8]/5 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg border border-sky-600/30 px-4 py-2.5 text-xs font-medium text-sky-700 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "Checking..." : "Ask"}
         </button>
       </form>
 
       <div className="mt-4">
-        <div className="mb-2 text-[9px] font-semibold uppercase tracking-wider text-slate-600">
+        <div className="mb-2 text-[9px] font-semibold uppercase tracking-wider text-slate-500">
           Suggested questions
         </div>
 
@@ -214,7 +214,7 @@ export default function GroundedAssistant({
               type="button"
               onClick={() => void submit(suggestion)}
               disabled={loading}
-              className="rounded-lg border border-[#1F2937] px-2.5 py-1.5 text-left text-[10px] text-slate-400 hover:border-[#38BDF8]/30 hover:text-[#38BDF8] disabled:opacity-50"
+              className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-left text-[10px] text-slate-500 hover:border-sky-600/30 hover:text-sky-700 disabled:opacity-50"
             >
               {suggestion}
             </button>
@@ -232,29 +232,29 @@ export default function GroundedAssistant({
       )}
 
       {response && !error && (
-        <div className="mt-5 space-y-4 rounded-xl border border-[#1F2937] bg-[#030712] p-4">
+        <div className="mt-5 space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div>
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-[#38BDF8]">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-sky-700">
               Grounded answer
             </div>
-            <p className="mt-2 text-sm leading-6 text-slate-200">
+            <p className="mt-2 text-sm leading-6 text-slate-800">
               {getAnswer(response)}
             </p>
           </div>
 
           {response.gemini_explanation && (
-            <div className="rounded-lg border border-[#818CF8]/20 bg-[#818CF8]/5 p-3">
+            <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-3">
               <div className="flex items-center justify-between gap-2">
-                <div className="text-[9px] font-semibold uppercase tracking-wider text-[#818CF8]">
+                <div className="text-[9px] font-semibold uppercase tracking-wider text-indigo-700">
                   Gemini explanation
                 </div>
-                <span className="text-[9px] uppercase tracking-wider text-slate-600">
+                <span className="text-[9px] uppercase tracking-wider text-slate-500">
                   {response.explanation_status === "AVAILABLE"
                     ? "Grounded"
                     : "Fallback"}
                 </span>
               </div>
-              <p className="mt-2 whitespace-pre-line text-xs leading-5 text-slate-300">
+              <p className="mt-2 whitespace-pre-line text-xs leading-5 text-slate-700">
                 {response.gemini_explanation}
               </p>
             </div>
@@ -262,10 +262,10 @@ export default function GroundedAssistant({
 
           {getEvidence(response).length > 0 && (
             <div>
-              <div className="text-[9px] font-semibold uppercase tracking-wider text-slate-600">
+              <div className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">
                 Evidence
               </div>
-              <div className="mt-2 space-y-1 text-xs text-slate-400">
+              <div className="mt-2 space-y-1 text-xs text-slate-500">
                 {getEvidence(response).map((evidence, index) => (
                   <div key={evidence.reference || response.evidence_references[index] || `evidence-${index}`}>
                     {evidence.reference || "Approved result"} ·{" "}
@@ -279,27 +279,27 @@ export default function GroundedAssistant({
 
           <div className="grid gap-2 text-[10px] text-slate-500 sm:grid-cols-3">
             <div>
-              <span className="text-slate-600">Data version</span>
-              <div className="mt-1 text-slate-300">
+              <span className="text-slate-500">Data version</span>
+              <div className="mt-1 text-slate-700">
                 {response.metadata.data_version}
               </div>
             </div>
             <div>
-              <span className="text-slate-600">Method version</span>
-              <div className="mt-1 text-slate-300">
+              <span className="text-slate-500">Method version</span>
+              <div className="mt-1 text-slate-700">
                 {response.metadata.method_version}
               </div>
             </div>
             <div>
-              <span className="text-slate-600">Quality</span>
-              <div className="mt-1 text-slate-300">
+              <span className="text-slate-500">Quality</span>
+              <div className="mt-1 text-slate-700">
                 {response.metadata.quality_status}
               </div>
             </div>
           </div>
 
-          <div className="border-t border-[#1F2937] pt-3">
-            <div className="text-[9px] font-semibold uppercase tracking-wider text-slate-600">
+          <div className="border-t border-slate-200 pt-3">
+            <div className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">
               Limitation
             </div>
             <p className="mt-1 text-[10px] leading-5 text-slate-500">

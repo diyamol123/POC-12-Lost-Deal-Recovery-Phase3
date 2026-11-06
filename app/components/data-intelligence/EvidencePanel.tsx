@@ -51,17 +51,17 @@ export default function EvidencePanel({
         role="dialog"
         aria-modal="true"
         aria-labelledby="evidence-panel-title"
-        className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-xl flex-col border-l border-[#1F2937] bg-[#030712] shadow-2xl"
+        className="fixed right-0 top-0 z-50 flex h-screen w-full max-w-xl flex-col border-l border-[#e2e8f0] bg-[#f8fafc] shadow-2xl"
       >
-        <div className="flex items-start justify-between border-b border-[#1F2937] p-5">
+        <div className="flex items-start justify-between border-b border-[#e2e8f0] p-5">
           <div>
-            <div className="text-[9px] tracking-[0.25em] text-[#38BDF8]">
+            <div className="text-[9px] tracking-[0.25em] text-[#2563eb]">
               RESULT EVIDENCE
             </div>
 
             <h2
               id="evidence-panel-title"
-              className="mt-1 text-xl font-semibold text-slate-100"
+              className="mt-1 text-xl font-semibold text-slate-900"
             >
               {result.group_key}
             </h2>
@@ -70,7 +70,7 @@ export default function EvidencePanel({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-[#1F2937] px-3 py-2 text-xs text-slate-400"
+            className="rounded-lg border border-[#e2e8f0] px-3 py-2 text-xs text-slate-500"
             aria-label="Close evidence panel"
           >
             Close
@@ -78,18 +78,18 @@ export default function EvidencePanel({
         </div>
 
         <div className="flex-1 space-y-4 overflow-y-auto p-5">
-          <section className="rounded-xl border border-[#1F2937] bg-[#0B1117] p-4">
+          <section className="rounded-xl border border-[#e2e8f0] bg-[#ffffff] p-4">
             <div className="text-[9px] tracking-widest text-slate-500">
               FINDING
             </div>
 
-            <p className="mt-2 text-sm leading-6 text-slate-200">
+            <p className="mt-2 text-sm leading-6 text-slate-800">
               {result.finding}
             </p>
           </section>
 
-          <section className="rounded-xl border border-[#1F2937] bg-[#0B1117] p-4">
-            <div className="text-[9px] tracking-widest text-[#38BDF8]">
+          <section className="rounded-xl border border-[#e2e8f0] bg-[#ffffff] p-4">
+            <div className="text-[9px] tracking-widest text-[#2563eb]">
               SUPPORTING EVIDENCE
             </div>
 
@@ -102,7 +102,7 @@ export default function EvidencePanel({
               <Metric
                 label="Average"
                 value={result.evidence.average_deal_value.toLocaleString(
-                  "en-IN",
+                  "en-US",
                   { maximumFractionDigits: 0 }
                 )}
               />
@@ -129,10 +129,10 @@ export default function EvidencePanel({
                     onClick={() =>
                       setSelectedRecordId((current) => current === id ? null : id)
                     }
-                    className={`rounded-full border px-3 py-1.5 text-xs transition focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/60 ${
+                    className={`rounded-full border px-3 py-1.5 text-xs transition focus:outline-none focus:ring-2 focus:ring-[#2563eb]/60 ${
                       selectedRecordId === id
-                        ? "border-[#38BDF8] bg-[#38BDF8]/15 text-[#7DD3FC]"
-                        : "border-[#1F2937] text-slate-400 hover:border-[#38BDF8]/50 hover:text-slate-200"
+                        ? "border-[#2563eb] bg-[#2563eb]/15 text-[#1d4ed8]"
+                        : "border-[#e2e8f0] text-slate-500 hover:border-[#2563eb]/50 hover:text-slate-800"
                     }`}
                   >
                     {id}
@@ -148,13 +148,13 @@ export default function EvidencePanel({
               <section
                 aria-live="polite"
                 aria-label={`CRM record ${selectedRecordId} details`}
-                className="mt-4 rounded-xl border border-[#38BDF8]/30 bg-[#38BDF8]/5 p-4"
+                className="mt-4 rounded-xl border border-[#2563eb]/30 bg-[#2563eb]/5 p-4"
               >
-                <div className="text-xs font-semibold uppercase tracking-wide text-[#38BDF8]">
+                <div className="text-xs font-semibold uppercase tracking-wide text-[#2563eb]">
                   CRM RECORD INSPECTION
                 </div>
                 {dealsLoading ? (
-                  <p className="mt-3 text-sm text-slate-400">
+                  <p className="mt-3 text-sm text-slate-500">
                     Loading CRM record details...
                   </p>
                 ) : dealsError ? (
@@ -167,7 +167,7 @@ export default function EvidencePanel({
                   </p>
                 ) : (
                   <>
-                    <h3 className="mt-3 text-base font-semibold text-slate-100">
+                    <h3 className="mt-3 text-base font-semibold text-slate-900">
                       {selectedRecord.company}
                     </h3>
                     <p className="mt-1 text-xs text-slate-500">
@@ -185,20 +185,20 @@ export default function EvidencePanel({
                         ["Priority label", selectedRecord.priority],
                         [
                           "Observed value (currency unspecified)",
-                          selectedRecord.value.toLocaleString("en-IN", {
+                          selectedRecord.value.toLocaleString("en-US", {
                             maximumFractionDigits: 0,
                           }),
                         ],
                       ].map(([label, value]) => (
-                        <div key={label} className="rounded-lg border border-[#1F2937] bg-[#030712]/70 p-3">
+                        <div key={label} className="rounded-lg border border-[#e2e8f0] bg-[#f8fafc]/70 p-3">
                           <dt className="text-xs text-slate-500">{label}</dt>
-                          <dd className="mt-1 break-words font-medium text-slate-200">{value}</dd>
+                          <dd className="mt-1 break-words font-medium text-slate-800">{value}</dd>
                         </div>
                       ))}
                     </dl>
-                    <div className="mt-3 rounded-lg border border-[#1F2937] bg-[#030712]/70 p-3">
+                    <div className="mt-3 rounded-lg border border-[#e2e8f0] bg-[#f8fafc]/70 p-3">
                       <div className="text-xs text-slate-500">Recorded action</div>
-                      <p className="mt-1 text-sm leading-6 text-slate-300">
+                      <p className="mt-1 text-sm leading-6 text-slate-700">
                         {selectedRecord.action}
                       </p>
                     </div>
@@ -213,12 +213,12 @@ export default function EvidencePanel({
               LIMITATION
             </div>
 
-            <p className="mt-2 text-xs leading-5 text-slate-300">
+            <p className="mt-2 text-xs leading-5 text-slate-700">
               {result.limitation}
             </p>
           </section>
 
-          <section className="rounded-xl border border-[#1F2937] bg-[#0B1117] p-4 text-[10px] text-slate-500">
+          <section className="rounded-xl border border-[#e2e8f0] bg-[#ffffff] p-4 text-[10px] text-slate-500">
             Data {result.data_version} · Method {result.method_version} ·
             Generated {new Date(result.generated_at).toLocaleString()}
           </section>
@@ -230,12 +230,12 @@ export default function EvidencePanel({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[#1F2937] bg-[#030712] p-3">
+    <div className="rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-3">
       <div className="text-[8px] tracking-widest text-slate-500">
         {label}
       </div>
 
-      <div className="mt-1 text-sm font-semibold text-slate-200">
+      <div className="mt-1 text-sm font-semibold text-slate-800">
         {value}
       </div>
     </div>

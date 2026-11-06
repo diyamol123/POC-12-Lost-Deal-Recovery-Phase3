@@ -191,16 +191,16 @@ export default function DataIntelligencePage() {
 
   if (loading || state === "loading") {
     return (
-      <main className="min-h-screen bg-[#030712] p-5 text-slate-100">
+      <main className="min-h-screen bg-[#f8fafc] p-5 text-slate-900">
         <div className="mx-auto max-w-[1400px] animate-pulse space-y-4">
-          <div className="h-32 rounded-2xl bg-[#0B1117]" />
+          <div className="h-32 rounded-2xl bg-[#ffffff]" />
           <div className="grid gap-3 sm:grid-cols-4">
-            <div className="h-24 rounded-2xl bg-[#0B1117]" />
-            <div className="h-24 rounded-2xl bg-[#0B1117]" />
-            <div className="h-24 rounded-2xl bg-[#0B1117]" />
-            <div className="h-24 rounded-2xl bg-[#0B1117]" />
+            <div className="h-24 rounded-2xl bg-[#ffffff]" />
+            <div className="h-24 rounded-2xl bg-[#ffffff]" />
+            <div className="h-24 rounded-2xl bg-[#ffffff]" />
+            <div className="h-24 rounded-2xl bg-[#ffffff]" />
           </div>
-          <div className="h-96 rounded-2xl bg-[#0B1117]" />
+          <div className="h-96 rounded-2xl bg-[#ffffff]" />
         </div>
       </main>
     );
@@ -227,16 +227,16 @@ export default function DataIntelligencePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#030712] px-4 py-5 text-slate-100 sm:px-5 lg:px-8">
+    <main className="min-h-screen bg-[#f8fafc] px-4 py-5 text-slate-900 sm:px-5 lg:px-8">
       <div className="mx-auto max-w-[1400px] space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
           <Link
             href="/"
-            className="rounded-lg border border-[#1F2937] px-3 py-2 text-slate-400 hover:border-[#38BDF8]/30 hover:text-[#38BDF8]"
+            className="rounded-lg border border-[#e2e8f0] px-3 py-2 text-slate-500 hover:border-[#2563eb]/30 hover:text-[#2563eb]"
           >
             ← Operational View
           </Link>
-          <span className="text-slate-600">Data Intelligence · Post #4 integration</span>
+          <span className="text-slate-500">Data Intelligence · Post #4 integration</span>
         </div>
 
         <IntelligenceHeader metadata={pkg.metadata} />
@@ -258,9 +258,9 @@ export default function DataIntelligencePage() {
         {filteredResults.length === 0 ? (
           <section
             aria-label="No matching intelligence results"
-            className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-8 text-center"
+            className="rounded-2xl border border-[#e2e8f0] bg-[#ffffff] p-8 text-center"
           >
-            <div className="text-sm font-semibold text-slate-200">
+            <div className="text-sm font-semibold text-slate-800">
               No matching results
             </div>
             <p className="mt-2 text-xs text-slate-500">
@@ -269,7 +269,7 @@ export default function DataIntelligencePage() {
             <button
               type="button"
               onClick={clearFilters}
-              className="mt-4 rounded-lg border border-[#38BDF8]/30 px-4 py-2 text-xs text-[#38BDF8]"
+              className="mt-4 rounded-lg border border-[#2563eb]/30 px-4 py-2 text-xs text-[#2563eb]"
             >
               Clear filters
             </button>

@@ -34,7 +34,7 @@ export default function IntelligenceFilters({
         aria-label={label}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-lg border border-[#1F2937] bg-[#030712] px-3 py-2.5 text-xs text-slate-200 outline-none focus:border-[#38BDF8]/50"
+        className="w-full rounded-lg border border-[#e2e8f0] bg-[#f8fafc] px-3 py-2.5 text-xs text-slate-800 outline-none focus:border-[#2563eb]/50"
       >
         {options.map((option) => (
           <option key={option} value={option}>
@@ -48,9 +48,9 @@ export default function IntelligenceFilters({
   return (
     <section
       aria-label="Intelligence filters"
-      className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4"
+      className="rounded-2xl border border-[#e2e8f0] bg-[#ffffff] p-4"
     >
-      <div className="mb-4 text-[10px] font-semibold tracking-[0.25em] text-[#38BDF8]">
+      <div className="mb-4 text-[10px] font-semibold tracking-[0.25em] text-[#2563eb]">
         INTELLIGENCE FILTERS
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

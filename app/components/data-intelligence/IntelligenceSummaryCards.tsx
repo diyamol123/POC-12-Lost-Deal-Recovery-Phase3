@@ -13,9 +13,9 @@ export default function IntelligenceSummaryCards({ summary }: { summary: Intelli
   return (
     <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       {cards.map(([label, value]) => (
-        <div key={label} className="rounded-2xl border border-[#1F2937] bg-[#0B1117] p-4">
+        <div key={label} className="rounded-2xl border border-[#e2e8f0] bg-[#ffffff] p-4">
           <div className="text-[9px] tracking-widest text-slate-500">{label}</div>
-          <div className="mt-2 truncate text-xl font-bold text-slate-100">{value}</div>
+          <div className="mt-2 truncate text-xl font-bold text-slate-900">{value}</div>
         </div>
       ))}
     </section>

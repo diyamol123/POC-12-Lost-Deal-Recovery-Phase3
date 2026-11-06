@@ -23,7 +23,7 @@ export default function DecisionPanel({
   topCompetitor,
 }: DecisionPanelProps) {
   const formatValue = (value: number) => {
-    return new Intl.NumberFormat("en-IN", {
+    return new Intl.NumberFormat("en-US", {
       maximumFractionDigits: 0,
     }).format(value);
   };

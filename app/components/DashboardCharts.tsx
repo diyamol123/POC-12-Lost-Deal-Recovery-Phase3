@@ -39,7 +39,7 @@ type SelectedSignal = {
   description?: string;
   action?: string;
 };
-const numberFormat = new Intl.NumberFormat("en-IN", {
+const numberFormat = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0,
 });
 

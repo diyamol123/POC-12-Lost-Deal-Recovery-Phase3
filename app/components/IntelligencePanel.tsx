@@ -30,7 +30,7 @@ export default function IntelligencePanel({
 }: IntelligencePanelProps) {
   if (!selected) return null;
 
-  const numberFormat = new Intl.NumberFormat("en-IN", {
+  const numberFormat = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 0,
   });
 

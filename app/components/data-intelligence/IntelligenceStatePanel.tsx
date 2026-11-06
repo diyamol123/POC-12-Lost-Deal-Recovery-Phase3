@@ -15,8 +15,8 @@ export default function IntelligenceStatePanel({
   const stale = state === "stale";
 
   return (
-    <main className="min-h-screen bg-[#030712] p-5 text-slate-100">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-[#1F2937] bg-[#0B1117] p-6">
+    <main className="min-h-screen bg-[#f8fafc] p-5 text-slate-900">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-[#e2e8f0] bg-[#ffffff] p-6">
         <div
           className={`text-[10px] font-semibold tracking-[0.25em] ${
             stale ? "text-amber-300" : "text-red-300"
@@ -25,20 +25,20 @@ export default function IntelligenceStatePanel({
           {stale ? "INTELLIGENCE DATA STALE" : "INTELLIGENCE LOAD ERROR"}
         </div>
 
-        <h1 className="mt-3 text-lg font-semibold text-slate-100">
+        <h1 className="mt-3 text-lg font-semibold text-slate-900">
           {stale
             ? "Approved results are not being rendered as current."
             : "Trusted intelligence data is unavailable."}
         </h1>
 
-        <p className="mt-3 text-sm leading-6 text-slate-400">
+        <p className="mt-3 text-sm leading-6 text-slate-500">
           {stale
             ? "A version, timestamp, quality, or validation mismatch was detected. The application has withheld the affected analytical results until the approved package is aligned."
             : "The application could not safely load and validate the approved intelligence package."}
         </p>
 
         {detail && (
-          <div className="mt-4 rounded-lg border border-[#1F2937] bg-[#030712] p-3 text-xs leading-5 text-slate-500">
+          <div className="mt-4 rounded-lg border border-[#e2e8f0] bg-[#f8fafc] p-3 text-xs leading-5 text-slate-500">
             {detail}
           </div>
         )}
@@ -48,14 +48,14 @@ export default function IntelligenceStatePanel({
             <button
               type="button"
               onClick={onRetry}
-              className="rounded-lg border border-[#38BDF8]/30 px-4 py-2 text-xs text-[#38BDF8]"
+              className="rounded-lg border border-[#2563eb]/30 px-4 py-2 text-xs text-[#2563eb]"
             >
               Retry
             </button>
           )}
           <Link
             href="/"
-            className="rounded-lg border border-[#1F2937] px-4 py-2 text-xs text-slate-400"
+            className="rounded-lg border border-[#e2e8f0] px-4 py-2 text-xs text-slate-500"
           >
             Operational View
           </Link>

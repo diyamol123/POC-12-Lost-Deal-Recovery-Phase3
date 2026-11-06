@@ -12,7 +12,7 @@ export default function LimitationsPanel({
         LIMITATIONS & UNSUPPORTED USES
       </div>
 
-      <ul className="mt-3 space-y-2 text-xs leading-5 text-slate-300">
+      <ul className="mt-3 space-y-2 text-xs leading-5 text-slate-700">
         {summary.important_limitations.map((item) => (
           <li key={item}>• {item}</li>
         ))}
