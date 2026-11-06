@@ -51,7 +51,7 @@ export default function Home() {
 
   useEffect(() => {
     let active = true;
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/portfolio/records`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/portfolio/records`)
       .then((response) => {
         if (!response.ok) throw new Error(`Portfolio API returned ${response.status}`);
         return response.json();
@@ -138,7 +138,7 @@ export default function Home() {
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e8efff] text-[#3659c9]"><BarChart3 size={16} /></span>
               Portfolio intelligence · Synthetic experiment
             </div>
-            <h1 className="text-2xl font-semibold tracking-tight text-[#14213d] sm:text-[30px]">Lost-deal portfolio overview</h1>
+            <h1 id="portfolio-overview" className="text-2xl font-semibold tracking-tight text-[#14213d] sm:text-[30px]">Lost-deal portfolio overview</h1>
             <p className="mt-1 text-sm text-[#64748b]">A 500-record view of observed lost-deal values, categories and source evidence.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

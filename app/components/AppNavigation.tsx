@@ -12,6 +12,12 @@ export default function AppNavigation() {
           LOST DEAL INTELLIGENCE
         </span>
         <Link
+          href="/#portfolio-overview"
+          className="rounded-lg border border-[#1F2937] px-3 py-2 text-slate-300 hover:border-[#38BDF8]/30 hover:text-[#38BDF8]"
+        >
+          Overview
+        </Link>
+        <Link
           href="/"
           className="rounded-lg border border-[#1F2937] px-3 py-2 text-slate-300 hover:border-[#38BDF8]/30 hover:text-[#38BDF8]"
         >
