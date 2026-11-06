@@ -75,7 +75,7 @@ export default function PortfolioAssistant() {
           className="h-11 min-w-0 flex-1 rounded-xl border border-[#dce3ef] px-4 text-sm outline-none focus:border-[#5275d8] focus:ring-2 focus:ring-[#5275d8]/15"
           maxLength={500}
         />
-        <button disabled={loading || !question.trim()} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#3659c9] px-5 text-sm font-semibold text-white hover:bg-[#294bb3] disabled:cursor-not-allowed disabled:opacity-50">
+        <button type="submit" disabled={loading || !question.trim()} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#3659c9] px-5 text-sm font-semibold text-white hover:bg-[#294bb3] disabled:cursor-not-allowed disabled:opacity-50">
           {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           Ask assistant
         </button>
