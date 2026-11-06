@@ -103,7 +103,7 @@ export default function EvidencePanel({
                 label="Average"
                 value={result.evidence.average_deal_value.toLocaleString(
                   "en-US",
-                  { maximumFractionDigits: 0 }
+                  { notation: "compact", compactDisplay: "short", maximumFractionDigits: 1 }
                 )}
               />
 

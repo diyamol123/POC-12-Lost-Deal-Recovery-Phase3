@@ -22,7 +22,7 @@ const SUGGESTED_QUESTIONS = [
 function formatValue(value: unknown): string {
   if (typeof value === "number") {
     return value.toLocaleString("en-US", {
-      maximumFractionDigits: 2,
+      notation: "compact", compactDisplay: "short", maximumFractionDigits: 1,
     });
   }
 

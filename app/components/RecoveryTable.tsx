@@ -20,7 +20,7 @@ export default function RecoveryTable({
 }: RecoveryTableProps) {
   const formatValue = (value: number) => {
     return new Intl.NumberFormat("en-US", {
-      maximumFractionDigits: 0,
+      notation: "compact", compactDisplay: "short", maximumFractionDigits: 1,
     }).format(value);
   };
 

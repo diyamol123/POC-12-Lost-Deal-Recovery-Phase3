@@ -31,7 +31,7 @@ export default function IntelligencePanel({
   if (!selected) return null;
 
   const numberFormat = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 0,
+    notation: "compact", compactDisplay: "short", maximumFractionDigits: 1,
   });
 
   const formatValue = () => {

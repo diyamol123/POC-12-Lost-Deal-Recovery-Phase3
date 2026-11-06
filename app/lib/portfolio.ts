@@ -34,7 +34,7 @@ export type PortfolioGroup = {
 
 export function formatRawUnits(value: number): string {
   return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2,
+    notation: "compact", compactDisplay: "short", maximumFractionDigits: 1,
   }).format(value);
 }
 

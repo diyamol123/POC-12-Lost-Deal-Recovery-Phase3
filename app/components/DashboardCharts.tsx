@@ -34,7 +34,7 @@ type SelectedSignal = {
   action?: string;
 };
 const numberFormat = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 0,
+  notation: "compact", compactDisplay: "short", maximumFractionDigits: 1,
 });
 
 export default function DashboardCharts({

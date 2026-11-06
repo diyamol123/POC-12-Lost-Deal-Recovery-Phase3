@@ -2,7 +2,7 @@
 import type { IntelligenceResult } from "@/app/types/intelligence";
 
 function formatValue(value: number) {
-  return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  return value.toLocaleString("en-US", { notation: "compact", compactDisplay: "short", maximumFractionDigits: 1, });
 }
 
 export default function ComparativeRanking({

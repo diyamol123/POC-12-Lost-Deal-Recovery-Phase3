@@ -163,7 +163,7 @@ export default function Home() {
               <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e8efff] text-[#3659c9]"><BarChart3 size={16} /></span>
               Portfolio intelligence · Synthetic experiment
             </div>
-            <h1 id="portfolio-overview" className="text-2xl font-semibold tracking-tight text-[#14213d] sm:text-[30px]">Lost-deal portfolio overview</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-[#14213d] sm:text-[30px]">Lost-deal operational view</h1>
             <p className="mt-1 text-sm text-[#64748b]">A 500-record view of observed lost-deal values, categories and source evidence.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -256,7 +256,16 @@ export default function Home() {
 
         <PortfolioAssistant />
 
-        <footer className="mt-5 flex flex-col gap-2 border-t border-[#e1e7f0] pt-4 text-[11px] text-[#7b8798] sm:flex-row sm:items-center sm:justify-between"><span className="inline-flex items-center gap-1.5"><ShieldCheck size={13} /> Data version: portfolio-synth-v1.0.0 · Method version: 1.0.0</span><span>All 500 records are synthetic. Currency is unspecified. Results are descriptive and do not establish causality or predict real customer behaviour.</span></footer>
+        <footer className="mt-5 flex flex-col gap-3 border-t border-[#e1e7f0] pt-4 text-[11px] text-[#7b8798] sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <p className="inline-flex items-center gap-1.5"><ShieldCheck size={13} /> Dataset: 500 synthetic records · 2026 scenario · Method version: 1.0.0</p>
+            <p>Currency is unspecified. Results are descriptive and do not establish causality or predict real customer behaviour.</p>
+          </div>
+          <div className="sm:text-right">
+            <p className="font-semibold text-[#526174]">Developed by: Diyamol Jose · PoC ID: POC-12</p>
+            <p>GitHub: @diyamol123 · Infocreon Internship</p>
+          </div>
+        </footer>
       </div>
 
       {filtersOpen && <div className="fixed inset-0 z-50 flex justify-end bg-[#101828]/35">
